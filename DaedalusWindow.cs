@@ -17,5 +17,9 @@ namespace Daedalus
             InitializeComponent();
         }
 
+        private void DaedalusForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

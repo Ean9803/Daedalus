@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Daedalus
+namespace Daedalus.Daedalus.Programs
 {
     static class DaedalusProgram
     {
