@@ -30,113 +30,138 @@ namespace Daedalus
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DaedalusForm));
-            this.miniToolStrip = new System.Windows.Forms.ToolStrip();
-            this.targetBtn = new System.Windows.Forms.ToolStripButton();
-            this.roamBtn = new System.Windows.Forms.ToolStripButton();
-            this.mapLabel = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.modeLabel = new System.Windows.Forms.ToolStripLabel();
-            this.modeSelection = new System.Windows.Forms.ToolStripLabel();
-            this.labyrinthToolBar = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.VerticalLayout = new System.Windows.Forms.SplitContainer();
+            this.ControlLayout = new System.Windows.Forms.SplitContainer();
+            this.labyrinthBox = new System.Windows.Forms.GroupBox();
+            this.labyrinthScene = new System.Windows.Forms.PictureBox();
+            this.labyrinthToolStrip = new System.Windows.Forms.ToolStrip();
+            this.labyrinthTool = new System.Windows.Forms.ToolStripLabel();
             this.clearBtn = new System.Windows.Forms.ToolStripButton();
             this.loadBtn = new System.Windows.Forms.ToolStripButton();
             this.saveBtn = new System.Windows.Forms.ToolStripButton();
             this.eraseBtn = new System.Windows.Forms.ToolStripButton();
             this.drawBtn = new System.Windows.Forms.ToolStripButton();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.zoomControls = new System.Windows.Forms.GroupBox();
-            this.zoomOutBtn = new System.Windows.Forms.Button();
-            this.zoomInBtn = new System.Windows.Forms.Button();
-            this.zoomTrackBar = new System.Windows.Forms.TrackBar();
+            this.mapBox = new System.Windows.Forms.GroupBox();
+            this.mapScene = new System.Windows.Forms.PictureBox();
             this.mapToolStrip = new System.Windows.Forms.ToolStrip();
-            this.labyrinthToolBar.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.zoomControls.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).BeginInit();
+            this.targetBtn = new System.Windows.Forms.ToolStripButton();
+            this.roamBtn = new System.Windows.Forms.ToolStripButton();
+            this.mapMode = new System.Windows.Forms.ToolStripLabel();
+            this.playBtn = new System.Windows.Forms.ToolStripButton();
+            this.stopBtn = new System.Windows.Forms.ToolStripButton();
+            this.zoomSlider = new System.Windows.Forms.TrackBar();
+            this.MinotaurWorker = new System.ComponentModel.BackgroundWorker();
+            this.LabyrinthUpdate = new System.ComponentModel.BackgroundWorker();
+            this.openMapFile = new System.Windows.Forms.OpenFileDialog();
+            this.saveMapFile = new System.Windows.Forms.SaveFileDialog();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalLayout)).BeginInit();
+            this.VerticalLayout.Panel1.SuspendLayout();
+            this.VerticalLayout.Panel2.SuspendLayout();
+            this.VerticalLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ControlLayout)).BeginInit();
+            this.ControlLayout.Panel1.SuspendLayout();
+            this.ControlLayout.Panel2.SuspendLayout();
+            this.ControlLayout.SuspendLayout();
+            this.labyrinthBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.labyrinthScene)).BeginInit();
+            this.labyrinthToolStrip.SuspendLayout();
+            this.mapBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mapScene)).BeginInit();
             this.mapToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomSlider)).BeginInit();
             this.SuspendLayout();
             // 
-            // miniToolStrip
+            // VerticalLayout
             // 
-            this.miniToolStrip.AccessibleName = "New item selection";
-            this.miniToolStrip.AccessibleRole = System.Windows.Forms.AccessibleRole.ButtonDropDown;
-            this.miniToolStrip.AutoSize = false;
-            this.miniToolStrip.CanOverflow = false;
-            this.miniToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.miniToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.miniToolStrip.Location = new System.Drawing.Point(141, 3);
-            this.miniToolStrip.Name = "miniToolStrip";
-            this.miniToolStrip.Size = new System.Drawing.Size(386, 25);
-            this.miniToolStrip.TabIndex = 1;
+            this.VerticalLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.VerticalLayout.Location = new System.Drawing.Point(0, 0);
+            this.VerticalLayout.Name = "VerticalLayout";
+            this.VerticalLayout.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // targetBtn
+            // VerticalLayout.Panel1
             // 
-            this.targetBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.targetBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.targetBtn.Image = ((System.Drawing.Image)(resources.GetObject("targetBtn.Image")));
-            this.targetBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.targetBtn.Name = "targetBtn";
-            this.targetBtn.Size = new System.Drawing.Size(23, 22);
-            this.targetBtn.Text = "Target Mode";
+            this.VerticalLayout.Panel1.Controls.Add(this.ControlLayout);
+            this.VerticalLayout.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
-            // roamBtn
+            // VerticalLayout.Panel2
             // 
-            this.roamBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.roamBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.roamBtn.Image = ((System.Drawing.Image)(resources.GetObject("roamBtn.Image")));
-            this.roamBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.roamBtn.Name = "roamBtn";
-            this.roamBtn.Size = new System.Drawing.Size(23, 22);
-            this.roamBtn.Text = "Roam Mode";
+            this.VerticalLayout.Panel2.Controls.Add(this.zoomSlider);
+            this.VerticalLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.VerticalLayout.Size = new System.Drawing.Size(1031, 527);
+            this.VerticalLayout.SplitterDistance = 454;
+            this.VerticalLayout.SplitterWidth = 10;
+            this.VerticalLayout.TabIndex = 4;
+            this.VerticalLayout.TabStop = false;
             // 
-            // mapLabel
+            // ControlLayout
             // 
-            this.mapLabel.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.mapLabel.Name = "mapLabel";
-            this.mapLabel.Size = new System.Drawing.Size(31, 22);
-            this.mapLabel.Text = "Map";
+            this.ControlLayout.BackColor = System.Drawing.SystemColors.MenuText;
+            this.ControlLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ControlLayout.ForeColor = System.Drawing.SystemColors.InactiveBorder;
+            this.ControlLayout.Location = new System.Drawing.Point(0, 0);
+            this.ControlLayout.Name = "ControlLayout";
             // 
-            // toolStripSeparator1
+            // ControlLayout.Panel1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.ControlLayout.Panel1.Controls.Add(this.labyrinthBox);
+            this.ControlLayout.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
-            // modeLabel
+            // ControlLayout.Panel2
             // 
-            this.modeLabel.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.modeLabel.Name = "modeLabel";
-            this.modeLabel.Size = new System.Drawing.Size(41, 22);
-            this.modeLabel.Text = "Mode:";
+            this.ControlLayout.Panel2.Controls.Add(this.mapBox);
+            this.ControlLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ControlLayout.Size = new System.Drawing.Size(1031, 454);
+            this.ControlLayout.SplitterDistance = 515;
+            this.ControlLayout.SplitterWidth = 10;
+            this.ControlLayout.TabIndex = 3;
+            this.ControlLayout.TabStop = false;
             // 
-            // modeSelection
+            // labyrinthBox
             // 
-            this.modeSelection.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.modeSelection.Name = "modeSelection";
-            this.modeSelection.Size = new System.Drawing.Size(54, 22);
-            this.modeSelection.Text = "<mode>";
+            this.labyrinthBox.BackColor = System.Drawing.SystemColors.Desktop;
+            this.labyrinthBox.Controls.Add(this.labyrinthScene);
+            this.labyrinthBox.Controls.Add(this.labyrinthToolStrip);
+            this.labyrinthBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labyrinthBox.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.labyrinthBox.Location = new System.Drawing.Point(0, 0);
+            this.labyrinthBox.Name = "labyrinthBox";
+            this.labyrinthBox.Size = new System.Drawing.Size(515, 454);
+            this.labyrinthBox.TabIndex = 0;
+            this.labyrinthBox.TabStop = false;
+            this.labyrinthBox.Text = "Labyrinth";
             // 
-            // labyrinthToolBar
+            // labyrinthScene
             // 
-            this.labyrinthToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
+            this.labyrinthScene.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labyrinthScene.Location = new System.Drawing.Point(3, 50);
+            this.labyrinthScene.Name = "labyrinthScene";
+            this.labyrinthScene.Size = new System.Drawing.Size(509, 401);
+            this.labyrinthScene.TabIndex = 7;
+            this.labyrinthScene.TabStop = false;
+            this.labyrinthScene.Paint += new System.Windows.Forms.PaintEventHandler(this.labyrinthScene_Paint);
+            // 
+            // labyrinthToolStrip
+            // 
+            this.labyrinthToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.labyrinthToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.labyrinthTool,
             this.clearBtn,
             this.loadBtn,
             this.saveBtn,
             this.eraseBtn,
             this.drawBtn});
-            this.labyrinthToolBar.Location = new System.Drawing.Point(0, 0);
-            this.labyrinthToolBar.Name = "labyrinthToolBar";
-            this.labyrinthToolBar.Size = new System.Drawing.Size(402, 25);
-            this.labyrinthToolBar.TabIndex = 5;
-            this.labyrinthToolBar.Text = "toolStrip3";
+            this.labyrinthToolStrip.Location = new System.Drawing.Point(3, 23);
+            this.labyrinthToolStrip.Name = "labyrinthToolStrip";
+            this.labyrinthToolStrip.Size = new System.Drawing.Size(509, 27);
+            this.labyrinthToolStrip.TabIndex = 0;
+            this.labyrinthToolStrip.Text = "toolStrip3";
             // 
-            // toolStripLabel1
+            // labyrinthTool
             // 
-            this.toolStripLabel1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(57, 22);
-            this.toolStripLabel1.Text = "Labyrinth";
+            this.labyrinthTool.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.labyrinthTool.Name = "labyrinthTool";
+            this.labyrinthTool.Size = new System.Drawing.Size(58, 24);
+            this.labyrinthTool.Text = "<Tool>";
             // 
             // clearBtn
             // 
@@ -145,8 +170,9 @@ namespace Daedalus
             this.clearBtn.Image = ((System.Drawing.Image)(resources.GetObject("clearBtn.Image")));
             this.clearBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.clearBtn.Name = "clearBtn";
-            this.clearBtn.Size = new System.Drawing.Size(23, 22);
+            this.clearBtn.Size = new System.Drawing.Size(29, 24);
             this.clearBtn.Text = "Clear";
+            this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);
             // 
             // loadBtn
             // 
@@ -155,8 +181,9 @@ namespace Daedalus
             this.loadBtn.Image = ((System.Drawing.Image)(resources.GetObject("loadBtn.Image")));
             this.loadBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadBtn.Name = "loadBtn";
-            this.loadBtn.Size = new System.Drawing.Size(23, 22);
+            this.loadBtn.Size = new System.Drawing.Size(29, 24);
             this.loadBtn.Text = "Load Map";
+            this.loadBtn.Click += new System.EventHandler(this.loadBtn_Click);
             // 
             // saveBtn
             // 
@@ -165,8 +192,9 @@ namespace Daedalus
             this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
             this.saveBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(23, 22);
+            this.saveBtn.Size = new System.Drawing.Size(29, 24);
             this.saveBtn.Text = "Save";
+            this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
             // eraseBtn
             // 
@@ -175,8 +203,9 @@ namespace Daedalus
             this.eraseBtn.Image = ((System.Drawing.Image)(resources.GetObject("eraseBtn.Image")));
             this.eraseBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.eraseBtn.Name = "eraseBtn";
-            this.eraseBtn.Size = new System.Drawing.Size(23, 22);
+            this.eraseBtn.Size = new System.Drawing.Size(29, 24);
             this.eraseBtn.Text = "Erase";
+            this.eraseBtn.Click += new System.EventHandler(this.eraseBtn_Click);
             // 
             // drawBtn
             // 
@@ -185,135 +214,205 @@ namespace Daedalus
             this.drawBtn.Image = ((System.Drawing.Image)(resources.GetObject("drawBtn.Image")));
             this.drawBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.drawBtn.Name = "drawBtn";
-            this.drawBtn.Size = new System.Drawing.Size(23, 22);
+            this.drawBtn.Size = new System.Drawing.Size(29, 24);
             this.drawBtn.Text = "Draw";
+            this.drawBtn.Click += new System.EventHandler(this.drawBtn_Click);
             // 
-            // tableLayoutPanel1
+            // mapBox
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 402F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.zoomControls, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.labyrinthToolBar, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.mapToolStrip, 2, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, -1);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.35294F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 87.64706F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(848, 353);
-            this.tableLayoutPanel1.TabIndex = 0;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
+            this.mapBox.Controls.Add(this.mapScene);
+            this.mapBox.Controls.Add(this.mapToolStrip);
+            this.mapBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapBox.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.mapBox.Location = new System.Drawing.Point(0, 0);
+            this.mapBox.Name = "mapBox";
+            this.mapBox.Size = new System.Drawing.Size(506, 454);
+            this.mapBox.TabIndex = 0;
+            this.mapBox.TabStop = false;
+            this.mapBox.Text = "Map";
             // 
-            // zoomControls
+            // mapScene
             // 
-            this.zoomControls.BackColor = System.Drawing.Color.White;
-            this.zoomControls.Controls.Add(this.zoomOutBtn);
-            this.zoomControls.Controls.Add(this.zoomInBtn);
-            this.zoomControls.Controls.Add(this.zoomTrackBar);
-            this.zoomControls.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.zoomControls.Location = new System.Drawing.Point(405, 3);
-            this.zoomControls.Name = "zoomControls";
-            this.tableLayoutPanel1.SetRowSpan(this.zoomControls, 2);
-            this.zoomControls.Size = new System.Drawing.Size(54, 347);
-            this.zoomControls.TabIndex = 7;
-            this.zoomControls.TabStop = false;
-            this.zoomControls.Text = "Zoom";
-            // 
-            // zoomOutBtn
-            // 
-            this.zoomOutBtn.Image = ((System.Drawing.Image)(resources.GetObject("zoomOutBtn.Image")));
-            this.zoomOutBtn.Location = new System.Drawing.Point(14, 294);
-            this.zoomOutBtn.Name = "zoomOutBtn";
-            this.zoomOutBtn.Size = new System.Drawing.Size(30, 30);
-            this.zoomOutBtn.TabIndex = 2;
-            this.zoomOutBtn.UseVisualStyleBackColor = true;
-            // 
-            // zoomInBtn
-            // 
-            this.zoomInBtn.Image = ((System.Drawing.Image)(resources.GetObject("zoomInBtn.Image")));
-            this.zoomInBtn.Location = new System.Drawing.Point(14, 44);
-            this.zoomInBtn.Name = "zoomInBtn";
-            this.zoomInBtn.Size = new System.Drawing.Size(30, 30);
-            this.zoomInBtn.TabIndex = 1;
-            this.zoomInBtn.UseVisualStyleBackColor = true;
-            // 
-            // zoomTrackBar
-            // 
-            this.zoomTrackBar.Location = new System.Drawing.Point(6, 80);
-            this.zoomTrackBar.Maximum = 25;
-            this.zoomTrackBar.Name = "zoomTrackBar";
-            this.zoomTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.zoomTrackBar.Size = new System.Drawing.Size(45, 208);
-            this.zoomTrackBar.TabIndex = 0;
+            this.mapScene.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapScene.Location = new System.Drawing.Point(3, 50);
+            this.mapScene.Name = "mapScene";
+            this.mapScene.Size = new System.Drawing.Size(500, 401);
+            this.mapScene.TabIndex = 3;
+            this.mapScene.TabStop = false;
+            this.mapScene.Paint += new System.Windows.Forms.PaintEventHandler(this.mapScene_Paint);
             // 
             // mapToolStrip
             // 
+            this.mapToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mapToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.targetBtn,
             this.roamBtn,
-            this.mapLabel,
-            this.toolStripSeparator1,
-            this.modeLabel,
-            this.modeSelection});
-            this.mapToolStrip.Location = new System.Drawing.Point(462, 0);
+            this.mapMode,
+            this.playBtn,
+            this.stopBtn});
+            this.mapToolStrip.Location = new System.Drawing.Point(3, 23);
             this.mapToolStrip.Name = "mapToolStrip";
-            this.mapToolStrip.Size = new System.Drawing.Size(386, 25);
+            this.mapToolStrip.Size = new System.Drawing.Size(500, 27);
             this.mapToolStrip.TabIndex = 1;
             this.mapToolStrip.Text = "toolStrip2";
             // 
+            // targetBtn
+            // 
+            this.targetBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.targetBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.targetBtn.Image = ((System.Drawing.Image)(resources.GetObject("targetBtn.Image")));
+            this.targetBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.targetBtn.Name = "targetBtn";
+            this.targetBtn.Size = new System.Drawing.Size(29, 24);
+            this.targetBtn.Text = "Target Mode";
+            this.targetBtn.Click += new System.EventHandler(this.targetBtn_Click);
+            // 
+            // roamBtn
+            // 
+            this.roamBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.roamBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.roamBtn.Image = ((System.Drawing.Image)(resources.GetObject("roamBtn.Image")));
+            this.roamBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.roamBtn.Name = "roamBtn";
+            this.roamBtn.Size = new System.Drawing.Size(29, 24);
+            this.roamBtn.Text = "Roam Mode";
+            this.roamBtn.Click += new System.EventHandler(this.roamBtn_Click);
+            // 
+            // mapMode
+            // 
+            this.mapMode.ForeColor = System.Drawing.SystemColors.WindowFrame;
+            this.mapMode.Name = "mapMode";
+            this.mapMode.Size = new System.Drawing.Size(68, 24);
+            this.mapMode.Text = "<mode>";
+            // 
+            // playBtn
+            // 
+            this.playBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.playBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.playBtn.Image = ((System.Drawing.Image)(resources.GetObject("playBtn.Image")));
+            this.playBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.playBtn.Name = "playBtn";
+            this.playBtn.Size = new System.Drawing.Size(29, 24);
+            this.playBtn.Text = "Activate Minotaur";
+            this.playBtn.Click += new System.EventHandler(this.playBtn_Click);
+            // 
+            // stopBtn
+            // 
+            this.stopBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.stopBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.stopBtn.Image = ((System.Drawing.Image)(resources.GetObject("stopBtn.Image")));
+            this.stopBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stopBtn.Name = "stopBtn";
+            this.stopBtn.Size = new System.Drawing.Size(29, 24);
+            this.stopBtn.Text = "Deactivate Minotaur";
+            this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
+            // 
+            // zoomSlider
+            // 
+            this.zoomSlider.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomSlider.LargeChange = 10;
+            this.zoomSlider.Location = new System.Drawing.Point(310, -4);
+            this.zoomSlider.Maximum = 100;
+            this.zoomSlider.Minimum = 1;
+            this.zoomSlider.Name = "zoomSlider";
+            this.zoomSlider.Size = new System.Drawing.Size(417, 56);
+            this.zoomSlider.TabIndex = 5;
+            this.zoomSlider.TabStop = false;
+            this.zoomSlider.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.zoomSlider.Value = 1;
+            this.zoomSlider.Scroll += new System.EventHandler(this.zoomSlider_Scroll);
+            // 
+            // MinotaurWorker
+            // 
+            this.MinotaurWorker.WorkerSupportsCancellation = true;
+            this.MinotaurWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.MinotaurWorker_DoWork);
+            this.MinotaurWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_End);
+            // 
+            // LabyrinthUpdate
+            // 
+            this.LabyrinthUpdate.WorkerSupportsCancellation = true;
+            this.LabyrinthUpdate.DoWork += new System.ComponentModel.DoWorkEventHandler(this.LabyrinthUpdate_DoWork);
+            this.LabyrinthUpdate.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_End);
+            // 
+            // openMapFile
+            // 
+            this.openMapFile.FileName = "openFileDialog1";
+            this.openMapFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openMapFile_FileOk);
+            // 
+            // saveMapFile
+            // 
+            this.saveMapFile.FileOk += new System.ComponentModel.CancelEventHandler(this.saveMapFile_FileOk);
+            // 
             // DaedalusForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.WindowText;
-            this.ClientSize = new System.Drawing.Size(872, 364);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.ForeColor = System.Drawing.SystemColors.Window;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.ClientSize = new System.Drawing.Size(1031, 527);
+            this.Controls.Add(this.VerticalLayout);
+            this.ForeColor = System.Drawing.SystemColors.InfoText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DaedalusForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Daedalus";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DaedalusForm_Close);
             this.Load += new System.EventHandler(this.DaedalusForm_Load);
-            this.labyrinthToolBar.ResumeLayout(false);
-            this.labyrinthToolBar.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.zoomControls.ResumeLayout(false);
-            this.zoomControls.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).EndInit();
+            this.VerticalLayout.Panel1.ResumeLayout(false);
+            this.VerticalLayout.Panel2.ResumeLayout(false);
+            this.VerticalLayout.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalLayout)).EndInit();
+            this.VerticalLayout.ResumeLayout(false);
+            this.ControlLayout.Panel1.ResumeLayout(false);
+            this.ControlLayout.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ControlLayout)).EndInit();
+            this.ControlLayout.ResumeLayout(false);
+            this.labyrinthBox.ResumeLayout(false);
+            this.labyrinthBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.labyrinthScene)).EndInit();
+            this.labyrinthToolStrip.ResumeLayout(false);
+            this.labyrinthToolStrip.PerformLayout();
+            this.mapBox.ResumeLayout(false);
+            this.mapBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mapScene)).EndInit();
             this.mapToolStrip.ResumeLayout(false);
             this.mapToolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomSlider)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ToolStrip miniToolStrip;
-        private System.Windows.Forms.ToolStripButton targetBtn;
-        private System.Windows.Forms.ToolStripButton roamBtn;
-        private System.Windows.Forms.ToolStripLabel mapLabel;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripLabel modeLabel;
-        private System.Windows.Forms.ToolStripLabel modeSelection;
-        private System.Windows.Forms.ToolStrip labyrinthToolBar;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.SplitContainer VerticalLayout;
+        private System.Windows.Forms.SplitContainer ControlLayout;
+        private System.Windows.Forms.GroupBox labyrinthBox;
+        private System.Windows.Forms.PictureBox labyrinthScene;
+        private System.Windows.Forms.ToolStrip labyrinthToolStrip;
+        private System.Windows.Forms.ToolStripLabel labyrinthTool;
         private System.Windows.Forms.ToolStripButton clearBtn;
         private System.Windows.Forms.ToolStripButton loadBtn;
         private System.Windows.Forms.ToolStripButton saveBtn;
         private System.Windows.Forms.ToolStripButton eraseBtn;
         private System.Windows.Forms.ToolStripButton drawBtn;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.GroupBox mapBox;
+        private System.Windows.Forms.PictureBox mapScene;
         private System.Windows.Forms.ToolStrip mapToolStrip;
-        private System.Windows.Forms.GroupBox zoomControls;
-        private System.Windows.Forms.Button zoomOutBtn;
-        private System.Windows.Forms.Button zoomInBtn;
-        private System.Windows.Forms.TrackBar zoomTrackBar;
+        private System.Windows.Forms.ToolStripButton targetBtn;
+        private System.Windows.Forms.ToolStripButton roamBtn;
+        private System.Windows.Forms.ToolStripLabel mapMode;
+        private System.Windows.Forms.ToolStripButton playBtn;
+        private System.Windows.Forms.ToolStripButton stopBtn;
+        private System.Windows.Forms.TrackBar zoomSlider;
+        private System.ComponentModel.BackgroundWorker MinotaurWorker;
+        private System.ComponentModel.BackgroundWorker LabyrinthUpdate;
+        private System.Windows.Forms.OpenFileDialog openMapFile;
+        private System.Windows.Forms.SaveFileDialog saveMapFile;
     }
 }
 

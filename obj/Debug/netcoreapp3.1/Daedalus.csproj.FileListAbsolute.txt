@@ -31,3 +31,4 @@ C:\Programming Projects\School\Software Engineering Project\obj\Debug\netcoreapp
 C:\Programming Projects\School\Software Engineering Project\obj\Debug\netcoreapp3.1\Daedalus.pdb
 C:\Programming Projects\School\Software Engineering Project\obj\Debug\netcoreapp3.1\Daedalus.genruntimeconfig.cache
 C:\Programming Projects\School\Software Engineering Project\obj\Debug\netcoreapp3.1\Daedalus.Properties.Resources.resources
+C:\Users\irobo\source\repos\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Properties.Resources.resources
