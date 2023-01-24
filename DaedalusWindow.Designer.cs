@@ -139,7 +139,10 @@ namespace Daedalus
             this.labyrinthScene.TabIndex = 7;
             this.labyrinthScene.TabStop = false;
             this.labyrinthScene.Paint += new System.Windows.Forms.PaintEventHandler(this.labyrinthScene_Paint);
-            // 
+            this.labyrinthScene.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labyrinthScene_MouseDown);
+            this.labyrinthScene.MouseLeave += new System.EventHandler(this.labyrinthScene_MouseLeave);
+            this.labyrinthScene.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labyrinthScene_Mouse);
+            this.labyrinthScene.MouseUp += new System.Windows.Forms.MouseEventHandler(this.labyrinthScene_MouseUp);            // 
             // labyrinthToolStrip
             // 
             this.labyrinthToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
