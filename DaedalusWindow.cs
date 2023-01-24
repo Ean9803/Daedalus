@@ -254,6 +254,7 @@ namespace Daedalus
 
         private void ProcessLoadFile(string FilePath)
         {
+            Walls.Clear();
             string input;
             input = File.ReadAllText(FilePath);
             System.Diagnostics.Debug.WriteLine(input);
