@@ -247,7 +247,7 @@ namespace Daedalus
             string output = "";
             foreach (Line item in Walls)
             {
-                output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "^";
+                output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "___";
             }
             File.WriteAllText(FilePath, output);
         }
@@ -260,7 +260,7 @@ namespace Daedalus
             System.Diagnostics.Debug.WriteLine(input);
 
             // Split all lines into individual coordinates
-            string[] delimeters = {"^", "#", "/"};
+            string[] delimeters = {"___", "#", "/"};
             string[] coordinates = input.Split(delimeters, StringSplitOptions.None);
 
             // Four coordinates per line
