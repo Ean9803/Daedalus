@@ -44,6 +44,49 @@ namespace Daedalus
                 Highlight = Val;
             }
 
+            public Line[] GenerateRec()
+            {
+                Line[] Ret = new Line[4];
+                PointF PP1 = P1;
+                PointF PP2 = P2;
+
+                for (int i = 0; i < Ret.Length; i++)
+                {
+                    Ret[i] = new Line();
+                    Ret[i].SetHighlight(Highlight);
+                    Ret[i].Width = 0;
+                    Ret[i].P1.X = PP1.X;
+                    Ret[i].P1.Y = PP1.Y;
+                    Ret[i].P2.X = PP2.X;
+                    Ret[i].P2.Y = PP2.Y;
+                }
+
+                PointF Direction = new PointF();
+                Direction.X = P1.X - P2.X;
+                Direction.Y = P1.Y - P2.Y;
+
+                float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
+
+                float YSlope = (Direction.Y / distance);
+                float XSlope = (Direction.X / distance);
+                Ret[0].P1.X += (YSlope * Width);
+                Ret[0].P1.Y += (XSlope * Width);
+                Ret[0].P2.X += (YSlope * Width);
+                Ret[0].P2.Y += (XSlope * Width);
+                Ret[1].P1.X -= (YSlope * Width);
+                Ret[1].P1.Y -= (XSlope * Width);
+                Ret[1].P2.X -= (YSlope * Width);
+                Ret[1].P2.Y -= (XSlope * Width);
+
+                Ret[2].P1 = Ret[0].P1;
+                Ret[2].P2 = Ret[1].P1;
+                Ret[3].P1 = Ret[0].P2;
+                Ret[3].P2 = Ret[1].P2;
+
+
+                return Ret;
+            }
+
             public Line[] GenerateRec(PointF Origin, float ZoomAmount)
             {
                 Line[] Ret = new Line[4];
@@ -92,6 +135,11 @@ namespace Daedalus
 
                 return Ret;
             }
+        }
+
+        public PointF CalculateViewPosition(PointF In)
+        {
+            return new PointF((In.X / ZoomAmount) + Origin.X, -(In.Y / ZoomAmount) + Origin.Y);
         }
 
         public List<Line> Walls = new List<Line>();
@@ -560,9 +608,23 @@ namespace Daedalus
             }
             window.DrawEllipse(DrawPen, ScreenOrigin.X, ScreenOrigin.Y, 1, 1);
 
+            /*************************************************************************************************Test*******************/
+            if (WallDetectAngle(MouseLocationLab, Angle, 100, out PointF Hit))
+            {
+                Hit = CalculateViewPosition(Hit);
+                window.DrawEllipse(DrawPen, Hit.X, Hit.Y, 3, 3);
+            }
+
+            Angle += 0.01f;
+            if (Angle >= 360)
+                Angle = 0;
+            /*************************************************************************************************Test_End*******************/
             PrintMessages(window, LogOuput);
             DrawPen.Dispose();
         }
+        /*************************************************************************************************Test*******************/
+        float Angle = 0;
+        /*************************************************************************************************Test_End*******************/
 
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
@@ -621,6 +683,46 @@ namespace Daedalus
                     DebugLog("Mino Status", "Mino Disabled", false);
                 }
             }
+        }
+
+        public bool WallDetectAngle(PointF Origin, float Angle, float Dist, out PointF Hit)
+        {
+            return WallDetect(Origin, new PointF(MathF.Cos(Angle), MathF.Sin(Angle)), Dist, out Hit);
+        }
+
+        public bool WallDetect(PointF Origin, PointF Slope, float Dist, out PointF Hit)
+        {
+            PointF Max = Origin;
+
+            float distance = (float)Math.Sqrt(Math.Pow((Slope.X), 2) + Math.Pow((Slope.Y), 2));
+
+            float YSlope = (Slope.Y / distance);
+            float XSlope = (Slope.X / distance);
+
+            Max.X += XSlope * Dist;
+            Max.Y += YSlope * Dist;
+
+            PointF Ray = new PointF(Max.X - Origin.X, Max.Y - Origin.Y);
+            float Per = 1;
+            Hit = Max;
+            foreach (Line Wall in Walls)
+            {
+                foreach (Line Face in Wall.GenerateRec())
+                {
+                    PointF WallLine = new PointF(Face.P2.X - Face.P1.X, Face.P2.Y - Face.P1.Y);
+                    float t = (((Face.P1.X - Origin.X) * WallLine.Y) - ((Face.P1.Y - Origin.Y) * WallLine.X)) / (Ray.X * WallLine.Y - Ray.Y * WallLine.X);
+                    float u = (((Origin.X - Face.P1.X) * Ray.Y) - ((Origin.Y - Face.P1.Y) * Ray.X)) / (WallLine.X * Ray.Y - WallLine.Y * Ray.X);
+                    if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
+                    {
+                        if (t < Per)
+                        {
+                            Per = t;
+                            Hit = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * u));
+                        }
+                    }
+                }
+            }
+            return true;// Per != 1;
         }
 
         #endregion
