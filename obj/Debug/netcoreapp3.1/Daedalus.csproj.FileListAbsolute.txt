@@ -49,3 +49,20 @@ C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\n
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.dll
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.pdb
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.genruntimeconfig.cache
+C:\Users\tsc\Documents\GitHub\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.exe
+C:\Users\tsc\Documents\GitHub\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.deps.json
+C:\Users\tsc\Documents\GitHub\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.runtimeconfig.json
+C:\Users\tsc\Documents\GitHub\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.runtimeconfig.dev.json
+C:\Users\tsc\Documents\GitHub\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.dll
+C:\Users\tsc\Documents\GitHub\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.pdb
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.AssemblyReference.cache
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.DaedalusForm.resources
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Properties.Resources.resources
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.GenerateResource.cache
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.AssemblyInfoInputs.cache
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.AssemblyInfo.cs
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.CoreCompileInputs.cache
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.dll
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.pdb
+C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.genruntimeconfig.cache

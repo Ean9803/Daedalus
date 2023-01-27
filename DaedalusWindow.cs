@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using static Daedalus.DaedalusForm;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Drawing.Printing;
 
 namespace Daedalus
 {
@@ -145,6 +147,7 @@ namespace Daedalus
         public List<Line> Walls = new List<Line>();
         public List<Line> EraseWalls = new List<Line>();
         public List<PointF> Points = new List<PointF>();
+        public List<PointF> MapPoints = new List<PointF>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
@@ -613,6 +616,7 @@ namespace Daedalus
             {
                 Hit = CalculateViewPosition(Hit);
                 window.DrawEllipse(DrawPen, Hit.X, Hit.Y, 3, 3);
+                // if hit true call add point ( hit.x, hit.y)
             }
 
             Angle += 0.01f;
@@ -630,9 +634,14 @@ namespace Daedalus
         {
             Pen DrawPen = new Pen(Color.White, 2);
             Graphics window = e.Graphics;   
-            //TODO
+            
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
+
+            foreach(PointF item in MapPoints)
+            {
+                window.DrawEllipse(DrawPen, item.X, item.Y, 1, 1);
+            }
 
             PrintMessages(window, MapLogOuput);
             DrawPen.Dispose();
@@ -724,6 +733,13 @@ namespace Daedalus
             }
             return true;// Per != 1;
         }
+
+
+        private void AddPoint(PointF pt)
+        {
+            MapPoints.Add(CalculateViewPosition(pt));
+        }
+
 
         #endregion
     }

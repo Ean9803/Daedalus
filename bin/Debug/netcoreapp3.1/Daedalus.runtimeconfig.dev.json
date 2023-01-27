@@ -1,8 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\irobo\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\irobo\\.nuget\\packages",
+      "C:\\Users\\tsc\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\tsc\\.nuget\\packages",
       "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
     ]
   }

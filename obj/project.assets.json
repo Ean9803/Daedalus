@@ -8,23 +8,23 @@
     ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
-    "C:\\Users\\irobo\\.nuget\\packages\\": {},
+    "C:\\Users\\tsc\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\irobo\\source\\repos\\Daedalus\\Daedalus.csproj",
+      "projectUniqueName": "C:\\Users\\tsc\\Documents\\GitHub\\Daedalus\\Daedalus.csproj",
       "projectName": "Daedalus",
-      "projectPath": "C:\\Users\\irobo\\source\\repos\\Daedalus\\Daedalus.csproj",
-      "packagesPath": "C:\\Users\\irobo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\irobo\\source\\repos\\Daedalus\\obj\\",
+      "projectPath": "C:\\Users\\tsc\\Documents\\GitHub\\Daedalus\\Daedalus.csproj",
+      "packagesPath": "C:\\Users\\tsc\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tsc\\Documents\\GitHub\\Daedalus\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\irobo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\tsc\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -56,7 +56,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -68,7 +69,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
