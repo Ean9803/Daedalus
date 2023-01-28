@@ -623,7 +623,6 @@ namespace Daedalus
             Graphics window = e.Graphics;
             
             int Count = MapPoints.Count;
-            int StopCount = Count;
             PointF[] CopyMapPoints = new PointF[Count];
             for (int i = 0; i < Count; i++)
             {
@@ -636,7 +635,7 @@ namespace Daedalus
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
-            for (int i = 0; i < StopCount; i++)
+            for (int i = 0; i < CopyMapPoints.Length; i++)
             {
                 window.DrawEllipse(DrawPen, CopyMapPoints[i].X, CopyMapPoints[i].Y, 1, 1);
             }
@@ -719,7 +718,19 @@ namespace Daedalus
             PointF Ray = new PointF(Max.X - Origin.X, Max.Y - Origin.Y);
             float Per = 1;
             Hit = Max;
-            foreach (Line Wall in Walls)
+
+            int Count = Walls.Count;
+            int StopCount = Count;
+            Line[] CopyWalls = new Line[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                if (i < Walls.Count)
+                {
+                    CopyWalls[i] = Walls[i];
+                }
+            }
+
+            foreach (Line Wall in CopyWalls)
             {
                 foreach (Line Face in Wall.GenerateRec())
                 {
@@ -736,7 +747,7 @@ namespace Daedalus
                     }
                 }
             }
-            return true;// Per != 1;
+            return Per != 1;
         }
 
         private bool Frame = false;

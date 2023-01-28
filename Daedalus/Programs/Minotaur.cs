@@ -59,6 +59,7 @@ namespace Daedalus.Daedalus.Programs
             }
 
             Map.Clear();
+            
             Form.MinoEndUpdate();
         }
 
