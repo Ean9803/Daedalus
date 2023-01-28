@@ -42,18 +42,24 @@ namespace Daedalus.Daedalus.Programs
             
             for (int i = 0; i < Angles.Length; i++)
             {
-                if (Form.WallDetectAngle(Pos, Angles[i], ViewDist, out PointF Hit))
+                if (Form.WallDetectAngle(Pos, Angles[i], ViewDist, out PointF Hit) || true)
                 {
                     //Add Point to list
-                    if (!Map.Contains(Hit))
+                    //if (!Map.Contains(Hit))
                         Map.Add(Hit);
                 }
             }
 
+            Form.DebugLog("RayPoints", "Points: " + Map.Count);
+
             foreach (PointF item in Map)
             {
                 //Add to draw
+                Form.AddPoint(item);
+                
             }
+
+            Map.Clear();
         }
 
         private void CalculateRes()

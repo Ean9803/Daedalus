@@ -12,14 +12,17 @@ using System.IO;
 using static Daedalus.DaedalusForm;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing.Printing;
+using Daedalus.Daedalus.Programs;
 
 namespace Daedalus
 {
     public partial class DaedalusForm : Form
     {
+        Minotaur Mino;
         public DaedalusForm()
         {
             InitializeComponent();
+            Mino = new Minotaur(this, 1);
         }
 
         public delegate void SceneDel(DaedalusForm Form);
@@ -146,7 +149,6 @@ namespace Daedalus
 
         public List<Line> Walls = new List<Line>();
         public List<Line> EraseWalls = new List<Line>();
-        public List<PointF> Points = new List<PointF>();
         public List<PointF> MapPoints = new List<PointF>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
@@ -611,37 +613,36 @@ namespace Daedalus
             }
             window.DrawEllipse(DrawPen, ScreenOrigin.X, ScreenOrigin.Y, 1, 1);
 
-            /*************************************************************************************************Test*******************/
-            if (WallDetectAngle(MouseLocationLab, Angle, 100, out PointF Hit))
-            {
-                Hit = CalculateViewPosition(Hit);
-                window.DrawEllipse(DrawPen, Hit.X, Hit.Y, 3, 3);
-                // if hit true call add point ( hit.x, hit.y)
-            }
-
-            Angle += 0.01f;
-            if (Angle >= 360)
-                Angle = 0;
-            /*************************************************************************************************Test_End*******************/
             PrintMessages(window, LogOuput);
             DrawPen.Dispose();
         }
-        /*************************************************************************************************Test*******************/
-        float Angle = 0;
-        /*************************************************************************************************Test_End*******************/
-
+        
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Color.White, 2);
-            Graphics window = e.Graphics;   
+            Graphics window = e.Graphics;
             
+            int Count = MapPoints.Count;
+            int StopCount = Count;
+            PointF[] CopyMapPoints = new PointF[Count];
+            DebugLog("MapPoints", "MapPoints: " + Count, false);
+            for (int i = 0; i < Count; i++)
+            {
+                if (i < MapPoints.Count)
+                {
+                    CopyMapPoints[i] = MapPoints[i];
+                }
+            }
+
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
-            foreach(PointF item in MapPoints)
+            for (int i = 0; i < StopCount; i++)
             {
-                window.DrawEllipse(DrawPen, item.X, item.Y, 1, 1);
+                window.DrawEllipse(DrawPen, CopyMapPoints[i].X, CopyMapPoints[i].Y, 1, 1);
             }
+
+            MapPoints.Clear();
 
             PrintMessages(window, MapLogOuput);
             DrawPen.Dispose();
@@ -685,6 +686,7 @@ namespace Daedalus
                 {
                     //TODO
                     DebugLog("Mino Status", "Mino Active", false);
+                    Mino.Update();
                 }
                 else
                 {
@@ -735,9 +737,11 @@ namespace Daedalus
         }
 
 
-        private void AddPoint(PointF pt)
+        public void AddPoint(PointF pt)
         {
-            MapPoints.Add(CalculateViewPosition(pt));
+            PointF NewPoint = CalculateViewPosition(pt);
+            if (!MapPoints.Contains(NewPoint))
+                MapPoints.Add(NewPoint);
         }
 
 
