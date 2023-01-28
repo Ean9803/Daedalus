@@ -247,20 +247,29 @@ namespace Daedalus
             string output = "";
             foreach (Line item in Walls)
             {
-                output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "___";
+                output += item.P1.X + "/" + item.P1.Y + "___" + item.P2.X + "/" + item.P2.Y + "\n";
             }
             File.WriteAllText(FilePath, output);
         }
 
         private void ProcessLoadFile(string FilePath)
         {
+            // Reset screen to origin
+            OriginOffset.X = 0;
+            OriginOffset.Y = 0;
+
+            // Reset zoom
+            ZoomAmount = 1;
+            zoomSlider.Value = 100;
+
+            // Clear map for incoming map
             Walls.Clear();
             string input;
             input = File.ReadAllText(FilePath);
             System.Diagnostics.Debug.WriteLine(input);
 
             // Split all lines into individual coordinates
-            string[] delimeters = {"___", "#", "/"};
+            string[] delimeters = {"\n", "___", "/"};
             string[] coordinates = input.Split(delimeters, StringSplitOptions.None);
 
             // Four coordinates per line
@@ -272,7 +281,7 @@ namespace Daedalus
                 x2 = float.Parse(coordinates[i + 2]);
                 y2 = float.Parse(coordinates[i + 3]);
 
-                Walls.Add(new Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2) });
+                AddLine(new PointF(x1, y1), new PointF(x2, y2));
             }
 
         }
