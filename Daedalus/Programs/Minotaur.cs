@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
@@ -42,15 +43,13 @@ namespace Daedalus.Daedalus.Programs
             
             for (int i = 0; i < Angles.Length; i++)
             {
-                if (Form.WallDetectAngle(Pos, Angles[i], ViewDist, out PointF Hit) || true)
+                if (Form.WallDetectAngle(Pos, Angles[i], ViewDist, out PointF Hit))
                 {
                     //Add Point to list
-                    //if (!Map.Contains(Hit))
+                    if (!Map.Contains(Hit))
                         Map.Add(Hit);
                 }
             }
-
-            Form.DebugLog("RayPoints", "Points: " + Map.Count);
 
             foreach (PointF item in Map)
             {
@@ -60,6 +59,7 @@ namespace Daedalus.Daedalus.Programs
             }
 
             Map.Clear();
+            Form.MinoEndUpdate();
         }
 
         private void CalculateRes()
@@ -67,7 +67,7 @@ namespace Daedalus.Daedalus.Programs
             Angles = new float[Res + 1];
             for (int i = 0; i <= Res; i++)
             {
-                Angles[i] = (i / Res) * 360;
+                Angles[i] = ((float)i / Res) * 360;
             }
         }
     }

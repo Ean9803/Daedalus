@@ -625,7 +625,6 @@ namespace Daedalus
             int Count = MapPoints.Count;
             int StopCount = Count;
             PointF[] CopyMapPoints = new PointF[Count];
-            DebugLog("MapPoints", "MapPoints: " + Count, false);
             for (int i = 0; i < Count; i++)
             {
                 if (i < MapPoints.Count)
@@ -642,7 +641,11 @@ namespace Daedalus
                 window.DrawEllipse(DrawPen, CopyMapPoints[i].X, CopyMapPoints[i].Y, 1, 1);
             }
 
-            MapPoints.Clear();
+            if (Frame)
+            {
+                Frame = false;
+                MapPoints.Clear();
+            }
 
             PrintMessages(window, MapLogOuput);
             DrawPen.Dispose();
@@ -736,6 +739,11 @@ namespace Daedalus
             return true;// Per != 1;
         }
 
+        private bool Frame = false;
+        public void MinoEndUpdate()
+        {
+            Frame = true;
+        }
 
         public void AddPoint(PointF pt)
         {
