@@ -698,29 +698,39 @@ namespace Daedalus
             }
         }
 
-        public bool WallDetectAngle(PointF Origin, float Angle, float Dist, out PointF Hit)
+        public bool WallDetectAngle(PointF Origin, float[] Angles, float Dist, out List<PointF?> Hits)
         {
-            return WallDetect(Origin, new PointF(MathF.Cos(Angle), MathF.Sin(Angle)), Dist, out Hit);
+            PointF[] Slopes = new PointF[Angles.Length];
+            for (int i = 0; i < Slopes.Length; i++)
+            {
+                Slopes[i] = new PointF(MathF.Cos(Angles[i]), MathF.Sin(Angles[i]));
+            }
+            return WallDetect(Origin, Slopes, Dist, out Hits);
         }
 
-        public bool WallDetect(PointF Origin, PointF Slope, float Dist, out PointF Hit)
+        public bool WallDetect(PointF Origin, PointF[] Slopes, float Dist, out List<PointF?> Hits)
         {
-            PointF Max = Origin;
+            PointF[] Ray = new PointF[Slopes.Length];
+            float[] Percents = new float[Slopes.Length];
+            Hits = new List<PointF?>();
+            for (int i = 0; i < Ray.Length; i++)
+            {
+                PointF Max = Origin;
 
-            float distance = (float)Math.Sqrt(Math.Pow((Slope.X), 2) + Math.Pow((Slope.Y), 2));
+                float distance = (float)Math.Sqrt(Math.Pow((Slopes[i].X), 2) + Math.Pow((Slopes[i].Y), 2));
 
-            float YSlope = (Slope.Y / distance);
-            float XSlope = (Slope.X / distance);
+                float YSlope = (Slopes[i].Y / distance);
+                float XSlope = (Slopes[i].X / distance);
 
-            Max.X += XSlope * Dist;
-            Max.Y += YSlope * Dist;
+                Max.X += XSlope * Dist;
+                Max.Y += YSlope * Dist;
 
-            PointF Ray = new PointF(Max.X - Origin.X, Max.Y - Origin.Y);
-            float Per = 1;
-            Hit = Max;
+                Ray[i] = new PointF(Max.X - Origin.X, Max.Y - Origin.Y);
+                Percents[i] = 1;
+                Hits.Add(null);
+            }
 
             int Count = Walls.Count;
-            int StopCount = Count;
             Line[] CopyWalls = new Line[Count];
             for (int i = 0; i < Count; i++)
             {
@@ -729,25 +739,29 @@ namespace Daedalus
                     CopyWalls[i] = Walls[i];
                 }
             }
-
+            bool Hitted = false;
             foreach (Line Wall in CopyWalls)
             {
                 foreach (Line Face in Wall.GenerateRec())
                 {
-                    PointF WallLine = new PointF(Face.P2.X - Face.P1.X, Face.P2.Y - Face.P1.Y);
-                    float t = (((Face.P1.X - Origin.X) * WallLine.Y) - ((Face.P1.Y - Origin.Y) * WallLine.X)) / (Ray.X * WallLine.Y - Ray.Y * WallLine.X);
-                    float u = (((Origin.X - Face.P1.X) * Ray.Y) - ((Origin.Y - Face.P1.Y) * Ray.X)) / (WallLine.X * Ray.Y - WallLine.Y * Ray.X);
-                    if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
+                    for (int i = 0; i < Slopes.Length; i++)
                     {
-                        if (t < Per)
+                        PointF WallLine = new PointF(Face.P2.X - Face.P1.X, Face.P2.Y - Face.P1.Y);
+                        float t = (((Face.P1.X - Origin.X) * WallLine.Y) - ((Face.P1.Y - Origin.Y) * WallLine.X)) / (Ray[i].X * WallLine.Y - Ray[i].Y * WallLine.X);
+                        float u = (((Origin.X - Face.P1.X) * Ray[i].Y) - ((Origin.Y - Face.P1.Y) * Ray[i].X)) / (WallLine.X * Ray[i].Y - WallLine.Y * Ray[i].X);
+                        if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
                         {
-                            Per = t;
-                            Hit = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * u));
+                            if (t < Percents[i])
+                            {
+                                Percents[i] = t;
+                                Hits[i] = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * u));
+                                Hitted = true;
+                            }
                         }
                     }
                 }
             }
-            return Per != 1;
+            return Hitted;
         }
 
         private bool Frame = false;

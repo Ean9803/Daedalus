@@ -40,14 +40,14 @@ namespace Daedalus.Daedalus.Programs
                 CalculateRes();
                 LastRes = Res;
             }
-            
-            for (int i = 0; i < Angles.Length; i++)
+
+            if (Form.WallDetectAngle(Pos, Angles, ViewDist, out List<PointF?> Hits))
             {
-                if (Form.WallDetectAngle(Pos, Angles[i], ViewDist, out PointF Hit))
+                //Add Point to list
+                foreach (PointF? item in Hits)
                 {
-                    //Add Point to list
-                    if (!Map.Contains(Hit))
-                        Map.Add(Hit);
+                    if (item != null)
+                        Map.Add((PointF)item);
                 }
             }
 
