@@ -32,6 +32,7 @@ namespace Daedalus
         private const float LineWidth = 10;
         private float ZoomAmount;
 
+        // Line class consists of two PointFs, highlight to indicate if the line is being selected, and the width
         public class Line
         {
             public PointF P1 = new PointF(0, 0);
@@ -94,9 +95,9 @@ namespace Daedalus
             }
         }
 
+        // Lists of lines used in the user-made labrynth
         public List<Line> Walls = new List<Line>();
         public List<Line> EraseWalls = new List<Line>();
-        public List<PointF> Points = new List<PointF>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
@@ -242,6 +243,11 @@ namespace Daedalus
             }
         }
 
+        /* Saves the list of walls to a file
+         * 'n/' divides walls
+         * '___' divides ponts
+         * '/' divides coordinates
+         */
         private void ProcessSaveFile(string FilePath)
         {
             string output = "";
@@ -386,15 +392,19 @@ namespace Daedalus
             return float.MaxValue;
         }
 
+        // Mouse button control
         private void labyrinthScene_MouseDown(object sender, MouseEventArgs e)
         {
+            // Pan on right click
             if (e.Button == MouseButtons.Right)
             {
                 Pan = true;
             }
-            if (labPen == labPenMode.Draw)
+            // Draw or erase on left click
+            if (e.Button == MouseButtons.Left)
             {
-                if (e.Button == MouseButtons.Left)
+                // Drag and draw on left click when drawing is enabled
+                if (labPen == labPenMode.Draw)
                 {
                     StartLine = MouseLocationLab;
                     TempLine.Width = LineWidth;
@@ -402,10 +412,8 @@ namespace Daedalus
                     TempLine.P2 = MouseLocationLab;
                     CreatingLine = true;
                 }
-            }
-            else if (labPen == labPenMode.Erase)
-            {
-                if (e.Button == MouseButtons.Left)
+                // Erase selected line when erasing is enabled
+                else if (labPen == labPenMode.Erase)
                 {
                     foreach (Line item in EraseWalls)
                     {
@@ -456,6 +464,7 @@ namespace Daedalus
             Pan = false;
         }
 
+        // Adds a line to the list of walls to be drawn to the labrynth
         private void AddLine(PointF P1, PointF P2)
         {
             if (Dist(TempLine.P1, TempLine.P2) > 0.1f)
@@ -540,7 +549,7 @@ namespace Daedalus
             Pen FillPen = new Pen(Color.Blue, 1);
             Graphics window = e.Graphics;
             UpdateOrigin();
-            //TODO
+
             foreach (Line item in Walls)
             {
                 foreach (Line Wall in item.GenerateRec(Origin, ZoomAmount))
@@ -577,7 +586,7 @@ namespace Daedalus
         {
             Pen DrawPen = new Pen(Color.White, 2);
             Graphics window = e.Graphics;   
-            //TODO
+
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
