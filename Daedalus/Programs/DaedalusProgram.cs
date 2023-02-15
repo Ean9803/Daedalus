@@ -17,7 +17,7 @@ namespace Daedalus.Daedalus.Programs
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DaedalusForm());
+            Application.Run(new Knossos());
         }
     }
 }

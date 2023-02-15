@@ -1,7 +1,7 @@
 ﻿
 namespace Daedalus
 {
-    partial class DaedalusForm
+    partial class Knossos
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@ namespace Daedalus
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DaedalusForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Knossos));
             this.VerticalLayout = new System.Windows.Forms.SplitContainer();
             this.ControlLayout = new System.Windows.Forms.SplitContainer();
             this.labyrinthBox = new System.Windows.Forms.GroupBox();
@@ -41,6 +41,7 @@ namespace Daedalus
             this.saveBtn = new System.Windows.Forms.ToolStripButton();
             this.eraseBtn = new System.Windows.Forms.ToolStripButton();
             this.drawBtn = new System.Windows.Forms.ToolStripButton();
+            this.setMinoPos = new System.Windows.Forms.ToolStripButton();
             this.mapBox = new System.Windows.Forms.GroupBox();
             this.mapScene = new System.Windows.Forms.PictureBox();
             this.mapToolStrip = new System.Windows.Forms.ToolStrip();
@@ -75,7 +76,6 @@ namespace Daedalus
             // 
             this.VerticalLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.VerticalLayout.Location = new System.Drawing.Point(0, 0);
-            this.VerticalLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.VerticalLayout.Name = "VerticalLayout";
             this.VerticalLayout.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -88,9 +88,9 @@ namespace Daedalus
             // 
             this.VerticalLayout.Panel2.Controls.Add(this.zoomSlider);
             this.VerticalLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.VerticalLayout.Size = new System.Drawing.Size(902, 395);
-            this.VerticalLayout.SplitterDistance = 340;
-            this.VerticalLayout.SplitterWidth = 8;
+            this.VerticalLayout.Size = new System.Drawing.Size(1031, 527);
+            this.VerticalLayout.SplitterDistance = 453;
+            this.VerticalLayout.SplitterWidth = 11;
             this.VerticalLayout.TabIndex = 4;
             this.VerticalLayout.TabStop = false;
             // 
@@ -100,7 +100,6 @@ namespace Daedalus
             this.ControlLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ControlLayout.ForeColor = System.Drawing.SystemColors.InactiveBorder;
             this.ControlLayout.Location = new System.Drawing.Point(0, 0);
-            this.ControlLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ControlLayout.Name = "ControlLayout";
             // 
             // ControlLayout.Panel1
@@ -112,9 +111,9 @@ namespace Daedalus
             // 
             this.ControlLayout.Panel2.Controls.Add(this.mapBox);
             this.ControlLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ControlLayout.Size = new System.Drawing.Size(902, 340);
-            this.ControlLayout.SplitterDistance = 450;
-            this.ControlLayout.SplitterWidth = 9;
+            this.ControlLayout.Size = new System.Drawing.Size(1031, 453);
+            this.ControlLayout.SplitterDistance = 514;
+            this.ControlLayout.SplitterWidth = 10;
             this.ControlLayout.TabIndex = 3;
             this.ControlLayout.TabStop = false;
             // 
@@ -126,10 +125,8 @@ namespace Daedalus
             this.labyrinthBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labyrinthBox.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.labyrinthBox.Location = new System.Drawing.Point(0, 0);
-            this.labyrinthBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.labyrinthBox.Name = "labyrinthBox";
-            this.labyrinthBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.labyrinthBox.Size = new System.Drawing.Size(450, 340);
+            this.labyrinthBox.Size = new System.Drawing.Size(514, 453);
             this.labyrinthBox.TabIndex = 0;
             this.labyrinthBox.TabStop = false;
             this.labyrinthBox.Text = "Labyrinth";
@@ -137,10 +134,9 @@ namespace Daedalus
             // labyrinthScene
             // 
             this.labyrinthScene.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labyrinthScene.Location = new System.Drawing.Point(3, 45);
-            this.labyrinthScene.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.labyrinthScene.Location = new System.Drawing.Point(3, 50);
             this.labyrinthScene.Name = "labyrinthScene";
-            this.labyrinthScene.Size = new System.Drawing.Size(444, 293);
+            this.labyrinthScene.Size = new System.Drawing.Size(508, 400);
             this.labyrinthScene.TabIndex = 7;
             this.labyrinthScene.TabStop = false;
             this.labyrinthScene.Paint += new System.Windows.Forms.PaintEventHandler(this.labyrinthScene_Paint);
@@ -158,10 +154,11 @@ namespace Daedalus
             this.loadBtn,
             this.saveBtn,
             this.eraseBtn,
-            this.drawBtn});
-            this.labyrinthToolStrip.Location = new System.Drawing.Point(3, 18);
+            this.drawBtn,
+            this.setMinoPos});
+            this.labyrinthToolStrip.Location = new System.Drawing.Point(3, 23);
             this.labyrinthToolStrip.Name = "labyrinthToolStrip";
-            this.labyrinthToolStrip.Size = new System.Drawing.Size(444, 27);
+            this.labyrinthToolStrip.Size = new System.Drawing.Size(508, 27);
             this.labyrinthToolStrip.TabIndex = 0;
             this.labyrinthToolStrip.Text = "toolStrip3";
             // 
@@ -169,7 +166,7 @@ namespace Daedalus
             // 
             this.labyrinthTool.ForeColor = System.Drawing.SystemColors.WindowText;
             this.labyrinthTool.Name = "labyrinthTool";
-            this.labyrinthTool.Size = new System.Drawing.Size(45, 24);
+            this.labyrinthTool.Size = new System.Drawing.Size(58, 24);
             this.labyrinthTool.Text = "<Tool>";
             // 
             // clearBtn
@@ -179,7 +176,7 @@ namespace Daedalus
             this.clearBtn.Image = ((System.Drawing.Image)(resources.GetObject("clearBtn.Image")));
             this.clearBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.clearBtn.Name = "clearBtn";
-            this.clearBtn.Size = new System.Drawing.Size(24, 24);
+            this.clearBtn.Size = new System.Drawing.Size(29, 24);
             this.clearBtn.Text = "Clear";
             this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);
             // 
@@ -190,7 +187,7 @@ namespace Daedalus
             this.loadBtn.Image = ((System.Drawing.Image)(resources.GetObject("loadBtn.Image")));
             this.loadBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadBtn.Name = "loadBtn";
-            this.loadBtn.Size = new System.Drawing.Size(24, 24);
+            this.loadBtn.Size = new System.Drawing.Size(29, 24);
             this.loadBtn.Text = "Load Map";
             this.loadBtn.Click += new System.EventHandler(this.loadBtn_Click);
             // 
@@ -201,7 +198,7 @@ namespace Daedalus
             this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
             this.saveBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(24, 24);
+            this.saveBtn.Size = new System.Drawing.Size(29, 24);
             this.saveBtn.Text = "Save";
             this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
@@ -212,7 +209,7 @@ namespace Daedalus
             this.eraseBtn.Image = ((System.Drawing.Image)(resources.GetObject("eraseBtn.Image")));
             this.eraseBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.eraseBtn.Name = "eraseBtn";
-            this.eraseBtn.Size = new System.Drawing.Size(24, 24);
+            this.eraseBtn.Size = new System.Drawing.Size(29, 24);
             this.eraseBtn.Text = "Erase";
             this.eraseBtn.Click += new System.EventHandler(this.eraseBtn_Click);
             // 
@@ -223,9 +220,21 @@ namespace Daedalus
             this.drawBtn.Image = ((System.Drawing.Image)(resources.GetObject("drawBtn.Image")));
             this.drawBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.drawBtn.Name = "drawBtn";
-            this.drawBtn.Size = new System.Drawing.Size(24, 24);
+            this.drawBtn.Size = new System.Drawing.Size(29, 24);
             this.drawBtn.Text = "Draw";
             this.drawBtn.Click += new System.EventHandler(this.drawBtn_Click);
+            // 
+            // setMinoPos
+            // 
+            this.setMinoPos.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.setMinoPos.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.setMinoPos.Image = ((System.Drawing.Image)(resources.GetObject("setMinoPos.Image")));
+            this.setMinoPos.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.setMinoPos.Name = "setMinoPos";
+            this.setMinoPos.Size = new System.Drawing.Size(29, 24);
+            this.setMinoPos.Text = "setMinoPos";
+            this.setMinoPos.ToolTipText = "Set Minotaur Position";
+            this.setMinoPos.Click += new System.EventHandler(this.setMinoPos_Click);
             // 
             // mapBox
             // 
@@ -234,10 +243,8 @@ namespace Daedalus
             this.mapBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mapBox.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.mapBox.Location = new System.Drawing.Point(0, 0);
-            this.mapBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.mapBox.Name = "mapBox";
-            this.mapBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.mapBox.Size = new System.Drawing.Size(443, 340);
+            this.mapBox.Size = new System.Drawing.Size(507, 453);
             this.mapBox.TabIndex = 0;
             this.mapBox.TabStop = false;
             this.mapBox.Text = "Map";
@@ -245,10 +252,9 @@ namespace Daedalus
             // mapScene
             // 
             this.mapScene.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapScene.Location = new System.Drawing.Point(3, 45);
-            this.mapScene.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.mapScene.Location = new System.Drawing.Point(3, 50);
             this.mapScene.Name = "mapScene";
-            this.mapScene.Size = new System.Drawing.Size(437, 293);
+            this.mapScene.Size = new System.Drawing.Size(501, 400);
             this.mapScene.TabIndex = 3;
             this.mapScene.TabStop = false;
             this.mapScene.Paint += new System.Windows.Forms.PaintEventHandler(this.mapScene_Paint);
@@ -262,9 +268,9 @@ namespace Daedalus
             this.mapMode,
             this.playBtn,
             this.stopBtn});
-            this.mapToolStrip.Location = new System.Drawing.Point(3, 18);
+            this.mapToolStrip.Location = new System.Drawing.Point(3, 23);
             this.mapToolStrip.Name = "mapToolStrip";
-            this.mapToolStrip.Size = new System.Drawing.Size(437, 27);
+            this.mapToolStrip.Size = new System.Drawing.Size(501, 27);
             this.mapToolStrip.TabIndex = 1;
             this.mapToolStrip.Text = "toolStrip2";
             // 
@@ -275,7 +281,7 @@ namespace Daedalus
             this.targetBtn.Image = ((System.Drawing.Image)(resources.GetObject("targetBtn.Image")));
             this.targetBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.targetBtn.Name = "targetBtn";
-            this.targetBtn.Size = new System.Drawing.Size(24, 24);
+            this.targetBtn.Size = new System.Drawing.Size(29, 24);
             this.targetBtn.Text = "Target Mode";
             this.targetBtn.Click += new System.EventHandler(this.targetBtn_Click);
             // 
@@ -286,7 +292,7 @@ namespace Daedalus
             this.roamBtn.Image = ((System.Drawing.Image)(resources.GetObject("roamBtn.Image")));
             this.roamBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.roamBtn.Name = "roamBtn";
-            this.roamBtn.Size = new System.Drawing.Size(24, 24);
+            this.roamBtn.Size = new System.Drawing.Size(29, 24);
             this.roamBtn.Text = "Roam Mode";
             this.roamBtn.Click += new System.EventHandler(this.roamBtn_Click);
             // 
@@ -294,7 +300,7 @@ namespace Daedalus
             // 
             this.mapMode.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.mapMode.Name = "mapMode";
-            this.mapMode.Size = new System.Drawing.Size(54, 24);
+            this.mapMode.Size = new System.Drawing.Size(68, 24);
             this.mapMode.Text = "<mode>";
             // 
             // playBtn
@@ -304,7 +310,7 @@ namespace Daedalus
             this.playBtn.Image = ((System.Drawing.Image)(resources.GetObject("playBtn.Image")));
             this.playBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.playBtn.Name = "playBtn";
-            this.playBtn.Size = new System.Drawing.Size(24, 24);
+            this.playBtn.Size = new System.Drawing.Size(29, 24);
             this.playBtn.Text = "Activate Minotaur";
             this.playBtn.Click += new System.EventHandler(this.playBtn_Click);
             // 
@@ -315,21 +321,21 @@ namespace Daedalus
             this.stopBtn.Image = ((System.Drawing.Image)(resources.GetObject("stopBtn.Image")));
             this.stopBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stopBtn.Name = "stopBtn";
-            this.stopBtn.Size = new System.Drawing.Size(24, 24);
+            this.stopBtn.Size = new System.Drawing.Size(29, 24);
             this.stopBtn.Text = "Deactivate Minotaur";
             this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
             // 
             // zoomSlider
             // 
-            this.zoomSlider.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.zoomSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomSlider.LargeChange = 10;
-            this.zoomSlider.Location = new System.Drawing.Point(271, -3);
-            this.zoomSlider.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.zoomSlider.Location = new System.Drawing.Point(310, -4);
             this.zoomSlider.Maximum = 100;
             this.zoomSlider.Minimum = 1;
             this.zoomSlider.Name = "zoomSlider";
-            this.zoomSlider.Size = new System.Drawing.Size(365, 45);
+            this.zoomSlider.Size = new System.Drawing.Size(417, 56);
             this.zoomSlider.TabIndex = 5;
             this.zoomSlider.TabStop = false;
             this.zoomSlider.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
@@ -359,16 +365,18 @@ namespace Daedalus
             // 
             // DaedalusForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.WindowText;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(902, 395);
+            this.ClientSize = new System.Drawing.Size(1031, 527);
             this.Controls.Add(this.VerticalLayout);
             this.ForeColor = System.Drawing.SystemColors.InfoText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "DaedalusForm";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Name = "Knossos";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -425,6 +433,7 @@ namespace Daedalus
         private System.ComponentModel.BackgroundWorker LabyrinthUpdate;
         private System.Windows.Forms.OpenFileDialog openMapFile;
         private System.Windows.Forms.SaveFileDialog saveMapFile;
+        private System.Windows.Forms.ToolStripButton setMinoPos;
     }
 }
 

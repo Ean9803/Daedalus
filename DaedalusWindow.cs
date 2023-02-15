@@ -9,23 +9,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using static Daedalus.DaedalusForm;
+using static Daedalus.Knossos;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing.Printing;
 using Daedalus.Daedalus.Programs;
 
 namespace Daedalus
 {
-    public partial class DaedalusForm : Form
+    public partial class Knossos : Form
     {
         Minotaur Mino;
-        public DaedalusForm()
+        public Knossos()
         {
             InitializeComponent();
-            Mino = new Minotaur(this, 1);
+            Mino = new Minotaur(this, 10);
         }
 
-        public delegate void SceneDel(DaedalusForm Form);
+        public delegate void SceneDel(Knossos Form);
         SceneDel RefreshSceneWindows;
 
         System.Drawing.SolidBrush BrushColor = new System.Drawing.SolidBrush(Color.Wheat);
@@ -37,118 +37,14 @@ namespace Daedalus
         private const float LineWidth = 10;
         private float ZoomAmount;
 
-        public class Line
-        {
-            public PointF P1 = new PointF(0, 0);
-            public PointF P2 = new PointF(0, 0);
-            public float Width = 1;
-            public bool Highlight;
-
-            public void SetHighlight(bool Val)
-            {
-                Highlight = Val;
-            }
-
-            public Line[] GenerateRec()
-            {
-                Line[] Ret = new Line[4];
-                PointF PP1 = P1;
-                PointF PP2 = P2;
-
-                for (int i = 0; i < Ret.Length; i++)
-                {
-                    Ret[i] = new Line();
-                    Ret[i].SetHighlight(Highlight);
-                    Ret[i].Width = 0;
-                    Ret[i].P1.X = PP1.X;
-                    Ret[i].P1.Y = PP1.Y;
-                    Ret[i].P2.X = PP2.X;
-                    Ret[i].P2.Y = PP2.Y;
-                }
-
-                PointF Direction = new PointF();
-                Direction.X = P1.X - P2.X;
-                Direction.Y = P1.Y - P2.Y;
-
-                float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
-
-                float YSlope = (Direction.Y / distance);
-                float XSlope = (Direction.X / distance);
-                Ret[0].P1.X += (YSlope * Width);
-                Ret[0].P1.Y += (XSlope * Width);
-                Ret[0].P2.X += (YSlope * Width);
-                Ret[0].P2.Y += (XSlope * Width);
-                Ret[1].P1.X -= (YSlope * Width);
-                Ret[1].P1.Y -= (XSlope * Width);
-                Ret[1].P2.X -= (YSlope * Width);
-                Ret[1].P2.Y -= (XSlope * Width);
-
-                Ret[2].P1 = Ret[0].P1;
-                Ret[2].P2 = Ret[1].P1;
-                Ret[3].P1 = Ret[0].P2;
-                Ret[3].P2 = Ret[1].P2;
-
-
-                return Ret;
-            }
-
-            public Line[] GenerateRec(PointF Origin, float ZoomAmount)
-            {
-                Line[] Ret = new Line[4];
-                PointF PP1 = P1;
-                PP1.X /= ZoomAmount;
-                PP1.Y /= ZoomAmount;
-                PointF PP2 = P2;
-                PP2.X /= ZoomAmount;
-                PP2.Y /= ZoomAmount;
-
-                float RectWidth = Width / ZoomAmount;
-
-                for (int i = 0; i < Ret.Length; i++)
-                {
-                    Ret[i] = new Line();
-                    Ret[i].SetHighlight(Highlight);
-                    Ret[i].Width = 0;
-                    Ret[i].P1.X = (int)((PP1.X + Origin.X));
-                    Ret[i].P1.Y = (int)((-PP1.Y + Origin.Y));
-                    Ret[i].P2.X = (int)((PP2.X + Origin.X));
-                    Ret[i].P2.Y = (int)((-PP2.Y + Origin.Y));
-                }
-
-                PointF Direction = new PointF();
-                Direction.X = P1.X - P2.X;
-                Direction.Y = P1.Y - P2.Y;
-
-                float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
-
-                float YSlope = (Direction.Y / distance);
-                float XSlope = (Direction.X / distance);
-                Ret[0].P1.X += (YSlope * RectWidth);
-                Ret[0].P1.Y += (XSlope * RectWidth);
-                Ret[0].P2.X += (YSlope * RectWidth);
-                Ret[0].P2.Y += (XSlope * RectWidth);
-                Ret[1].P1.X -= (YSlope * RectWidth);
-                Ret[1].P1.Y -= (XSlope * RectWidth);
-                Ret[1].P2.X -= (YSlope * RectWidth);
-                Ret[1].P2.Y -= (XSlope * RectWidth);
-
-                Ret[2].P1 = Ret[0].P1;
-                Ret[2].P2 = Ret[1].P1;
-                Ret[3].P1 = Ret[0].P2;
-                Ret[3].P2 = Ret[1].P2;
-
-
-                return Ret;
-            }
-        }
 
         public PointF CalculateViewPosition(PointF In)
         {
             return new PointF((In.X / ZoomAmount) + Origin.X, -(In.Y / ZoomAmount) + Origin.Y);
         }
 
-        public List<Line> Walls = new List<Line>();
-        public List<Line> EraseWalls = new List<Line>();
+        public List<Lclass.Line> Walls = new List<Lclass.Line>();
+        public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
         public List<PointF> MapPoints = new List<PointF>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
@@ -206,7 +102,7 @@ namespace Daedalus
 
         #region PenControls
 
-        public enum labPenMode { Draw, Erase }
+        public enum labPenMode { Draw, Erase, MinoPos }
         public enum mapPenMode { Roam, Target }
         private labPenMode labPen = labPenMode.Draw;
         private mapPenMode mapPen = mapPenMode.Roam;
@@ -241,6 +137,11 @@ namespace Daedalus
         private void eraseBtn_Click(object sender, EventArgs e)
         {
             SetLabPenMode(labPenMode.Erase);
+        }
+
+        private void setMinoPos_Click(object sender, EventArgs e)
+        {
+            SetLabPenMode(labPenMode.MinoPos);
         }
 
         private void roamBtn_Click(object sender, EventArgs e)
@@ -298,7 +199,7 @@ namespace Daedalus
         private void ProcessSaveFile(string FilePath)
         {
             string output = "";
-            foreach (Line item in Walls)
+            foreach (Lclass.Line item in Walls)
             {
                 output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "___";
             }
@@ -325,7 +226,7 @@ namespace Daedalus
                 x2 = float.Parse(coordinates[i + 2]);
                 y2 = float.Parse(coordinates[i + 3]);
 
-                Walls.Add(new Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2) });
+                Walls.Add(new Lclass.Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2) });
             }
 
         }
@@ -362,7 +263,8 @@ namespace Daedalus
 
         private PointF StartLine;
         private bool CreatingLine;
-        private Line TempLine = new Line() { P1 = new PointF() { X = 0, Y = 1 }, P2 = new PointF() { X = 1, Y = 1 }, Width = 1 };
+        private bool SetMino = false;
+        private Lclass.Line TempLine = new Lclass.Line() { P1 = new PointF() { X = 0, Y = 1 }, P2 = new PointF() { X = 1, Y = 1 }, Width = 1 };
 
         private void labyrinthScene_Mouse(object sender, MouseEventArgs e)
         {
@@ -386,6 +288,10 @@ namespace Daedalus
                 TempLine.P1 = StartLine;
                 TempLine.P2 = MouseLocationLab;
             }
+            else if (SetMino && labPen == labPenMode.MinoPos)
+            {
+                Mino.SetPosition(MouseLocationLab);
+            }
 
             if (labPen == labPenMode.Erase)
             {
@@ -393,7 +299,7 @@ namespace Daedalus
                 for (int i = 0; i < Walls.Count; i++)
                 {
                     Walls[i].SetHighlight(false);
-                    foreach (Line item in Walls[i].GenerateRec(Origin, ZoomAmount))
+                    foreach (Lclass.Line item in Walls[i].GenerateRec(Origin, ZoomAmount))
                     {
                         if (Dist(item.P1, MouseLocation) <= 20 || Dist(item.P2, MouseLocation) <= 20 || PointDistanceToLine(item, MouseLocation) <= 20)
                         {
@@ -418,7 +324,7 @@ namespace Daedalus
             return ret;
         }
 
-        private float PointDistanceToLine(Line Item, PointF Point)
+        private float PointDistanceToLine(Lclass.Line Item, PointF Point)
         {
             PointF Mid = midpoint(Item.P1, Item.P2);
             if (Dist(Mid, Point) <= Dist(Mid, Item.P1))
@@ -451,10 +357,18 @@ namespace Daedalus
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    foreach (Line item in EraseWalls)
+                    foreach (Lclass.Line item in EraseWalls)
                     {
                         Walls.Remove(item);
                     }
+                }
+            }
+            else if (labPen == labPenMode.MinoPos)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    Mino.SetPosition(MouseLocationLab);
+                    SetMino = true;
                 }
             }
         }
@@ -488,6 +402,13 @@ namespace Daedalus
                     }
                 }
             }
+            else if (labPen == labPenMode.MinoPos)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    SetMino = false;
+                }
+            }
         }
 
         private void labyrinthScene_MouseLeave(object sender, EventArgs e)
@@ -497,6 +418,7 @@ namespace Daedalus
                 CreatingLine = false;
                 AddLine(StartLine, MouseLocationLab);
             }
+            SetMino = false;
             Pan = false;
         }
 
@@ -504,7 +426,7 @@ namespace Daedalus
         {
             if (Dist(TempLine.P1, TempLine.P2) > 0.1f)
             {
-                Walls.Add(new Line()
+                Walls.Add(new Lclass.Line()
                 {
                     P1 = P1,
                     P2 = P2,
@@ -533,7 +455,7 @@ namespace Daedalus
             }
         }
 
-        private static void RefreshScene(DaedalusForm Form) { Form.PaintWindows(); }
+        private static void RefreshScene(Knossos Form) { Form.PaintWindows(); }
 
         public void PaintWindows()
         {
@@ -581,13 +503,12 @@ namespace Daedalus
         {
             Pen DrawPen = new Pen(Color.White, 2);
             Pen RedPen = new Pen(Color.Red, 2);
-            Pen FillPen = new Pen(Color.Blue, 1);
             Graphics window = e.Graphics;
             UpdateOrigin();
             //TODO
-            foreach (Line item in Walls)
+            foreach (Lclass.Line item in Walls)
             {
-                foreach (Line Wall in item.GenerateRec(Origin, ZoomAmount))
+                foreach (Lclass.Line Wall in item.GenerateRec(Origin, ZoomAmount))
                 {
                     window.DrawLine(Wall.Highlight ? RedPen : DrawPen, Wall.P1, Wall.P2);
                 }
@@ -605,7 +526,7 @@ namespace Daedalus
             {
                 if (Dist(TempLine.P1, TempLine.P2) > 0.1f)
                 {
-                    foreach (Line Wall in TempLine.GenerateRec(Origin, ZoomAmount))
+                    foreach (Lclass.Line Wall in TempLine.GenerateRec(Origin, ZoomAmount))
                     {
                         window.DrawLine(DrawPen, Wall.P1, Wall.P2);
                     }
@@ -613,8 +534,11 @@ namespace Daedalus
             }
             window.DrawEllipse(DrawPen, ScreenOrigin.X, ScreenOrigin.Y, 1, 1);
 
+            DrawMino(window);
+
             PrintMessages(window, LogOuput);
             DrawPen.Dispose();
+            RedPen.Dispose();
         }
         
         private void mapScene_Paint(object sender, PaintEventArgs e)
@@ -646,7 +570,24 @@ namespace Daedalus
                 MapPoints.Clear();
             }
 
+            DrawMino(window);
+
             PrintMessages(window, MapLogOuput);
+            DrawPen.Dispose();
+        }
+
+        private void DrawMino(Graphics window)
+        {
+            Pen DrawPen = new Pen(Color.Pink, 2);
+            PointF MinoPosition = CalculateViewPosition(Mino.getPosition());
+            float Radius = Mino.getRadius() / ZoomAmount;
+            window.DrawEllipse(DrawPen, new Rectangle()
+            {
+                X = (int)(MinoPosition.X - (Radius / 2)),
+                Y = (int)(MinoPosition.Y - (Radius / 2)),
+                Width = (int)Radius,
+                Height = (int)Radius
+            });
             DrawPen.Dispose();
         }
 
@@ -731,7 +672,7 @@ namespace Daedalus
             }
 
             int Count = Walls.Count;
-            Line[] CopyWalls = new Line[Count];
+            Lclass.Line[] CopyWalls = new Lclass.Line[Count];
             for (int i = 0; i < Count; i++)
             {
                 if (i < Walls.Count)
@@ -740,9 +681,9 @@ namespace Daedalus
                 }
             }
             bool Hitted = false;
-            foreach (Line Wall in CopyWalls)
+            foreach (Lclass.Line Wall in CopyWalls)
             {
-                foreach (Line Face in Wall.GenerateRec())
+                foreach (Lclass.Line Face in Wall.GenerateRec())
                 {
                     for (int i = 0; i < Slopes.Length; i++)
                     {

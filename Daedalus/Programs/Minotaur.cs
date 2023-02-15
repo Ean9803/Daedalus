@@ -10,22 +10,36 @@ namespace Daedalus.Daedalus.Programs
     public class Minotaur
     {
         private float Radius;
+        private float bias;
         private int Res;
         private int LastRes;
-        private DaedalusForm Form;
+        private Knossos KnossosForm;
         private PointF Pos;
         private float[] Angles;
         private float ViewDist;
 
         private List<PointF> Map = new List<PointF>();
+        private Map minotaurMap;
 
-        public Minotaur(DaedalusForm Form, float Size, float ViewDist = 100, int Resolution = 10)
+        public Minotaur(Knossos KnossosForm, float Size, float ViewDist = 100, int Resolution = 10, float bias = 1)
         {
-            this.Form = Form;
+            this.KnossosForm = KnossosForm;
             Radius = Size;
+            this.bias = bias;
             this.ViewDist = ViewDist;
             LastRes = Res = Resolution;
             CalculateRes();
+            minotaurMap = new Map();
+        }
+
+        public float getRadius()
+        {
+            return Radius;
+        }
+
+        public PointF getPosition()
+        {
+            return Pos;
         }
 
         public void SetPosition(PointF Point)
@@ -41,7 +55,7 @@ namespace Daedalus.Daedalus.Programs
                 LastRes = Res;
             }
 
-            if (Form.WallDetectAngle(Pos, Angles, ViewDist, out List<PointF?> Hits))
+            if (KnossosForm.WallDetectAngle(Pos, Angles, ViewDist, out List<PointF?> Hits))
             {
                 //Add Point to list
                 foreach (PointF? item in Hits)
@@ -54,13 +68,13 @@ namespace Daedalus.Daedalus.Programs
             foreach (PointF item in Map)
             {
                 //Add to draw
-                Form.AddPoint(item);
+                KnossosForm.AddPoint(item);
                 
             }
-
+            minotaurMap.CreateBuffer(Map, Radius + bias);
             Map.Clear();
-            
-            Form.MinoEndUpdate();
+
+            KnossosForm.MinoEndUpdate();
         }
 
         private void CalculateRes()
