@@ -28,18 +28,19 @@ public class Map
         // Connecting points
         List<Lclass.Line> preBuffers = new List<Lclass.Line>();
         PointF? PrevSlope = null;
-        for (int i = 1; i < orderedList.Count + 1; i++)
+        List<KeyValuePair<double, PointF>> currentPoints = orderedList.ToList();
+        for (int i = 1; i < currentPoints.Count + 1; i++)
         {
             prevIndex = i - 1;
             index = i % orderedList.Count;
 
             // Check to see if we have reached the end of the list
-            float currentSlopeX = orderedList[index].X - orderedList[prevIndex].X;
-            float currentSlopeY = orderedList[index].Y - orderedList[prevIndex].Y;
+            float currentSlopeX = currentPoints[index].Value.X - currentPoints[prevIndex].Value.X;
+            float currentSlopeY = currentPoints[index].Value.Y - currentPoints[prevIndex].Value.Y;
             if (PrevSlope == null)
             {
                 PrevSlope = new PointF(currentSlopeX, currentSlopeY);
-                preBuffers.Add(new Lclass.Line() { P1 = orderedList[prevIndex], P2 = orderedList[index], Width = 2 });
+                preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
             }
             else
             {
@@ -47,12 +48,12 @@ public class Map
                 if (match)
                 {
                     Lclass.Line existingLine = preBuffers[preBuffers.Count - 1];
-                    existingLine.P1 = orderedList[index];
+                    existingLine.P1 = currentPoints[index].Value;
                 }
                 else
                 {
                     PrevSlope = new PointF(currentSlopeX, currentSlopeY);
-                    preBuffers.Add(new Lclass.Line() { P1 = orderedList[prevIndex], P2 = orderedList[index], Width = 2 });
+                    preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
                 }
             }
         }
