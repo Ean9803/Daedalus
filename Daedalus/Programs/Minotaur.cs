@@ -68,9 +68,9 @@ namespace Daedalus.Daedalus.Programs
             foreach (PointF item in Map)
             {
                 //Add to draw
-                KnossosForm.AddPoint(item);
-                
+                KnossosForm.AddPoint(item, Color.Red);
             }
+
             minotaurMap.CreateBuffer(Map, getPosition(), Radius + bias);
             Map.Clear();
 

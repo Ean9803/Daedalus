@@ -23,7 +23,7 @@ namespace Daedalus
         public Knossos()
         {
             InitializeComponent();
-            Mino = new Minotaur(this, 10);
+            Mino = new Minotaur(this, 10, Resolution: 50);
             KnossosUI = this;
         }
 
@@ -47,8 +47,8 @@ namespace Daedalus
 
         public List<Lclass.Line> Walls = new List<Lclass.Line>();
         public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
-        public List<PointF> MapPoints = new List<PointF>();
-        public List<Lclass.Line> MapLines = new List<Lclass.Line>();
+        public List<KeyValuePair<PointF, Color>> MapPoints = new List<KeyValuePair<PointF, Color>>();
+        public List<KeyValuePair<Lclass.Line, Color>> MapLines = new List<KeyValuePair<Lclass.Line, Color>>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
@@ -550,7 +550,7 @@ namespace Daedalus
             Graphics window = e.Graphics;
             
             int Count = MapPoints.Count;
-            PointF[] CopyMapPoints = new PointF[Count];
+            KeyValuePair<PointF, Color>[] CopyMapPoints = new KeyValuePair<PointF, Color>[Count];
             for (int i = 0; i < Count; i++)
             {
                 if (i < MapPoints.Count)
@@ -560,7 +560,7 @@ namespace Daedalus
             }
 
             Count = MapLines.Count;
-            Lclass.Line[] CopyMapLines = new Lclass.Line[Count];
+            KeyValuePair<Lclass.Line, Color>[] CopyMapLines = new KeyValuePair<Lclass.Line, Color>[Count];
             for (int i = 0; i < Count; i++)
             {
                 if (i < MapLines.Count)
@@ -574,15 +574,19 @@ namespace Daedalus
 
             for (int i = 0; i < CopyMapPoints.Length; i++)
             {
-                window.DrawEllipse(DrawPen, CopyMapPoints[i].X, CopyMapPoints[i].Y, 1, 1);
+                DrawPen.Color = CopyMapPoints[i].Value;
+                window.DrawEllipse(DrawPen, CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y, 1, 1);
             }
 
-
-            foreach (Lclass.Line item in CopyMapLines)
+            foreach (KeyValuePair<Lclass.Line, Color> item in CopyMapLines)
             {
-                foreach (Lclass.Line Wall in item.GenerateRec(Origin, ZoomAmount))
+                if (item.Key != null)
                 {
-                    window.DrawLine(DrawPen, Wall.P1, Wall.P2);
+                    foreach (Lclass.Line Wall in item.Key.GenerateRec(Origin, ZoomAmount))
+                    {
+                        DrawPen.Color = item.Value;
+                        window.DrawLine(DrawPen, Wall.P1, Wall.P2);
+                    }
                 }
             }
 
@@ -735,15 +739,18 @@ namespace Daedalus
             Frame = true;
         }
 
-        public void AddPoint(PointF pt)
+        public void AddPoint(PointF pt, Color color)
         {
             PointF NewPoint = CalculateViewPosition(pt);
-            if (!MapPoints.Contains(NewPoint))
-                MapPoints.Add(NewPoint);
+            KeyValuePair<PointF, Color> NewItem = new KeyValuePair<PointF, Color>(NewPoint, color);
+            if (!MapPoints.Contains(NewItem))
+                MapPoints.Add(NewItem);
         }
-        public void addLine(Lclass.Line line)
+        public void addLine(Lclass.Line line, Color color)
         {
-            MapLines.Add(line);
+            KeyValuePair<Lclass.Line, Color> NewItem = new KeyValuePair<Lclass.Line, Color>(line, color);
+            if (!MapLines.Contains(NewItem))
+                MapLines.Add(NewItem);
         }
 
 
