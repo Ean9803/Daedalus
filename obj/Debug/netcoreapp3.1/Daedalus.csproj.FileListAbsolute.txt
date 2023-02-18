@@ -38,7 +38,6 @@ C:\Programming Projects\School\Software Engineering Project\Daedalus\bin\Debug\n
 C:\Programming Projects\School\Software Engineering Project\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.dll
 C:\Programming Projects\School\Software Engineering Project\Daedalus\bin\Debug\netcoreapp3.1\Daedalus.pdb
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.AssemblyReference.cache
-C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.DaedalusForm.resources
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Properties.Resources.resources
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.GenerateResource.cache
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.GeneratedMSBuildEditorConfig.editorconfig
@@ -66,3 +65,4 @@ C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.dll
 C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.pdb
 C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.genruntimeconfig.cache
 C:\Users\irobo\source\repos\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Knossos.resources
+C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Knossos.resources

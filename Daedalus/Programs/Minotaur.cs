@@ -71,7 +71,7 @@ namespace Daedalus.Daedalus.Programs
                 KnossosForm.AddPoint(item);
                 
             }
-            minotaurMap.CreateBuffer(Map, Radius + bias);
+            minotaurMap.CreateBuffer(Map, getPosition(), Radius + bias);
             Map.Clear();
 
             KnossosForm.MinoEndUpdate();

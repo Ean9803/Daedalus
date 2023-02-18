@@ -19,10 +19,12 @@ namespace Daedalus
     public partial class Knossos : Form
     {
         Minotaur Mino;
+        public static Knossos KnossosUI;
         public Knossos()
         {
             InitializeComponent();
             Mino = new Minotaur(this, 10);
+            KnossosUI = this;
         }
 
         public delegate void SceneDel(Knossos Form);
@@ -46,6 +48,7 @@ namespace Daedalus
         public List<Lclass.Line> Walls = new List<Lclass.Line>();
         public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
         public List<PointF> MapPoints = new List<PointF>();
+        public List<Lclass.Line> MapLines = new List<Lclass.Line>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
@@ -556,6 +559,16 @@ namespace Daedalus
                 }
             }
 
+            Count = MapLines.Count;
+            Lclass.Line[] CopyMapLines = new Lclass.Line[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                if (i < MapLines.Count)
+                {
+                    CopyMapLines[i] = MapLines[i];
+                }
+            }
+
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
@@ -564,10 +577,21 @@ namespace Daedalus
                 window.DrawEllipse(DrawPen, CopyMapPoints[i].X, CopyMapPoints[i].Y, 1, 1);
             }
 
+
+            foreach (Lclass.Line item in CopyMapLines)
+            {
+                foreach (Lclass.Line Wall in item.GenerateRec(Origin, ZoomAmount))
+                {
+                    window.DrawLine(DrawPen, Wall.P1, Wall.P2);
+                }
+            }
+
+
             if (Frame)
             {
                 Frame = false;
                 MapPoints.Clear();
+                MapLines.Clear();
             }
 
             DrawMino(window);
@@ -716,6 +740,10 @@ namespace Daedalus
             PointF NewPoint = CalculateViewPosition(pt);
             if (!MapPoints.Contains(NewPoint))
                 MapPoints.Add(NewPoint);
+        }
+        public void addLine(Lclass.Line line)
+        {
+            MapLines.Add(line);
         }
 
 
