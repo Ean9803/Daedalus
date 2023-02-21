@@ -49,16 +49,19 @@ public class Map
             }
             else
             {
-                bool match = InRange(((PointF)(PrevSlope)).X, currentSlopeX, 0.1f) && InRange(((PointF)(PrevSlope)).Y, currentSlopeY, 0.1f);
-                if (match)
+                if (ruleCheck(currentPoints[index].Value, currentPoints[prevIndex].Value, Radius))
                 {
-                    Lclass.Line existingLine = preBuffers[preBuffers.Count - 1];
-                    existingLine.P2 = currentPoints[index].Value;
-                }
-                else
-                {
-                    PrevSlope = new PointF(currentSlopeX, currentSlopeY);
-                    preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
+                    bool match = InRange(((PointF)(PrevSlope)).X, currentSlopeX, 0.1f) && InRange(((PointF)(PrevSlope)).Y, currentSlopeY, 0.1f);
+                    if (match)
+                    {
+                        Lclass.Line existingLine = preBuffers[preBuffers.Count - 1];
+                        existingLine.P2 = currentPoints[index].Value;
+                    }
+                    else
+                    {
+                        PrevSlope = new PointF(currentSlopeX, currentSlopeY);
+                        preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
+                    }
                 }
             }
         }
@@ -76,6 +79,14 @@ public class Map
     public void Refresh(float Radius)
     {
 
+    }
+
+    private bool ruleCheck(PointF P1, PointF P2, float radius)
+    {
+        float xDiff = P2.X - P1.X;
+        float yDiff = P2.Y - P1.Y;
+
+        return (xDiff <= radius) && (yDiff <= radius);
     }
 
     private bool InRange(float Val1, float Val2, float Thres)

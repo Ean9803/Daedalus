@@ -20,3 +20,20 @@ C:\Users\irobo\source\repos\Daedalus\Daedalus\Application\netcoreapp3.1\Daedalus
 C:\Users\irobo\source\repos\Daedalus\Daedalus\Application\netcoreapp3.1\Daedalus.runtimeconfig.dev.json
 C:\Users\irobo\source\repos\Daedalus\Daedalus\Application\netcoreapp3.1\Daedalus.dll
 C:\Users\irobo\source\repos\Daedalus\Daedalus\Application\netcoreapp3.1\Daedalus.pdb
+C:\Users\Hani\Documents\SWE Navmesh\Daedalus\Application\netcoreapp3.1\Daedalus.exe
+C:\Users\Hani\Documents\SWE Navmesh\Daedalus\Application\netcoreapp3.1\Daedalus.deps.json
+C:\Users\Hani\Documents\SWE Navmesh\Daedalus\Application\netcoreapp3.1\Daedalus.runtimeconfig.json
+C:\Users\Hani\Documents\SWE Navmesh\Daedalus\Application\netcoreapp3.1\Daedalus.runtimeconfig.dev.json
+C:\Users\Hani\Documents\SWE Navmesh\Daedalus\Application\netcoreapp3.1\Daedalus.dll
+C:\Users\Hani\Documents\SWE Navmesh\Daedalus\Application\netcoreapp3.1\Daedalus.pdb
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.csproj.AssemblyReference.cache
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.Knossos.resources
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.Properties.Resources.resources
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.csproj.GenerateResource.cache
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.AssemblyInfoInputs.cache
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.AssemblyInfo.cs
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.csproj.CoreCompileInputs.cache
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.dll
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.pdb
+C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.genruntimeconfig.cache
