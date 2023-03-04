@@ -17,6 +17,21 @@ public static class Lclass
             Highlight = Val;
         }
 
+        public float getSlope()
+        {
+            PointF Direction = new PointF();
+            Direction.X = P1.X - P2.X;
+            Direction.Y = P1.Y - P2.Y;
+
+
+            float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
+
+            float YSlope = (Direction.Y / distance);
+            float XSlope = (Direction.X / distance);
+
+            return YSlope / XSlope;
+        }
+
         public Line[] GenerateRec()
         {
             Line[] Ret = new Line[4];
