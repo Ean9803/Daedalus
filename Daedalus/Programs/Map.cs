@@ -57,8 +57,14 @@ public class Map
         for (int i = 0; i < collisionPoints.Count; i++)
         {
             angle = getAngleRad(location, collisionPoints[i]);
+
             if (!orderedList.ContainsKey(angle))
+            {
                 orderedList.Add(angle, collisionPoints[i]);
+
+                Knossos.KnossosUI.AddPoint(collisionPoints[i], HSL2RGB(angle / 360.0f, 0.5, 0.5));
+            }
+                
         }
         int index = 0;
         int prevIndex = 0;
@@ -72,35 +78,41 @@ public class Map
             prevIndex = i - 1;
             index = i % currentPoints.Count;
 
-            // Check to see if we have reached the end of the list
-            float currentSlopeX = currentPoints[index].Value.X - currentPoints[prevIndex].Value.X;
-            float currentSlopeY = currentPoints[index].Value.Y - currentPoints[prevIndex].Value.Y;
-            float normalizedSlopeX = currentSlopeX / MathF.Max(currentSlopeX, currentSlopeY);
-            float normalizedSlopeY = currentSlopeY / MathF.Max(currentSlopeX, currentSlopeY);
-            currentSlopeX = normalizedSlopeX;
-            currentSlopeY = normalizedSlopeY;
-
-            if (ruleCheck(currentPoints[index].Value, currentPoints[prevIndex].Value, Radius))
+            if (Dist(currentPoints[index].Value, currentPoints[prevIndex].Value) < Radius)
             {
-                if (PrevSlope == null)
+                /*
+                // Check to see if we have reached the end of the list
+                float currentSlopeX = currentPoints[index].Value.X - currentPoints[prevIndex].Value.X;
+                float currentSlopeY = currentPoints[index].Value.Y - currentPoints[prevIndex].Value.Y;
+                float normalizedSlopeX = currentSlopeX / MathF.Max(currentSlopeX, currentSlopeY);
+                float normalizedSlopeY = currentSlopeY / MathF.Max(currentSlopeX, currentSlopeY);
+                currentSlopeX = normalizedSlopeX;
+                currentSlopeY = normalizedSlopeY;
+
+                if (ruleCheck(currentPoints[index].Value, currentPoints[prevIndex].Value, Radius))
                 {
-                    PrevSlope = new PointF(currentSlopeX, currentSlopeY);
+                    if (PrevSlope == null)
+                */
+                {
+                    //PrevSlope = new PointF(currentSlopeX, currentSlopeY);
                     preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
                 }
-                else
-                {
-                    bool match = InRange(((PointF)(PrevSlope)).X, currentSlopeX, 0.1f) && InRange(((PointF)(PrevSlope)).Y, currentSlopeY, 0.1f);
-                    if (match)
-                    {
-                        Lclass.Line existingLine = preBuffers[preBuffers.Count - 1];
-                        existingLine.P2 = currentPoints[index].Value;
-                    }
+                /*
                     else
                     {
-                        PrevSlope = new PointF(currentSlopeX, currentSlopeY);
-                        preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
+                        bool match = InRange(((PointF)(PrevSlope)).X, currentSlopeX, 0.1f) && InRange(((PointF)(PrevSlope)).Y, currentSlopeY, 0.1f);
+                        if (match)
+                        {
+                            Lclass.Line existingLine = preBuffers[preBuffers.Count - 1];
+                            existingLine.P2 = currentPoints[index].Value;
+                        }
+                        else
+                        {
+                            PrevSlope = new PointF(currentSlopeX, currentSlopeY);
+                            preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
+                        }
                     }
-                }
+                */
             }
         }
 
@@ -129,6 +141,16 @@ public class Map
             if (ValI >= 1)
                 ValI = 0;
         }
+
+        if(processPreBuffers(preBuffers))
+        {
+            Refresh(Radius);
+        }
+
+        foreach (Lclass.Brick item in bricks)
+        {
+            Knossos.KnossosUI.addLine(item, HSL2RGB(3, 0.5, 0.5));
+        }
     }
 
     private struct sledgeHammer
@@ -137,72 +159,187 @@ public class Map
         public float slope;
         public enum point {p1, p2, both }
         public point ouioui;
+        public PointF Target;
+
+        public void setTarget (point Point, PointF Target)
+        {
+            this.Target = Target;
+            ouioui = Point;
+        }
     }
 
-    private void processPreBuffers(List<Lclass.Line> preBuffers)
+    private bool processPreBuffers(List<Lclass.Line> preBuffers)
     {
         if(preBuffers.Count == 0)
         {
-            return;
+            return false;
         }
 
         List<sledgeHammer> wreckingBall = new List<sledgeHammer>();
+        List<Lclass.Brick> remove = new List<Lclass.Brick>();
 
+        bool FoundIntercection = false;
         foreach (Lclass.Brick item in bricks)
         {
-
             float point1 = PointDistanceToLine(item, preBuffers[0].P1);
             float point2 = PointDistanceToLine(item, preBuffers[0].P2);
             
+            if (point1 != float.MaxValue || point2 != float.MaxValue)
+            {
+                FoundIntercection = true;
+            }
+
             if (point1 != float.MaxValue ^ point2 != float.MaxValue)
             {
-                bool state1 = false;
-                bool state2 = false;
-                if(MathF.Abs(point1) < brickWidth)
+                sledgeHammer.point pull = sledgeHammer.point.both;
+
+                PointF Inner = point1 != float.MaxValue ? preBuffers[0].P1 : preBuffers[0].P2;
+                PointF Outer = point1 != float.MaxValue ? preBuffers[0].P2 : preBuffers[0].P1;
+
+                double DistInner_1 = Dist(Inner, item.P1);
+                double DistInner_2 = Dist(Inner, item.P2);
+
+                if (DistInner_1 < DistInner_2)
                 {
-                    state1 = true;
-                }
-                if(MathF.Abs(point2) < brickWidth)
+                    pull = sledgeHammer.point.p1;
+                }else if (DistInner_2 < DistInner_1)
                 {
-                    state2 = true;
+                    pull = sledgeHammer.point.p2;
                 }
-                if ((!(!state1 && !state2)) && InRange(preBuffers[0].getSlope(), item.getSlope(), 0.01f))
+                else
+                {
+                    double DistOuter_1 = Dist(Outer, item.P1);
+                    double DistOuter_2 = Dist(Outer, item.P2);
+                    if (DistOuter_1 < DistOuter_2)
+                    {
+                        pull = sledgeHammer.point.p1;
+                    }
+                    else if (DistOuter_2 < DistOuter_1)
+                    {
+                        pull = sledgeHammer.point.p2;
+                    }
+                }
+
+                if (pull != sledgeHammer.point.both && InRange(MathF.Abs(preBuffers[0].getSlope()), MathF.Abs(item.getSlope()), 0.01f))
                 {
                     wreckingBall.Add(new sledgeHammer()
                     {
                         intersectingBrick = item,
                         slope = item.getSlope(),
-                        ouioui = (state1 && state2 ? sledgeHammer.point.both:(state1 ? sledgeHammer.point.p1 : sledgeHammer.point.p2))
-                    });
+                        ouioui = pull,
+                        Target = Outer
+                    }) ;
+                    remove.Add(item);
                 }
             }
         }
-        if(wreckingBall.Count == 0)
+
+        bool Changed = false;
+        if (wreckingBall.Count == 0)
         {
-            bricks.Add(new Lclass.Brick() { P1 = preBuffers[0].P1, P2 = preBuffers[0].P2, Width = brickWidth });
+            if (!FoundIntercection)
+            {
+                Changed = true;
+                bricks.Add(new Lclass.Brick() { P1 = preBuffers[0].P1, P2 = preBuffers[0].P2, Width = brickWidth });
+            }
         }
         else
         {
-            foreach(sledgeHammer item in wreckingBall)
+            Changed = true;
+            bricks.Add(processBricks(wreckingBall));
+            foreach (Lclass.Brick item in remove)
             {
-                switch (item.ouioui)
-                {
-                    case sledgeHammer.point.p1:
-
-                        break;
-                    case sledgeHammer.point.p2:
-                        break;
-                    case sledgeHammer.point.both:
-                        break;
-                    default:
-                        break;
-                }
-
+                bricks.Remove(item);
             }
         }
+
         preBuffers.RemoveAt(0);
-        processPreBuffers(preBuffers);
+        if (preBuffers.Count == 0)
+        {
+            return Changed;
+        }
+        else
+        {
+            return Changed || processPreBuffers(preBuffers);
+        }
     }
+
+    private Lclass.Brick processBricks(List<sledgeHammer> preBricks)
+    {
+        switch (preBricks[0].ouioui)
+        {
+            case sledgeHammer.point.p1:
+                preBricks[0].intersectingBrick.P1 = preBricks[0].Target;
+                break;
+            case sledgeHammer.point.p2:
+                preBricks[0].intersectingBrick.P2 = preBricks[0].Target;
+                break;
+            case sledgeHammer.point.both:
+                break;
+            default:
+                break;
+        }
+
+        sledgeHammer CurrentBrick = preBricks[0];
+        preBricks.RemoveAt(0);
+        if(preBricks.Count == 0)
+        {
+            return CurrentBrick.intersectingBrick;
+        }
+        else
+        {
+            foreach (sledgeHammer item in preBricks)
+            {
+                float point1 = PointDistanceToLine(item.intersectingBrick, CurrentBrick.intersectingBrick.P1);
+                float point2 = PointDistanceToLine(item.intersectingBrick, CurrentBrick.intersectingBrick.P2);
+                
+                if (point1 != float.MaxValue ^ point2 != float.MaxValue)
+                {
+                    sledgeHammer.point pull = sledgeHammer.point.both;
+                    float Distance = point1 != float.MaxValue ? point1 : point2;
+                    PointF Inner = point1 != float.MaxValue ? CurrentBrick.intersectingBrick.P1 : CurrentBrick.intersectingBrick.P2;
+                    PointF Outer = point1 != float.MaxValue ? CurrentBrick.intersectingBrick.P2 : CurrentBrick.intersectingBrick.P1;
+                
+                    if(MathF.Abs(Distance) < brickWidth)
+                    {
+                        double DistInner_1 = Dist(Inner, item.intersectingBrick.P1);
+                        double DistInner_2 = Dist(Inner, item.intersectingBrick.P2);
+
+                        if (DistInner_1 < DistInner_2)
+                        {
+                            pull = sledgeHammer.point.p1;
+                        }
+                        else if (DistInner_2 < DistInner_1)
+                        {
+                            pull = sledgeHammer.point.p2;
+                        }
+                        else
+                        {
+                            double DistOuter_1 = Dist(Outer, item.intersectingBrick.P1);
+                            double DistOuter_2 = Dist(Outer, item.intersectingBrick.P2);
+
+                            if (DistOuter_1 < DistOuter_2)
+                            {
+                                pull = sledgeHammer.point.p1;
+                            }
+                            else if (DistOuter_2 < DistOuter_1)
+                            {
+                                pull = sledgeHammer.point.p2;
+                            }
+
+                        }
+                    }
+                    if (pull != sledgeHammer.point.both && InRange(MathF.Abs(CurrentBrick.slope), MathF.Abs(item.slope), 0.01f))
+                    {
+                        item.setTarget(pull, Outer);
+                    }
+                }
+            }
+            return processBricks(preBricks);
+        }
+    }
+
+
 
     public void Refresh(float Radius)
     {
@@ -239,7 +376,11 @@ public class Map
         {
             float num = MathF.Abs((Item.P2.X - Item.P1.X) * (Item.P1.Y - Point.Y) - (Item.P1.X - Point.X) * (Item.P2.Y - Item.P1.Y));
             float dom = MathF.Sqrt(MathF.Pow((Item.P2.X - Item.P1.X), 2) + MathF.Pow((Item.P2.Y - Item.P1.Y), 2));
-            return num / dom;
+            float distance = num / dom;
+            if (distance < Item.Width)
+            {
+                return distance;
+            }
         }
         return float.MaxValue;
     }

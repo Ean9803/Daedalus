@@ -591,9 +591,9 @@ namespace Daedalus
             }
 
 
-            if (Frame)
+            if (Frame >= 5)
             {
-                Frame = false;
+                Frame = 0;
                 MapPoints.Clear();
                 MapLines.Clear();
             }
@@ -733,10 +733,10 @@ namespace Daedalus
             return Hitted;
         }
 
-        private bool Frame = false;
+        private int Frame = 0;
         public void MinoEndUpdate()
         {
-            Frame = true;
+            Frame++;
         }
 
         public void AddPoint(PointF pt, Color color)
