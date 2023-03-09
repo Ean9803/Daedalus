@@ -619,6 +619,19 @@ namespace Daedalus
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
+
+            float Prev = DrawPen.Width;
+            foreach (KeyValuePair<Lclass.Line, Color> item in CopyMapLines)
+            {
+                if (item.Key != null)
+                {
+                    DrawPen.Color = item.Value;
+                    DrawPen.Width = (item.Key.Width * 1.5f) / ZoomAmount;
+                    window.DrawLine(DrawPen, CalculateViewPosition(item.Key.P1), CalculateViewPosition(item.Key.P2));
+                }
+            }
+            DrawPen.Width = Prev;
+
             for (int i = 0; i < CopyMapPoints.Length; i++)
             {
                 DrawPen.Color = CopyMapPoints[i].Value.color;
@@ -661,17 +674,6 @@ namespace Daedalus
                         break;
                 }
             }
-            float Prev = DrawPen.Width;
-            foreach (KeyValuePair<Lclass.Line, Color> item in CopyMapLines)
-            {
-                if (item.Key != null)
-                {
-                    DrawPen.Color = item.Value;
-                    DrawPen.Width = (item.Key.Width * 1.5f) / ZoomAmount;
-                    window.DrawLine(DrawPen, CalculateViewPosition(item.Key.P1), CalculateViewPosition(item.Key.P2));
-                }
-            }
-            DrawPen.Width = Prev;
 
 
             if (ClearFrame)
