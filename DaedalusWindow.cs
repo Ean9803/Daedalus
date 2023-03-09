@@ -47,7 +47,7 @@ namespace Daedalus
 
         public List<Lclass.Line> Walls = new List<Lclass.Line>();
         public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
-        public List<KeyValuePair<PointF, Color>> MapPoints = new List<KeyValuePair<PointF, Color>>();
+        public List<KeyValuePair<PointF, TargetPoint>> MapPoints = new List<KeyValuePair<PointF, TargetPoint>>();
         public List<KeyValuePair<Lclass.Line, Color>> MapLines = new List<KeyValuePair<Lclass.Line, Color>>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
@@ -58,7 +58,7 @@ namespace Daedalus
             StartWorkers();
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
-            ZoomAmount = (zoomSlider.Maximum - zoomSlider.Value) + 1;
+            ZoomAmount = 1;
         }
 
         int WorkersOpen = 0;
@@ -204,8 +204,9 @@ namespace Daedalus
             string output = "";
             foreach (Lclass.Line item in Walls)
             {
-                output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "___";
+                output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "#" + item.Width + "___";
             }
+            output += "\n" + Mino.ExportMapData();
             File.WriteAllText(FilePath, output);
         }
 
@@ -214,22 +215,26 @@ namespace Daedalus
             Walls.Clear();
             string input;
             input = File.ReadAllText(FilePath);
-            System.Diagnostics.Debug.WriteLine(input);
+            string[] SplitData = input.Split('\n');
+            input = SplitData[0];
+            if (SplitData.Length > 1)
+                Mino.ImportMapData(SplitData[1]);
 
             // Split all lines into individual coordinates
             string[] delimeters = {"___", "#", "/"};
             string[] coordinates = input.Split(delimeters, StringSplitOptions.None);
 
             // Four coordinates per line
-            float x1, y1, x2, y2;
-            for (int i = 0; i < coordinates.Length - 3; i += 4)
+            float x1, y1, x2, y2, width;
+            for (int i = 0; i < coordinates.Length - 4; i += 5)
             {
                 x1 = float.Parse(coordinates[i]);
                 y1 = float.Parse(coordinates[i + 1]);
                 x2 = float.Parse(coordinates[i + 2]);
                 y2 = float.Parse(coordinates[i + 3]);
+                width = float.Parse(coordinates[i + 4]);
 
-                Walls.Add(new Lclass.Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2) });
+                Walls.Add(new Lclass.Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
             }
 
         }
@@ -243,9 +248,14 @@ namespace Daedalus
             Walls.Clear();
         }
 
+        private void ClearMemory_Click(object sender, EventArgs e)
+        {
+            Mino.WipeMemory();
+        }
+
         private void zoomSlider_Scroll(object sender, EventArgs e)
         {
-            ZoomAmount = (zoomSlider.Maximum - zoomSlider.Value) + 1;
+            ZoomAmount = MathF.Pow(((float)zoomSlider.Value + 1) / ((float)zoomSlider.Maximum / 2.0f), 2);
         }
 
         private void UpdateOrigin()
@@ -295,26 +305,27 @@ namespace Daedalus
             {
                 Mino.SetPosition(MouseLocationLab);
             }
-
+            if (EraseWalls.Count > 0)
+            {
+                foreach (Lclass.Line item in EraseWalls)
+                {
+                    item.SetHighlight(false);
+                }
+            }
+            EraseWalls.Clear();
             if (labPen == labPenMode.Erase)
             {
-                EraseWalls.Clear();
                 for (int i = 0; i < Walls.Count; i++)
                 {
                     Walls[i].SetHighlight(false);
-                    foreach (Lclass.Line item in Walls[i].GenerateRec(Origin, ZoomAmount))
+                    if (PointDistanceToLine(Walls[i], MouseLocationLab))
                     {
-                        if (Dist(item.P1, MouseLocation) <= 20 || Dist(item.P2, MouseLocation) <= 20 || PointDistanceToLine(item, MouseLocation) <= 20)
+                        Walls[i].SetHighlight(true);
+                        if (!EraseWalls.Contains(Walls[i]))
                         {
-                            Walls[i].SetHighlight(true);
-                            if (!EraseWalls.Contains(Walls[i]))
-                            {
-                                EraseWalls.Add(Walls[i]);
-                            }
+                            EraseWalls.Add(Walls[i]);
                         }
                     }
-
-                    continue;
                 }
             }
         }
@@ -327,16 +338,25 @@ namespace Daedalus
             return ret;
         }
 
-        private float PointDistanceToLine(Lclass.Line Item, PointF Point)
+        private bool PointDistanceToLine(Lclass.Line Item, PointF Point)
         {
             PointF Mid = midpoint(Item.P1, Item.P2);
             if (Dist(Mid, Point) <= Dist(Mid, Item.P1))
             {
                 float num = MathF.Abs((Item.P2.X - Item.P1.X) * (Item.P1.Y - Point.Y) - (Item.P1.X - Point.X) * (Item.P2.Y - Item.P1.Y));
                 float dom = MathF.Sqrt(MathF.Pow((Item.P2.X - Item.P1.X), 2) + MathF.Pow((Item.P2.Y - Item.P1.Y), 2));
-                return num / dom;
+                float Dist = num / dom;
+                return Dist <= Item.Width;
             }
-            return float.MaxValue;
+            return false;
+        }
+
+        private void mapScene_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Pan = true;
+            }
         }
 
         private void labyrinthScene_MouseDown(object sender, MouseEventArgs e)
@@ -425,6 +445,11 @@ namespace Daedalus
             Pan = false;
         }
 
+        private void mapScene_MouseLeave(object sender, EventArgs e)
+        {
+            Pan = false;
+        }
+
         private void AddLine(PointF P1, PointF P2)
         {
             if (Dist(TempLine.P1, TempLine.P2) > 0.1f)
@@ -445,6 +470,23 @@ namespace Daedalus
             Current.Y = (int)(e.Location.Y);
             MouseLocationMap.X = (Current.X - Origin.X) * ZoomAmount;
             MouseLocationMap.Y = (-(Current.Y - Origin.Y)) * ZoomAmount;
+
+            if (Pan)
+            {
+                float DiffX = Current.X - MouseLocation.X;
+                float DiffY = Current.Y - MouseLocation.Y;
+                OriginOffset.X += DiffX * ZoomAmount;
+                OriginOffset.Y += DiffY * ZoomAmount;
+            }
+            MouseLocation = Current;
+        }
+
+        private void mapScene_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Pan = false;
+            }
         }
 
         public bool UpdateFrames = true;
@@ -543,14 +585,16 @@ namespace Daedalus
             DrawPen.Dispose();
             RedPen.Dispose();
         }
-        
+
+        KeyValuePair<PointF, TargetPoint>[] CopyMapPoints;
+        KeyValuePair<Lclass.Line, Color>[] CopyMapLines = new KeyValuePair<Lclass.Line, Color>[0];
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Color.White, 2);
             Graphics window = e.Graphics;
             
             int Count = MapPoints.Count;
-            KeyValuePair<PointF, Color>[] CopyMapPoints = new KeyValuePair<PointF, Color>[Count];
+            CopyMapPoints = new KeyValuePair<PointF, TargetPoint>[Count];
             for (int i = 0; i < Count; i++)
             {
                 if (i < MapPoints.Count)
@@ -558,14 +602,17 @@ namespace Daedalus
                     CopyMapPoints[i] = MapPoints[i];
                 }
             }
-
-            Count = MapLines.Count;
-            KeyValuePair<Lclass.Line, Color>[] CopyMapLines = new KeyValuePair<Lclass.Line, Color>[Count];
-            for (int i = 0; i < Count; i++)
+            if (UpdateFrame)
             {
-                if (i < MapLines.Count)
+                UpdateFrame = false;
+                Count = MapLines.Count;
+                CopyMapLines = new KeyValuePair<Lclass.Line, Color>[Count];
+                for (int i = 0; i < Count; i++)
                 {
-                    CopyMapLines[i] = MapLines[i];
+                    if (i < MapLines.Count)
+                    {
+                        CopyMapLines[i] = MapLines[i];
+                    }
                 }
             }
 
@@ -574,26 +621,62 @@ namespace Daedalus
 
             for (int i = 0; i < CopyMapPoints.Length; i++)
             {
-                DrawPen.Color = CopyMapPoints[i].Value;
-                window.DrawEllipse(DrawPen, CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y, 1, 1);
-            }
+                DrawPen.Color = CopyMapPoints[i].Value.color;
+                switch (CopyMapPoints[i].Value.Type)
+                {
+                    case TargetPoint.DrawType.Dot:
+                        SolidBrush Fill = new SolidBrush(CopyMapPoints[i].Value.color);
+                        window.FillEllipse(Fill, new Rectangle()
+                        {
+                            X = (int)(CopyMapPoints[i].Key.X - (CopyMapPoints[i].Value.Diameter / 2)),
+                            Y = (int)(CopyMapPoints[i].Key.Y - (CopyMapPoints[i].Value.Diameter / 2)),
+                            Width = (int)CopyMapPoints[i].Value.Diameter,
+                            Height = (int)CopyMapPoints[i].Value.Diameter
+                        });
+                        Fill.Dispose();
+                        break;
+                    case TargetPoint.DrawType.Cross:
+                        PointF UpperLeft = new PointF(CopyMapPoints[i].Key.X - CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y - CopyMapPoints[i].Value.Diameter);
+                        PointF LowerRight = new PointF(CopyMapPoints[i].Key.X + CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y + CopyMapPoints[i].Value.Diameter);
 
+                        PointF LowerLeft = new PointF(CopyMapPoints[i].Key.X - CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y + CopyMapPoints[i].Value.Diameter);
+                        PointF UpperRight = new PointF(CopyMapPoints[i].Key.X + CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y - CopyMapPoints[i].Value.Diameter);
+
+                        window.DrawLine(DrawPen, UpperLeft, LowerRight);
+                        window.DrawLine(DrawPen, LowerLeft, UpperRight);
+                        break;
+                    case TargetPoint.DrawType.Diamond:
+                        PointF Top = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y - CopyMapPoints[i].Value.Diameter);
+                        PointF Bottom = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y + CopyMapPoints[i].Value.Diameter);
+
+                        PointF Left = new PointF(CopyMapPoints[i].Key.X - CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y);
+                        PointF Right = new PointF(CopyMapPoints[i].Key.X + CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y);
+
+                        window.DrawLine(DrawPen, Top, Left);
+                        window.DrawLine(DrawPen, Left, Bottom);
+                        window.DrawLine(DrawPen, Bottom, Right);
+                        window.DrawLine(DrawPen, Right, Top);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            float Prev = DrawPen.Width;
             foreach (KeyValuePair<Lclass.Line, Color> item in CopyMapLines)
             {
                 if (item.Key != null)
                 {
-                    foreach (Lclass.Line Wall in item.Key.GenerateRec(Origin, ZoomAmount))
-                    {
-                        DrawPen.Color = item.Value;
-                        window.DrawLine(DrawPen, Wall.P1, Wall.P2);
-                    }
+                    DrawPen.Color = item.Value;
+                    DrawPen.Width = (item.Key.Width * 1.5f) / ZoomAmount;
+                    window.DrawLine(DrawPen, CalculateViewPosition(item.Key.P1), CalculateViewPosition(item.Key.P2));
                 }
             }
+            DrawPen.Width = Prev;
 
 
-            if (Frame >= 5)
+            if (ClearFrame)
             {
-                Frame = 0;
+                ClearFrame = false;
                 MapPoints.Clear();
                 MapLines.Clear();
             }
@@ -655,15 +738,15 @@ namespace Daedalus
             {
                 if (MinoState == MinoMode.On)
                 {
-                    //TODO
                     DebugLog("Mino Status", "Mino Active", false);
                     Mino.Update();
                 }
                 else
                 {
-                    //TODO
                     DebugLog("Mino Status", "Mino Disabled", false);
                 }
+
+                Mino.ConstantUpdate();
             }
         }
 
@@ -733,16 +816,30 @@ namespace Daedalus
             return Hitted;
         }
 
-        private int Frame = 0;
+        private bool ClearFrame = false;
         public void MinoEndUpdate()
         {
-            Frame++;
+            ClearFrame = true;
         }
 
-        public void AddPoint(PointF pt, Color color)
+        private bool UpdateFrame = false;
+        public void MinoRefresh()
         {
-            PointF NewPoint = CalculateViewPosition(pt);
-            KeyValuePair<PointF, Color> NewItem = new KeyValuePair<PointF, Color>(NewPoint, color);
+            UpdateFrame = true;
+        }
+
+        public struct TargetPoint
+        {
+            public PointF Point;
+            public enum DrawType { Dot, Cross, Diamond }
+            public DrawType Type;
+            public Color color;
+            public float Diameter;
+        }
+        public void AddPoint(TargetPoint Point)
+        {
+            PointF NewPoint = CalculateViewPosition(Point.Point);
+            KeyValuePair<PointF, TargetPoint> NewItem = new KeyValuePair<PointF, TargetPoint>(NewPoint, Point);
             if (!MapPoints.Contains(NewItem))
                 MapPoints.Add(NewItem);
         }

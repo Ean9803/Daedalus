@@ -47,6 +47,7 @@ namespace Daedalus
             this.mapToolStrip = new System.Windows.Forms.ToolStrip();
             this.targetBtn = new System.Windows.Forms.ToolStripButton();
             this.roamBtn = new System.Windows.Forms.ToolStripButton();
+            this.ClearMemory = new System.Windows.Forms.ToolStripButton();
             this.mapMode = new System.Windows.Forms.ToolStripLabel();
             this.playBtn = new System.Windows.Forms.ToolStripButton();
             this.stopBtn = new System.Windows.Forms.ToolStripButton();
@@ -258,6 +259,10 @@ namespace Daedalus
             this.mapScene.TabIndex = 3;
             this.mapScene.TabStop = false;
             this.mapScene.Paint += new System.Windows.Forms.PaintEventHandler(this.mapScene_Paint);
+            this.mapScene.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapScene_MouseDown);
+            this.mapScene.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapScene_Mouse);
+            this.mapScene.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapScene_MouseUp);
+            this.mapScene.MouseLeave += new System.EventHandler(this.mapScene_MouseLeave);
             // 
             // mapToolStrip
             // 
@@ -265,6 +270,7 @@ namespace Daedalus
             this.mapToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.targetBtn,
             this.roamBtn,
+            this.ClearMemory,
             this.mapMode,
             this.playBtn,
             this.stopBtn});
@@ -282,7 +288,7 @@ namespace Daedalus
             this.targetBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.targetBtn.Name = "targetBtn";
             this.targetBtn.Size = new System.Drawing.Size(29, 24);
-            this.targetBtn.Text = "Target Mode";
+            this.targetBtn.Text = "Type Mode";
             this.targetBtn.Click += new System.EventHandler(this.targetBtn_Click);
             // 
             // roamBtn
@@ -295,6 +301,18 @@ namespace Daedalus
             this.roamBtn.Size = new System.Drawing.Size(29, 24);
             this.roamBtn.Text = "Roam Mode";
             this.roamBtn.Click += new System.EventHandler(this.roamBtn_Click);
+            // 
+            // ClearMemory
+            // 
+            this.ClearMemory.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ClearMemory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ClearMemory.Image = ((System.Drawing.Image)(resources.GetObject("ClearMemory.Image")));
+            this.ClearMemory.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ClearMemory.Name = "ClearMemory";
+            this.ClearMemory.Size = new System.Drawing.Size(29, 24);
+            this.ClearMemory.Text = "ClearMemory";
+            this.ClearMemory.ToolTipText = "Clear Memory";
+            this.ClearMemory.Click += new System.EventHandler(this.ClearMemory_Click);
             // 
             // mapMode
             // 
@@ -339,7 +357,7 @@ namespace Daedalus
             this.zoomSlider.TabIndex = 5;
             this.zoomSlider.TabStop = false;
             this.zoomSlider.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.zoomSlider.Value = 100;
+            this.zoomSlider.Value = 50;
             this.zoomSlider.Scroll += new System.EventHandler(this.zoomSlider_Scroll);
             // 
             // MinotaurWorker
@@ -363,7 +381,7 @@ namespace Daedalus
             // 
             this.saveMapFile.FileOk += new System.ComponentModel.CancelEventHandler(this.saveMapFile_FileOk);
             // 
-            // DaedalusForm
+            // Knossos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -434,6 +452,7 @@ namespace Daedalus
         private System.Windows.Forms.OpenFileDialog openMapFile;
         private System.Windows.Forms.SaveFileDialog saveMapFile;
         private System.Windows.Forms.ToolStripButton setMinoPos;
+        private System.Windows.Forms.ToolStripButton ClearMemory;
     }
 }
 
