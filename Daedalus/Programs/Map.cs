@@ -137,7 +137,7 @@ public class Map
         // Connecting points
         List<Lclass.Line> preBuffers = new List<Lclass.Line>();
         //PointF? PrevSlope = null;
-        float PrevSlope = float.NaN;
+        //float PrevSlope = float.NaN;
         List<KeyValuePair<double, PointF>> currentPoints = orderedList.ToList();
         for (int i = 1; i < currentPoints.Count; i++)
         {
