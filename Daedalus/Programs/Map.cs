@@ -57,6 +57,7 @@ public class Map
             bricks.Add(new Lclass.Brick() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
         }
         ForceRefresh = true;
+        ClearMem = true;
     }
 
     public void ClearMemory()
