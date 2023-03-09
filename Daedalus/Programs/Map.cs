@@ -15,6 +15,7 @@ public class Map
     private double ScanSpeed = 1;
     public bool ForceRefresh = false;
     private int CurrentSweep = 0;
+    private double Clock = 0;
 
     public Map(float brickWidth = 3, double ScanSpeed = 1)
     {
@@ -106,24 +107,33 @@ public class Map
         // Sorting Points
         SortedDictionary<double, PointF> orderedList = new SortedDictionary<double, PointF>();
         double angle;
+        double Key;
         for (int i = 0; i < collisionPoints.Count; i++)
         {
-            angle = (getAngleRad(location, collisionPoints[i]) + AngleOffset[CurrentSweep]) % 360;
-
-            if (!orderedList.ContainsKey(angle))
+            angle = (getAngleRad(location, collisionPoints[i]));
+            Key = (angle + AngleOffset[CurrentSweep]) % 360.0f;
+            if (!orderedList.ContainsKey(Key))
             {
-                orderedList.Add(angle, collisionPoints[i]);
+                orderedList.Add(Key, collisionPoints[i]);
 
                 Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                 {
                     Point = collisionPoints[i],
-                    color = HSL2RGB(Math.Abs(angle) / 360.0f, 0.5, 0.5),
+                    color = HSL2RGB(((angle + Clock) % 360.0f) / 360.0f, 0.5, 0.5),
                     Type = Knossos.TargetPoint.DrawType.Dot,
-                    Diameter = 2
+                    Diameter = 5
                 });
             }       
         }
-        CurrentSweep = ++CurrentSweep % AngleOffset.Length;
+        Clock += 0.1f;
+        if (Clock > 360)
+        {
+            Clock = 0;
+        }
+        if (++CurrentSweep >= AngleOffset.Length)
+        {
+            CurrentSweep = 0;
+        }
 
         AngleOffset[CurrentSweep] += ScanSpeed * (CurrentSweep % 2 == 0 ? 1 : -1);
         if (AngleOffset[CurrentSweep] > 360)

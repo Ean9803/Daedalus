@@ -30,7 +30,7 @@ namespace Daedalus.Daedalus.Programs
             this.ViewDist = ViewDist;
             LastRes = Res = Resolution;
             CalculateRes();
-            minotaurMap = new Map(ScanSpeed: 10);
+            minotaurMap = new Map(Size + (bias * 2), 10);
         }
 
         public float getRadius()

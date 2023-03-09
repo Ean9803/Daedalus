@@ -635,35 +635,36 @@ namespace Daedalus
             for (int i = 0; i < CopyMapPoints.Length; i++)
             {
                 DrawPen.Color = CopyMapPoints[i].Value.color;
+                float Diameter = CopyMapPoints[i].Value.Diameter / ZoomAmount;
                 switch (CopyMapPoints[i].Value.Type)
                 {
                     case TargetPoint.DrawType.Dot:
                         SolidBrush Fill = new SolidBrush(CopyMapPoints[i].Value.color);
                         window.FillEllipse(Fill, new Rectangle()
                         {
-                            X = (int)(CopyMapPoints[i].Key.X - (CopyMapPoints[i].Value.Diameter / 2)),
-                            Y = (int)(CopyMapPoints[i].Key.Y - (CopyMapPoints[i].Value.Diameter / 2)),
-                            Width = (int)CopyMapPoints[i].Value.Diameter,
-                            Height = (int)CopyMapPoints[i].Value.Diameter
+                            X = (int)(CopyMapPoints[i].Key.X - (Diameter / 2)),
+                            Y = (int)(CopyMapPoints[i].Key.Y - (Diameter / 2)),
+                            Width = (int)Diameter,
+                            Height = (int)Diameter
                         });
                         Fill.Dispose();
                         break;
                     case TargetPoint.DrawType.Cross:
-                        PointF UpperLeft = new PointF(CopyMapPoints[i].Key.X - CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y - CopyMapPoints[i].Value.Diameter);
-                        PointF LowerRight = new PointF(CopyMapPoints[i].Key.X + CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y + CopyMapPoints[i].Value.Diameter);
+                        PointF UpperLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y - Diameter);
+                        PointF LowerRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y + Diameter);
 
-                        PointF LowerLeft = new PointF(CopyMapPoints[i].Key.X - CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y + CopyMapPoints[i].Value.Diameter);
-                        PointF UpperRight = new PointF(CopyMapPoints[i].Key.X + CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y - CopyMapPoints[i].Value.Diameter);
+                        PointF LowerLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y + Diameter);
+                        PointF UpperRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y - Diameter);
 
                         window.DrawLine(DrawPen, UpperLeft, LowerRight);
                         window.DrawLine(DrawPen, LowerLeft, UpperRight);
                         break;
                     case TargetPoint.DrawType.Diamond:
-                        PointF Top = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y - CopyMapPoints[i].Value.Diameter);
-                        PointF Bottom = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y + CopyMapPoints[i].Value.Diameter);
+                        PointF Top = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y - Diameter);
+                        PointF Bottom = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y + Diameter);
 
-                        PointF Left = new PointF(CopyMapPoints[i].Key.X - CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y);
-                        PointF Right = new PointF(CopyMapPoints[i].Key.X + CopyMapPoints[i].Value.Diameter, CopyMapPoints[i].Key.Y);
+                        PointF Left = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y);
+                        PointF Right = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y);
 
                         window.DrawLine(DrawPen, Top, Left);
                         window.DrawLine(DrawPen, Left, Bottom);
