@@ -636,6 +636,7 @@ namespace Daedalus
             {
                 DrawPen.Color = CopyMapPoints[i].Value.color;
                 float Diameter = CopyMapPoints[i].Value.Diameter / (CopyMapPoints[i].Value.Scale ? ZoomAmount : 1);
+                Diameter = Math.Max(Diameter, 0.01f);
                 switch (CopyMapPoints[i].Value.Type)
                 {
                     case TargetPoint.DrawType.Dot:

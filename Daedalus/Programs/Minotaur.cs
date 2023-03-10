@@ -17,7 +17,6 @@ namespace Daedalus.Daedalus.Programs
         private PointF Pos;
         private float[] Angles;
         private float ViewDist;
-        private int RefreshScreen = 0;
 
         private List<PointF> Map = new List<PointF>();
         private Map minotaurMap;
@@ -30,7 +29,7 @@ namespace Daedalus.Daedalus.Programs
             this.ViewDist = ViewDist;
             LastRes = Res = Resolution;
             CalculateRes();
-            minotaurMap = new Map(Size + (bias * 2), 10);
+            minotaurMap = new Map(Size + (bias * 2), 25, 50);
         }
 
         public float getRadius()
@@ -80,19 +79,15 @@ namespace Daedalus.Daedalus.Programs
                         Map.Add((PointF)item);
                 }
             }
-            minotaurMap.ForceRefresh = true;
-            RefreshScreen = minotaurMap.CreateBuffer(Map, getPosition(), Radius + bias) ? 5 : RefreshScreen;
+
+            minotaurMap.CreateBuffer(Map, getPosition(), Radius + bias);
             Map.Clear();
         }
 
         public void ConstantUpdate()
         {
-            if (RefreshScreen > 0 || minotaurMap.ClearMem)
-            {
-                RefreshScreen--;
-                minotaurMap.DisplayMap(getPosition());
-                KnossosForm.MinoRefresh();
-            }
+            minotaurMap.DisplayMap(getPosition(), 2);
+            KnossosForm.MinoRefresh();
             KnossosForm.MinoEndUpdate();
         }
 

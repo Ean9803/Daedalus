@@ -16,6 +16,8 @@ public class Map
     private double[] AngleOffset = new double[10];
     private double ScanSpeed = 1;
     public bool ForceRefresh = false;
+    private bool CanSort = true;
+    private bool RefreshSort = false;
     private int CurrentSweep = 0;
     private double Clock = 0;
     private float GridSize;
@@ -60,7 +62,10 @@ public class Map
 
             bricks.Add(new Lclass.Brick() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
         }
-        RefreshSortedBricks();
+        if (CanSort)
+            RefreshSortedBricks();
+        else
+            RefreshSort = true;
         ForceRefresh = true;
         ClearMem = true;
     }
@@ -89,7 +94,8 @@ public class Map
         {
             if (Sortedbricks.ContainsKey(Point))
             {
-                Sortedbricks[Point].Add(item);
+                if (!Sortedbricks[Point].Contains(item))
+                    Sortedbricks[Point].Add(item);
             }
             else
             {
@@ -129,30 +135,47 @@ public class Map
 
     private PointF Snap(PointF Point)
     {
-        int Increment = (int)MathF.Round(GridSize * 2);
-        return new PointF((int)(Point.X / Increment) * Increment, (int)(Point.Y / Increment) * Increment);
+        return new PointF(
+            ((MathF.Floor((Point.X + (GridSize)) / (GridSize * 2))) * (GridSize * 2)),
+            ((MathF.Floor((Point.Y + (GridSize)) / (GridSize * 2))) * (GridSize * 2))
+            );
+    }
+
+    private List<PointF> SnapCoords(PointF Point, int Radius)
+    {
+        List<PointF> Coords = new List<PointF>();
+
+        PointF Center = Snap(Point);
+
+        for (int i = -Radius; i <= Radius; i++)
+        {
+            for (int j = -Radius; j <= Radius; j++)
+            {
+                Coords.Add(Snap(new PointF(Center.X - (GridSize * 2 * i), Center.Y - (GridSize * 2 * j))));
+            }
+        }
+
+        return Coords;
     }
 
     private List<PointF> LineCoords(PointF P1, PointF P2)
     {
         List<PointF> GridCorrdinates = new List<PointF>();
 
-        int Increment = (int)MathF.Round(GridSize * 2);
+        float Increment = (GridSize * 2);
 
-        int x1, y1, x2, y2;
-        x1 = (int)(P1.X / Increment) * Increment;
-        y1 = (int)(P1.Y / Increment) * Increment;
-        x2 = (int)(P2.X / Increment) * Increment;
-        y2 = (int)(P2.Y / Increment) * Increment;
+        PointF mP1, mP2;
+        mP1 = Snap(P1);
+        mP2 = Snap(P2);
+        
+        float i, error, errorprev, ddy, ddx;
+        float y = mP1.Y, x = mP1.X;
+        float dx = (mP2.X - mP1.X) / Increment;
+        float dy = (mP2.Y - mP1.Y) / Increment;
+        GridCorrdinates.Add(mP1);
 
-        int i, error, errorprev, ddy, ddx;
-        int y = y1, x = x1;
-        int dx = (x2 - x1) / Increment;
-        int dy = (y2 - y1) / Increment;
-        GridCorrdinates.Add(new PointF(x1, y1));
-
-        int ystep = Math.Sign(dy) * Increment;
-        int xstep = Math.Sign(dx) * Increment;
+        float ystep = Math.Sign(dy) * Increment;
+        float xstep = Math.Sign(dx) * Increment;
         dy = Math.Abs(dy);
         dx = Math.Abs(dx);
         ddy = 2 * dy;
@@ -215,7 +238,10 @@ public class Map
     public void ClearMemory()
     {
         if (CanClear)
+        {
             bricks.Clear();
+            Sortedbricks.Clear();
+        }
         else
             Clear = true;
         ClearMem = true;
@@ -401,35 +427,73 @@ public class Map
         return NewData;
     }
 
-    public void DisplayMap(PointF Focus)
+    public void DisplayMap(PointF Focus, int DisplayRadius)
     {
-        CanClear = false;
         /*
         foreach (Lclass.Brick item in bricks)
         {
             Knossos.KnossosUI.addLine(item, HSL2RGB(3, 0.5, 0.5));
         }
         */
-        Focus = Snap(Focus);
+
+        if (Clear)
+        {
+            ClearMemory();
+            Clear = false;
+        }
+
+        CanClear = false;
+
+        if (RefreshSort)
+        {
+            RefreshSort = false;
+            RefreshSortedBricks();
+        }
+
+        CanSort = false;
+        List<PointF> Focuses = SnapCoords(Focus, DisplayRadius);
+        PointF NewF = Snap(Focus);
+        bool Covered = false;
         foreach (PointF item in Sortedbricks.Keys)
         {
-            if (item.X == Focus.X && item.Y == Focus.Y)
+            foreach (PointF FocusPoint in Focuses)
             {
-                foreach (Lclass.Brick wall in Sortedbricks[item])
+                if (item.X == FocusPoint.X && item.Y == FocusPoint.Y)
                 {
-                    Knossos.KnossosUI.addLine(wall, HSL2RGB(3, 0.5, 0.5));
+                    foreach (Lclass.Brick wall in Sortedbricks[item])
+                    {
+                        Knossos.KnossosUI.addLine(wall, HSL2RGB(3, 0.5, 0.5));
+                    }
+                    break;
                 }
             }
             Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
             {
                 Point = item,
-                color = Color.DarkOrange,
+                color = (item.X == NewF.X && item.Y == NewF.Y) ? Color.Green : Color.DarkOrange,
                 Type = Knossos.TargetPoint.DrawType.Square,
-                Diameter = GridSize,
+                Diameter = GridSize - ((item.X == NewF.X && item.Y == NewF.Y) ? 10 : 0),
+                Scale = true
+            });
+
+            if (item.X == NewF.X && item.Y == NewF.Y)
+            {
+                Covered = true;
+            }
+        }
+        if (!Covered)
+        {
+            Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+            {
+                Point = NewF,
+                color = Color.Blue,
+                Type = Knossos.TargetPoint.DrawType.Square,
+                Diameter = GridSize - (Sortedbricks.Count > 0 ? 10 : 0),
                 Scale = true
             });
         }
         CanClear = true;
+        CanSort = true;
         ClearMem = false;
     }
 
