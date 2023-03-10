@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Metadata;
 
 public class Map
 {
     private float brickWidth = 0;
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
+    private Dictionary<PointF, List<Lclass.Brick>> Sortedbricks = new Dictionary<PointF, List<Lclass.Brick>>();
     private bool CanClear = false;
     private bool Clear = false;
     public bool ClearMem = false;
@@ -16,11 +18,13 @@ public class Map
     public bool ForceRefresh = false;
     private int CurrentSweep = 0;
     private double Clock = 0;
+    private float GridSize;
 
-    public Map(float brickWidth = 3, double ScanSpeed = 1)
+    public Map(float brickWidth = 3, double ScanSpeed = 1, float GridSize = 100)
     {
         this.brickWidth = brickWidth;
         this.ScanSpeed = ScanSpeed;
+        this.GridSize = GridSize;
 
         for (int i = 0; i < AngleOffset.Length; i++)
         {
@@ -56,8 +60,156 @@ public class Map
 
             bricks.Add(new Lclass.Brick() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
         }
+        RefreshSortedBricks();
         ForceRefresh = true;
         ClearMem = true;
+    }
+    
+    private List<Lclass.Brick> GetBricksAt(List<PointF> GridCoords)
+    {
+        List<Lclass.Brick> Overlap = new List<Lclass.Brick>();
+        foreach (PointF item in GridCoords)
+        {
+            if (Sortedbricks.ContainsKey(item))
+            {
+                foreach (Lclass.Brick brick in Sortedbricks[item])
+                {
+                    if (!Overlap.Contains(brick))
+                        Overlap.Add(brick);
+                }
+            }
+        }
+        return Overlap;
+    }
+
+    private void AddBrick(Lclass.Brick item, bool AddToList = true)
+    {
+        List<PointF> Coords = LineCoords(item.P1, item.P2);
+        foreach (PointF Point in Coords)
+        {
+            if (Sortedbricks.ContainsKey(Point))
+            {
+                Sortedbricks[Point].Add(item);
+            }
+            else
+            {
+                Sortedbricks.Add(Point, new List<Lclass.Brick>() { item });
+            }
+        }
+        if (AddToList)
+        {
+            if (!bricks.Contains(item))
+                bricks.Add(item);
+        }
+    }
+
+    private void RemoveBrick(Lclass.Brick Brick)
+    {
+        List<PointF> Coords = LineCoords(Brick.P1, Brick.P2);
+        foreach (PointF Point in Coords)
+        {
+            if (Sortedbricks.ContainsKey(Point))
+            {
+                if (Sortedbricks[Point].Contains(Brick))
+                    Sortedbricks[Point].Remove(Brick);
+            }
+        }
+        if (bricks.Contains(Brick))
+            bricks.Remove(Brick);
+    }
+
+    private void RefreshSortedBricks()
+    {
+        Sortedbricks.Clear();
+        foreach (Lclass.Brick item in bricks)
+        {
+            AddBrick(item, false);
+        }
+    }
+
+    private PointF Snap(PointF Point)
+    {
+        int Increment = (int)MathF.Round(GridSize * 2);
+        return new PointF((int)(Point.X / Increment) * Increment, (int)(Point.Y / Increment) * Increment);
+    }
+
+    private List<PointF> LineCoords(PointF P1, PointF P2)
+    {
+        List<PointF> GridCorrdinates = new List<PointF>();
+
+        int Increment = (int)MathF.Round(GridSize * 2);
+
+        int x1, y1, x2, y2;
+        x1 = (int)(P1.X / Increment) * Increment;
+        y1 = (int)(P1.Y / Increment) * Increment;
+        x2 = (int)(P2.X / Increment) * Increment;
+        y2 = (int)(P2.Y / Increment) * Increment;
+
+        int i, error, errorprev, ddy, ddx;
+        int y = y1, x = x1;
+        int dx = (x2 - x1) / Increment;
+        int dy = (y2 - y1) / Increment;
+        GridCorrdinates.Add(new PointF(x1, y1));
+
+        int ystep = Math.Sign(dy) * Increment;
+        int xstep = Math.Sign(dx) * Increment;
+        dy = Math.Abs(dy);
+        dx = Math.Abs(dx);
+        ddy = 2 * dy;
+        ddx = 2 * dx;
+
+        if (ddx >= ddy)
+        {
+            errorprev = error = dx;
+            for (i = 0; i < dx; i++)
+            {
+                x += xstep;
+                error += ddy;
+                if (error > ddx)
+                {
+                    y += ystep;
+                    error -= ddx;
+                    if (error + errorprev < ddx)
+                        GridCorrdinates.Add(new PointF(x, y - ystep));
+                    else if (error + errorprev > ddx)
+                        GridCorrdinates.Add(new PointF(x - xstep, y));
+                    else
+                    {
+                        GridCorrdinates.Add(new PointF(x, y - ystep));
+                        GridCorrdinates.Add(new PointF(x - xstep, y));
+                    }
+                }
+                GridCorrdinates.Add(new PointF(x, y));
+                errorprev = error;
+            }
+        }
+        else
+        {
+            errorprev = error = dy;
+            for (i = 0; i < dy; i++)
+            {
+                y += ystep;
+                error += ddx;
+                if (error > ddy)
+                {
+                    x += xstep;
+                    error -= ddy;
+                    if (error + errorprev < ddy)
+                        GridCorrdinates.Add(new PointF(x - xstep, y));
+                    else if (error + errorprev > ddy)
+                        GridCorrdinates.Add(new PointF(x, y - ystep));
+                    else
+                    {
+                        GridCorrdinates.Add(new PointF(x - xstep, y));
+                        GridCorrdinates.Add(new PointF(x, y - ystep));
+                    }
+                }
+                GridCorrdinates.Add(new PointF(x, y));
+                errorprev = error;
+            }
+        }
+
+        return GridCorrdinates;
     }
 
     public void ClearMemory()
@@ -249,12 +401,33 @@ public class Map
         return NewData;
     }
 
-    public void DisplayMap()
+    public void DisplayMap(PointF Focus)
     {
         CanClear = false;
+        /*
         foreach (Lclass.Brick item in bricks)
         {
             Knossos.KnossosUI.addLine(item, HSL2RGB(3, 0.5, 0.5));
+        }
+        */
+        Focus = Snap(Focus);
+        foreach (PointF item in Sortedbricks.Keys)
+        {
+            if (item.X == Focus.X && item.Y == Focus.Y)
+            {
+                foreach (Lclass.Brick wall in Sortedbricks[item])
+                {
+                    Knossos.KnossosUI.addLine(wall, HSL2RGB(3, 0.5, 0.5));
+                }
+            }
+            Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+            {
+                Point = item,
+                color = Color.DarkOrange,
+                Type = Knossos.TargetPoint.DrawType.Square,
+                Diameter = GridSize,
+                Scale = true
+            });
         }
         CanClear = true;
         ClearMem = false;
@@ -285,7 +458,7 @@ public class Map
         List<sledgeHammer> wreckingBall = new List<sledgeHammer>();
 
         bool FoundIntercection = false;
-        foreach (Lclass.Brick item in bricks)
+        foreach (Lclass.Brick item in GetBricksAt(LineCoords(preBuffers[0].P1, preBuffers[0].P2)))
         {
             FoundIntercection = processIntersection(item, preBuffers[0],
             (sledgeHammer.point pull, PointF Outer) =>
@@ -308,13 +481,13 @@ public class Map
             if (!FoundIntercection)
             {
                 Changed = true;
-                bricks.Add(new Lclass.Brick() { P1 = preBuffers[0].P1, P2 = preBuffers[0].P2, Width = brickWidth });
+                AddBrick(new Lclass.Brick() { P1 = preBuffers[0].P1, P2 = preBuffers[0].P2, Width = brickWidth });
             }
         }
         else
         {
             Changed = true;
-            bricks.Add(processBricks(wreckingBall));
+            AddBrick(processBricks(wreckingBall));
         }
 
         preBuffers.RemoveAt(0);
@@ -346,7 +519,7 @@ public class Map
 
         sledgeHammer CurrentBrick = preBricks[0];
         preBricks.RemoveAt(0);
-        bricks.Remove(CurrentBrick.intersectingBrick);
+        RemoveBrick(CurrentBrick.intersectingBrick);
         if(preBricks.Count == 0)
         {
             return CurrentBrick.intersectingBrick;

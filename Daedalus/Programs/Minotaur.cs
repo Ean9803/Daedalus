@@ -80,7 +80,7 @@ namespace Daedalus.Daedalus.Programs
                         Map.Add((PointF)item);
                 }
             }
-
+            minotaurMap.ForceRefresh = true;
             RefreshScreen = minotaurMap.CreateBuffer(Map, getPosition(), Radius + bias) ? 5 : RefreshScreen;
             Map.Clear();
         }
@@ -90,7 +90,7 @@ namespace Daedalus.Daedalus.Programs
             if (RefreshScreen > 0 || minotaurMap.ClearMem)
             {
                 RefreshScreen--;
-                minotaurMap.DisplayMap();
+                minotaurMap.DisplayMap(getPosition());
                 KnossosForm.MinoRefresh();
             }
             KnossosForm.MinoEndUpdate();

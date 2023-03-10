@@ -635,7 +635,7 @@ namespace Daedalus
             for (int i = 0; i < CopyMapPoints.Length; i++)
             {
                 DrawPen.Color = CopyMapPoints[i].Value.color;
-                float Diameter = CopyMapPoints[i].Value.Diameter / ZoomAmount;
+                float Diameter = CopyMapPoints[i].Value.Diameter / (CopyMapPoints[i].Value.Scale ? ZoomAmount : 1);
                 switch (CopyMapPoints[i].Value.Type)
                 {
                     case TargetPoint.DrawType.Dot:
@@ -670,6 +670,18 @@ namespace Daedalus
                         window.DrawLine(DrawPen, Left, Bottom);
                         window.DrawLine(DrawPen, Bottom, Right);
                         window.DrawLine(DrawPen, Right, Top);
+                        break;
+                    case TargetPoint.DrawType.Square:
+                        PointF TopLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y - Diameter);
+                        PointF BottomRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y + Diameter);
+
+                        PointF BottomLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y + Diameter);
+                        PointF TopRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y - Diameter);
+
+                        window.DrawLine(DrawPen, TopLeft, TopRight);
+                        window.DrawLine(DrawPen, TopRight, BottomRight);
+                        window.DrawLine(DrawPen, BottomRight, BottomLeft);
+                        window.DrawLine(DrawPen, BottomLeft, TopLeft);
                         break;
                     default:
                         break;
@@ -834,10 +846,11 @@ namespace Daedalus
         public struct TargetPoint
         {
             public PointF Point;
-            public enum DrawType { Dot, Cross, Diamond }
+            public enum DrawType { Dot, Cross, Diamond, Square }
             public DrawType Type;
             public Color color;
             public float Diameter;
+            public bool Scale;
         }
         public void AddPoint(TargetPoint Point)
         {
