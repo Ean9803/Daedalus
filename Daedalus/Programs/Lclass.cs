@@ -129,5 +129,53 @@ public static class Lclass
     {
         public Brick LeftBrick;
         public Brick RightBrick;
+        public List<PointF> Regions = new List<PointF>();
+        public List<KeyValuePair<PointF, List<Brick>>> Parents = new List<KeyValuePair<PointF, List<Brick>>>();
+
+        public Brick AddRegion(PointF Region)
+        {
+            if (!Regions.Contains(Region))
+                Regions.Add(Region);
+            return this;
+        }
+
+        public Brick AddRegions(List<PointF> Region)
+        {
+            foreach (PointF item in Region)
+            {
+                AddRegion(item);
+            }
+            return this;
+        }
+
+        public Brick AddParent(List<Brick> Parent, PointF Region)
+        {
+            Parents.Add(new KeyValuePair<PointF, List<Brick>>(Region, Parent));
+            return this;
+        }
+
+        public List<PointF> AddToParent(Brick NewBrick)
+        {
+            List<PointF> Affected = new List<PointF>();
+            foreach (KeyValuePair<PointF, List<Brick>> item in Parents)
+            {
+                //if (!item.Value.Contains(NewBrick))
+                {
+                    item.Value.Add(NewBrick);
+                    Affected.Add(item.Key);
+                }
+            }
+            return Affected;
+        }
+
+        public void RemoveFromParent()
+        {
+            foreach (KeyValuePair<PointF, List<Brick>> item in Parents)
+            {
+                if (item.Value.Contains(this))
+                    item.Value.Remove(this);
+            }
+            Parents.Clear();
+        }
     }
 }

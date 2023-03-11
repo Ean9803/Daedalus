@@ -28,6 +28,7 @@ public class Map
     private int CurrentSweep = 0;
     private double Clock = 0;
     private float GridSize;
+    private const float MaxSlopeDiff = 0.5f;
 
     public Map(float brickWidth = 3, double ScanSpeed = 1, float GridSize = 100)
     {
@@ -107,50 +108,110 @@ public class Map
     {
         List<PointF> Coords = LineCoords(item.P1, item.P2);
         bool Added = false;
-        foreach (PointF Point in Coords)
+        bool Same = false;
+        bool NewRegions = true;
+        item.AddRegions(Coords);
+        while (NewRegions)
         {
-            if (Sortedbricks.ContainsKey(Point))
+            foreach (PointF Point in Coords)
             {
-                for (int i = Sortedbricks[Point].Count - 1; i >= 0 && !Added; i--)
+                if (Sortedbricks.ContainsKey(Point))
                 {
-                    Lclass.Brick Buff = MaxDist(Sortedbricks[Point][i]);
-                    if (SimilarSlope(Buff.getSlope(), item.getSlope(), 0.1f))
+                    for (int i = Sortedbricks[Point].Count - 1; i >= 0 && !Added && !Same; i--)
                     {
-                        if (LineDistance(Buff, item.P1) < brickWidth / 2 && LineDistance(Buff, item.P2) < brickWidth / 2)
+                        Lclass.Brick Buff = MaxDist(Sortedbricks[Point][i]);
+                        if (Buff.P1 != item.P1 && Buff.P2 != item.P2)
                         {
-                            if (Encaps(Buff, item))
+                            if (SimilarSlope(Buff.getSlope(), item.getSlope(), MaxSlopeDiff))
                             {
-                                Added = true;
-                            }
-                            else if (Encaps(item, Buff))
-                            {
-                                Sortedbricks[Point][i].Clear();
-                                Sortedbricks[Point][i].Add(item);
-                                Added = true;
-                            }
-                            else
-                            {
-                                if (Touching(Buff, item) || MinDistance(Buff, item) < Diameter)
+                                if (LineDistance(Buff, item.P1) < brickWidth / 2 && LineDistance(Buff, item.P2) < brickWidth / 2)
                                 {
-                                    Added = true;
-                                    Sortedbricks[Point][i].Add(item);
-                                    Lclass.Brick NewBuff = MaxDist(Sortedbricks[Point][i]);
-                                    Sortedbricks[Point][i].Clear();
-                                    if (LineCoords(NewBuff.P1, NewBuff.P2).Contains(Point))
-                                        Sortedbricks[Point][i].Add(NewBuff);
+                                    if (Encaps(Buff, item))
+                                    {
+                                        item.AddRegions(Buff.Regions);
+                                        item.P1 = Buff.P1;
+                                        item.P2 = Buff.P2;
+                                        Sortedbricks[Point][i].Add(item);
+                                        List<Lclass.Brick> Collection = new List<Lclass.Brick>(Sortedbricks[Point][i]);
+                                        foreach (Lclass.Brick Brick in Collection)
+                                        {
+                                            item.AddRegions(Brick.AddToParent(item));
+                                            Brick.RemoveFromParent();
+                                        }
+                                        Added = true;
+                                    }
+                                    else if (Encaps(item, Buff))
+                                    {
+                                        item.AddRegions(Buff.Regions);
+                                        Sortedbricks[Point][i].Add(item);
+                                        List<Lclass.Brick> Collection = new List<Lclass.Brick>(Sortedbricks[Point][i]);
+                                        foreach (Lclass.Brick Brick in Collection)
+                                        {
+                                            item.AddRegions(Brick.AddToParent(item));
+                                            Brick.RemoveFromParent();
+                                        }
+                                        Added = true;
+                                    }
+                                    else
+                                    {
+                                        if (Touching(Buff, item) || MinDistance(Buff, item) < Diameter)
+                                        {
+                                            Added = true;
+                                            List<Lclass.Brick> NewGroup = new List<Lclass.Brick>(Sortedbricks[Point][i]);
+                                            NewGroup.Add(item);
+                                            Lclass.Brick NewBuff = MaxDist(NewGroup);
+                                            
+                                            if (LineCoords(NewBuff.P1, NewBuff.P2).Contains(Point))
+                                            {
+                                                item.AddRegions(Buff.Regions);
+                                                item.P1 = NewBuff.P1;
+                                                item.P2 = NewBuff.P2;
+                                                Sortedbricks[Point][i].Add(item);
+
+                                                List<Lclass.Brick> Collection = new List<Lclass.Brick>(Sortedbricks[Point][i]);
+                                                foreach (Lclass.Brick Brick in Collection)
+                                                {
+                                                    item.AddRegions(Brick.AddToParent(item));
+                                                    Brick.RemoveFromParent();
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+                        else
+                        {
+                            Same = true;
+                            Added = false;
+                        }
+                    }
+                    if (!Added && !Same)
+                    {
+                        List<Lclass.Brick> Collection = new List<Lclass.Brick>();
+                        item.AddRegion(Point).AddParent(Collection, Point);
+                        Collection.Add(item);
+                        Sortedbricks[Point].Add(Collection);
+                        Added = true;
                     }
                 }
-                if (!Added)
+                else
                 {
-                    Sortedbricks[Point].Add(new List<Lclass.Brick>() { item });
+                    List<List<Lclass.Brick>> Group = new List<List<Lclass.Brick>>();
+                    List<Lclass.Brick> Collection =  new List<Lclass.Brick>();
+                    item.AddRegion(Point).AddParent(Collection, Point);
+                    Group.Add(Collection);
+                    Collection.Add(item);
+                    Sortedbricks.Add(Point, Group);
                 }
+            }
+            if (item.Regions.Count != Coords.Count)
+            {
+                Coords = item.Regions;
             }
             else
             {
-                Sortedbricks.Add(Point, new List<List<Lclass.Brick>>() { new List<Lclass.Brick>() { item } });
+                NewRegions = false;
             }
         }
         return Coords;
@@ -184,7 +245,7 @@ public class Map
                 {
                     for (int j = Sortedbricks[Point][i].Count - 1; j >= 0; j--)
                     {
-                        if (SimilarSlope(Sortedbricks[Point][i][j].getSlope(), Brick.getSlope(), 0.1f))
+                        if (SimilarSlope(Sortedbricks[Point][i][j].getSlope(), Brick.getSlope(), MaxSlopeDiff))
                         {
                             if (LineDistance(Sortedbricks[Point][i][j], Brick.P1) < brickWidth / 2 && LineDistance(Sortedbricks[Point][i][j], Brick.P2) < brickWidth / 2)
                             {
@@ -813,10 +874,12 @@ public class Map
         PointF Min = new Point(0, 0);
         double Distance = 0;
         List<PointF> Points = new List<PointF>();
+        Lclass.Brick Ret = new Lclass.Brick();
         for (int i = 0; i < Group.Count; i++)
         {
             Points.Add(Group[i].P1);
             Points.Add(Group[i].P2);
+            Ret.AddRegions(Group[i].Regions);
         }
         for (int i = 0; i < Points.Count; i++)
         {
@@ -832,12 +895,11 @@ public class Map
             }
         }
 
-        return new Lclass.Brick()
-        {
-            P1 = Max,
-            P2 = Min,
-            Width = brickWidth
-        };
+        Ret.P1 = Max;
+        Ret.P2 = Min;
+        Ret.Width = brickWidth;
+
+        return Ret;
     }
 
     private double MinDistance(Lclass.Line L1, Lclass.Line L2)
@@ -876,6 +938,8 @@ public class Map
 
     private float PointDistanceToLine(Lclass.Brick Item, PointF Point)
     {
+        if ((Item.P1 == Point || Item.P2 == Point))
+            return 0;
         PointF Mid = midpoint(Item.P1, Item.P2);
         if (Dist(Mid, Point) <= (Dist(Mid, Item.P1)))
         {
