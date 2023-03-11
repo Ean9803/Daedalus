@@ -9,7 +9,7 @@ namespace Daedalus.Daedalus.Programs
 {
     public class Minotaur
     {
-        private float Radius;
+        private float Diameter;
         private float bias;
         private int Res;
         private int LastRes;
@@ -24,17 +24,17 @@ namespace Daedalus.Daedalus.Programs
         public Minotaur(Knossos KnossosForm, float Size, float ViewDist = 100, int Resolution = 10, float bias = 1)
         {
             this.KnossosForm = KnossosForm;
-            Radius = Size;
+            Diameter = Size;
             this.bias = bias;
             this.ViewDist = ViewDist;
             LastRes = Res = Resolution;
             CalculateRes();
-            minotaurMap = new Map(Size + (bias * 2), 25, 50);
+            minotaurMap = new Map(Size + (bias * 2), 25, 25);
         }
 
         public float getRadius()
         {
-            return Radius;
+            return Diameter;
         }
 
         public void WipeMemory()
@@ -59,7 +59,7 @@ namespace Daedalus.Daedalus.Programs
 
         public void ImportMapData(string Data)
         {
-            minotaurMap.ImportMapData(Data);
+            minotaurMap.ImportMapData(Data, Diameter + bias);
         }
 
         public void Update()
@@ -80,13 +80,13 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            minotaurMap.CreateBuffer(Map, getPosition(), Radius + bias);
+            minotaurMap.CreateBuffer(Map, getPosition(), Diameter + bias);
             Map.Clear();
         }
 
         public void ConstantUpdate()
         {
-            minotaurMap.DisplayMap(getPosition(), 2);
+            minotaurMap.DisplayMap(getPosition(), 1, Diameter + bias);
             KnossosForm.MinoRefresh();
             KnossosForm.MinoEndUpdate();
         }

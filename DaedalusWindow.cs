@@ -48,7 +48,7 @@ namespace Daedalus
         public List<Lclass.Line> Walls = new List<Lclass.Line>();
         public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
         public List<KeyValuePair<PointF, TargetPoint>> MapPoints = new List<KeyValuePair<PointF, TargetPoint>>();
-        public List<KeyValuePair<Lclass.Line, Color>> MapLines = new List<KeyValuePair<Lclass.Line, Color>>();
+        public List<TargetLine> MapLines = new List<TargetLine>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
@@ -587,7 +587,7 @@ namespace Daedalus
         }
 
         KeyValuePair<PointF, TargetPoint>[] CopyMapPoints;
-        KeyValuePair<Lclass.Line, Color>[] CopyMapLines = new KeyValuePair<Lclass.Line, Color>[0];
+        TargetLine[] CopyMapLines = new TargetLine[0];
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Color.White, 2);
@@ -606,12 +606,18 @@ namespace Daedalus
             {
                 UpdateFrame = false;
                 Count = MapLines.Count;
-                CopyMapLines = new KeyValuePair<Lclass.Line, Color>[Count];
+                CopyMapLines = new TargetLine[Count];
                 for (int i = 0; i < Count; i++)
                 {
-                    if (i < MapLines.Count)
+                    if (i < MapLines.Count && MapLines[i].Line != null)
                     {
-                        CopyMapLines[i] = MapLines[i];
+                        CopyMapLines[i] = new TargetLine()
+                        {
+                            Line = new Lclass.Line() { P1 = MapLines[i].Line.P1, P2 = MapLines[i].Line.P2, Width = (MapLines[i].ViewWidth == 0 ? MapLines[i].Line.Width : MapLines[i].ViewWidth) },
+                            color = MapLines[i].color,
+                            Type = MapLines[i].Type,
+                            ViewWidth = MapLines[i].ViewWidth
+                        };
                     }
                 }
             }
@@ -621,13 +627,27 @@ namespace Daedalus
 
 
             float Prev = DrawPen.Width;
-            foreach (KeyValuePair<Lclass.Line, Color> item in CopyMapLines)
+            foreach (TargetLine item in CopyMapLines)
             {
-                if (item.Key != null)
+                if (item.Line != null)
                 {
-                    DrawPen.Color = item.Value;
-                    DrawPen.Width = (item.Key.Width * 1.5f) / ZoomAmount;
-                    window.DrawLine(DrawPen, CalculateViewPosition(item.Key.P1), CalculateViewPosition(item.Key.P2));
+                    DrawPen.Color = item.color;
+                    switch (item.Type)
+                    {
+                        case TargetLine.DrawType.Solid:
+                            DrawPen.Width = ((item.ViewWidth == 0 ? item.Line.Width : item.ViewWidth) * 1.5f) / ZoomAmount;
+                            window.DrawLine(DrawPen, CalculateViewPosition(item.Line.P1), CalculateViewPosition(item.Line.P2));
+                            break;
+                        case TargetLine.DrawType.Outline:
+                            DrawPen.Width = Prev;
+                            foreach (Lclass.Line Wall in item.Line.GenerateRec(Origin, ZoomAmount))
+                            {
+                                window.DrawLine(DrawPen, Wall.P1, Wall.P2);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             DrawPen.Width = Prev;
@@ -860,11 +880,20 @@ namespace Daedalus
             if (!MapPoints.Contains(NewItem))
                 MapPoints.Add(NewItem);
         }
-        public void addLine(Lclass.Line line, Color color)
+
+        public struct TargetLine
         {
-            KeyValuePair<Lclass.Line, Color> NewItem = new KeyValuePair<Lclass.Line, Color>(line, color);
-            if (!MapLines.Contains(NewItem))
-                MapLines.Add(NewItem);
+            public Lclass.Line Line;
+            public Color color;
+            public enum DrawType { Solid, Outline }
+            public DrawType Type;
+            public float ViewWidth;
+        }
+
+        public void addLine(TargetLine Line)
+        {
+            if (!MapLines.Contains(Line))
+                MapLines.Add(Line);
         }
 
 

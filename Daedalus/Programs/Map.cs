@@ -1,15 +1,21 @@
 ﻿using Daedalus;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata;
+using System.Runtime.Intrinsics.X86;
+using System.Threading.Channels;
+using static Lclass;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 public class Map
 {
     private float brickWidth = 0;
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
-    private Dictionary<PointF, List<Lclass.Brick>> Sortedbricks = new Dictionary<PointF, List<Lclass.Brick>>();
+    private Dictionary<PointF, List<List<Lclass.Brick>>> Sortedbricks = new Dictionary<PointF, List<List<Lclass.Brick>>>();
     private bool CanClear = false;
     private bool Clear = false;
     public bool ClearMem = false;
@@ -18,6 +24,7 @@ public class Map
     public bool ForceRefresh = false;
     private bool CanSort = true;
     private bool RefreshSort = false;
+    private bool IsDrawing = false;
     private int CurrentSweep = 0;
     private double Clock = 0;
     private float GridSize;
@@ -37,14 +44,20 @@ public class Map
     public string ExportMapData()
     {
         string output = "";
-        foreach (Lclass.Brick item in bricks)
+        foreach (List<List<Lclass.Brick>> item in Sortedbricks.Values)
         {
-            output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "#" + item.Width + "___";
+            foreach (List<Lclass.Brick> Group in item)
+            {
+                foreach (Lclass.Brick brick in Group)
+                {
+                    output += brick.P1.X + "/" + brick.P1.Y + "#" + brick.P2.X + "/" + brick.P2.Y + "#" + brick.Width + "___";
+                }
+            }
         }
         return output;
     }
 
-    public void ImportMapData(string Data)
+    public void ImportMapData(string Data, float Diameter)
     {
         bricks.Clear();
         string[] delimeters = { "___", "#", "/" };
@@ -63,7 +76,7 @@ public class Map
             bricks.Add(new Lclass.Brick() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
         }
         if (CanSort)
-            RefreshSortedBricks();
+            RefreshSortedBricks(Diameter);
         else
             RefreshSort = true;
         ForceRefresh = true;
@@ -77,59 +90,167 @@ public class Map
         {
             if (Sortedbricks.ContainsKey(item))
             {
-                foreach (Lclass.Brick brick in Sortedbricks[item])
+                foreach (List<Lclass.Brick> bricks in Sortedbricks[item])
                 {
-                    if (!Overlap.Contains(brick))
-                        Overlap.Add(brick);
+                    foreach (Lclass.Brick brick in bricks)
+                    {
+                        if (!Overlap.Contains(brick))
+                            Overlap.Add(brick);
+                    }
                 }
             }
         }
         return Overlap;
     }
 
-    private void AddBrick(Lclass.Brick item, bool AddToList = true)
+    private List<PointF> AddBrick(Lclass.Brick item, float Diameter)
     {
         List<PointF> Coords = LineCoords(item.P1, item.P2);
+        bool Added = false;
         foreach (PointF Point in Coords)
         {
             if (Sortedbricks.ContainsKey(Point))
             {
-                if (!Sortedbricks[Point].Contains(item))
-                    Sortedbricks[Point].Add(item);
+                for (int i = Sortedbricks[Point].Count - 1; i >= 0 && !Added; i--)
+                {
+                    Lclass.Brick Buff = MaxDist(Sortedbricks[Point][i]);
+                    if (SimilarSlope(Buff.getSlope(), item.getSlope(), 0.1f))
+                    {
+                        if (LineDistance(Buff, item.P1) < brickWidth / 2 && LineDistance(Buff, item.P2) < brickWidth / 2)
+                        {
+                            if (Encaps(Buff, item))
+                            {
+                                Added = true;
+                            }
+                            else if (Encaps(item, Buff))
+                            {
+                                Sortedbricks[Point][i].Clear();
+                                Sortedbricks[Point][i].Add(item);
+                                Added = true;
+                            }
+                            else
+                            {
+                                if (Touching(Buff, item) || MinDistance(Buff, item) < Diameter)
+                                {
+                                    Added = true;
+                                    Sortedbricks[Point][i].Add(item);
+                                    Lclass.Brick NewBuff = MaxDist(Sortedbricks[Point][i]);
+                                    Sortedbricks[Point][i].Clear();
+                                    if (LineCoords(NewBuff.P1, NewBuff.P2).Contains(Point))
+                                        Sortedbricks[Point][i].Add(NewBuff);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!Added)
+                {
+                    Sortedbricks[Point].Add(new List<Lclass.Brick>() { item });
+                }
             }
             else
             {
-                Sortedbricks.Add(Point, new List<Lclass.Brick>() { item });
+                Sortedbricks.Add(Point, new List<List<Lclass.Brick>>() { new List<Lclass.Brick>() { item } });
             }
         }
-        if (AddToList)
-        {
-            if (!bricks.Contains(item))
-                bricks.Add(item);
-        }
+        return Coords;
     }
 
-    private void RemoveBrick(Lclass.Brick Brick)
+    private bool Encaps(Lclass.Brick Outter, Lclass.Brick Inner)
+    {
+        float P1 = PointDistanceToLine(Outter, Inner.P1);
+        float P2 = PointDistanceToLine(Outter, Inner.P2);
+
+        return P1 != float.MaxValue && P2 != float.MaxValue;
+    }
+
+    private bool Touching(Lclass.Brick Outter, Lclass.Brick Inner)
+    {
+        float P1 = PointDistanceToLine(Outter, Inner.P1);
+        float P2 = PointDistanceToLine(Outter, Inner.P2);
+
+        return P1 != float.MaxValue ^ P2 != float.MaxValue;
+    }
+
+    private bool RemoveBrick(Lclass.Brick Brick)
     {
         List<PointF> Coords = LineCoords(Brick.P1, Brick.P2);
+        bool removed = false;
         foreach (PointF Point in Coords)
         {
             if (Sortedbricks.ContainsKey(Point))
             {
-                if (Sortedbricks[Point].Contains(Brick))
-                    Sortedbricks[Point].Remove(Brick);
+                for (int i = Sortedbricks[Point].Count - 1; i >= 0; i--)
+                {
+                    for (int j = Sortedbricks[Point][i].Count - 1; j >= 0; j--)
+                    {
+                        if (SimilarSlope(Sortedbricks[Point][i][j].getSlope(), Brick.getSlope(), 0.1f))
+                        {
+                            if (LineDistance(Sortedbricks[Point][i][j], Brick.P1) < brickWidth / 2 && LineDistance(Sortedbricks[Point][i][j], Brick.P2) < brickWidth / 2)
+                            {
+                                if (Encaps(Sortedbricks[Point][i][j], Brick))
+                                {
+                                    removed = true;
+                                    //Split
+                                }
+                                else if (Encaps(Brick, Sortedbricks[Point][i][j]))
+                                {
+                                    removed = true;
+                                    Sortedbricks[Point][i].RemoveAt(j);
+                                }
+                                else
+                                {
+                                    if (Touching(Sortedbricks[Point][i][j], Brick))
+                                    {
+                                        removed = true;
+                                        //Trim
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        if (bricks.Contains(Brick))
-            bricks.Remove(Brick);
+        return removed;
     }
 
-    private void RefreshSortedBricks()
+    private void RefreshSortedBricks(float Diameter)
     {
         Sortedbricks.Clear();
         foreach (Lclass.Brick item in bricks)
         {
-            AddBrick(item, false);
+            AddBrick(item, Diameter);
+        }
+        List<PointF> items = Sortedbricks.Keys.ToList();
+        Refresh(items);
+        ValidateLines(items);
+        ForceRefresh = true;
+    }
+
+    private void ValidateLines(List<PointF> items)
+    {
+        for (int h = items.Count - 1; h >= 0; h--)
+        {
+            for (int i = Sortedbricks[items[h]].Count - 1; i >= 0; i--)
+            {
+                for (int j = Sortedbricks[items[h]][i].Count - 1; j >= 0; j--)
+                {
+                    List<PointF> Coords = LineCoords(Sortedbricks[items[h]][i][j].P1, Sortedbricks[items[h]][i][j].P2);
+                    if (!Coords.Contains(items[h]))
+                    {
+                        Sortedbricks[items[h]][i].RemoveAt(j);
+                    }
+                }
+                if (Sortedbricks[items[h]][i].Count == 0)
+                {
+                    Sortedbricks[items[h]].RemoveAt(i);
+                }
+            }
+            if (Sortedbricks[items[h]].Count == 0)
+            {
+                Sortedbricks.Remove(items[h]);
+            }
         }
     }
 
@@ -278,7 +399,7 @@ public class Map
     //            ValI = 0;
     //    }
     //}
-    public bool CreateBuffer(List<PointF> collisionPoints, PointF location, float Radius)
+    public bool CreateBuffer(List<PointF> collisionPoints, PointF location, float Diameter)
     {
         //test();
         //return;
@@ -333,7 +454,7 @@ public class Map
             prevIndex = i - 1;
             index = i % currentPoints.Count;
 
-            if (Dist(currentPoints[index].Value, currentPoints[prevIndex].Value) < Radius)
+            if (Dist(currentPoints[index].Value, currentPoints[prevIndex].Value) < Diameter)
             {
                 preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
                 /*
@@ -410,10 +531,16 @@ public class Map
         }
         */
         CanClear = false;
-        bool NewData = processPreBuffers(preBuffers) || ForceRefresh;
-        if (NewData)
+        List<PointF> NewData = new List<PointF>();
+        bool Changed = ForceRefresh;
+        if (!IsDrawing)
         {
-            Refresh(Radius);
+            processPreBuffers(Diameter, preBuffers, ref NewData);
+            if (NewData.Count > 0 || ForceRefresh)
+            {
+                Refresh(Changed ? Sortedbricks.Keys.ToList() : NewData);
+                Changed |= true;
+            }
         }
         CanClear = true;
 
@@ -421,13 +548,13 @@ public class Map
         {
             ClearMemory();
             Clear = false;
-            NewData = true;
+            Changed |= true;
         }
         ForceRefresh = false;
-        return NewData;
+        return Changed;
     }
 
-    public void DisplayMap(PointF Focus, int DisplayRadius)
+    public void DisplayMap(PointF Focus, int DisplayRadius, float Diameter)
     {
         /*
         foreach (Lclass.Brick item in bricks)
@@ -447,32 +574,47 @@ public class Map
         if (RefreshSort)
         {
             RefreshSort = false;
-            RefreshSortedBricks();
+            RefreshSortedBricks(Diameter);
         }
 
         CanSort = false;
+        IsDrawing = true;
         List<PointF> Focuses = SnapCoords(Focus, DisplayRadius);
         PointF NewF = Snap(Focus);
         bool Covered = false;
+        bool Rendered = false;
+        float TotalSquares = MathF.Pow((DisplayRadius * 2) + 1, 2);
+        float I = 0;
         foreach (PointF item in Sortedbricks.Keys)
         {
+            Rendered = false;
             foreach (PointF FocusPoint in Focuses)
             {
                 if (item.X == FocusPoint.X && item.Y == FocusPoint.Y)
                 {
-                    foreach (Lclass.Brick wall in Sortedbricks[item])
+                    foreach (List<Lclass.Brick> Group in Sortedbricks[item])
                     {
-                        Knossos.KnossosUI.addLine(wall, HSL2RGB(3, 0.5, 0.5));
+                        foreach (Lclass.Brick wall in Group)
+                        {
+                            Knossos.KnossosUI.addLine(new Knossos.TargetLine()
+                            {
+                                Line = wall,
+                                color = HSL2RGB((I / TotalSquares), 0.5, 0.5),
+                                Type = Knossos.TargetLine.DrawType.Outline
+                            });
+                        }
                     }
+                    Rendered = true;
                     break;
                 }
             }
+
             Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
             {
                 Point = item,
-                color = (item.X == NewF.X && item.Y == NewF.Y) ? Color.Green : Color.DarkOrange,
+                color = (Rendered ? HSL2RGB((I / TotalSquares), 0.5, 0.5) : Color.DarkOrange),
                 Type = Knossos.TargetPoint.DrawType.Square,
-                Diameter = GridSize - ((item.X == NewF.X && item.Y == NewF.Y) ? 10 : 0),
+                Diameter = GridSize - ((item.X == NewF.X && item.Y == NewF.Y) ? 10 : (Rendered ? 5 : 0)),
                 Scale = true
             });
 
@@ -480,6 +622,9 @@ public class Map
             {
                 Covered = true;
             }
+
+            if (Rendered)
+                I++;
         }
         if (!Covered)
         {
@@ -492,6 +637,7 @@ public class Map
                 Scale = true
             });
         }
+        IsDrawing = false;
         CanClear = true;
         CanSort = true;
         ClearMem = false;
@@ -500,7 +646,6 @@ public class Map
     private struct sledgeHammer
     {
         public Lclass.Brick intersectingBrick;
-        public float slope;
         public enum point {p1, p2, both }
         public point ouioui;
         public PointF Target;
@@ -512,13 +657,13 @@ public class Map
         }
     }
 
-    private bool processPreBuffers(List<Lclass.Line> preBuffers)
+    private void processPreBuffers(float Diameter, List<Lclass.Line> preBuffers, ref List<PointF> Regions)
     {
         if(preBuffers.Count == 0)
         {
-            return false;
+            return;
         }
-
+        List<PointF> Changed = new List<PointF>();
         List<sledgeHammer> wreckingBall = new List<sledgeHammer>();
 
         bool FoundIntercection = false;
@@ -530,7 +675,6 @@ public class Map
                 wreckingBall.Add(new sledgeHammer()
                 {
                     intersectingBrick = item,
-                    slope = item.getSlope(),
                     ouioui = pull,
                     Target = Outer
                 });
@@ -539,29 +683,27 @@ public class Map
                 break;
         }
 
-        bool Changed = false;
+        //bool Changed = false;
         if (wreckingBall.Count == 0)
         {
             if (!FoundIntercection)
             {
-                Changed = true;
-                AddBrick(new Lclass.Brick() { P1 = preBuffers[0].P1, P2 = preBuffers[0].P2, Width = brickWidth });
+                Changed.AddRange(AddBrick(new Lclass.Brick() { P1 = preBuffers[0].P1, P2 = preBuffers[0].P2, Width = brickWidth }, Diameter));
             }
         }
         else
         {
-            Changed = true;
-            AddBrick(processBricks(wreckingBall));
+            Changed.AddRange(AddBrick(processBricks(wreckingBall), Diameter));
         }
 
         preBuffers.RemoveAt(0);
         if (preBuffers.Count == 0)
         {
-            return Changed;
+            return;
         }
         else
         {
-            return Changed || processPreBuffers(preBuffers);
+            processPreBuffers(Diameter, preBuffers, ref Regions);
         }
     }
 
@@ -583,7 +725,6 @@ public class Map
 
         sledgeHammer CurrentBrick = preBricks[0];
         preBricks.RemoveAt(0);
-        RemoveBrick(CurrentBrick.intersectingBrick);
         if(preBricks.Count == 0)
         {
             return CurrentBrick.intersectingBrick;
@@ -647,7 +788,7 @@ public class Map
                 }
             }
 
-            if (pull != sledgeHammer.point.both && InRange(MathF.Abs(Subject.getSlope()), MathF.Abs(Object.getSlope()), 0.1f) && action != null)
+            if (pull != sledgeHammer.point.both && SimilarSlope(Subject.getSlope(), Object.getSlope(), 0.1f) && action != null)
             {
                 action(pull, Outer);
             }
@@ -655,15 +796,65 @@ public class Map
         return FoundIntercection;
     }
 
-    private void Refresh(float Radius)
+    private bool SimilarSlope(PointF Slope1, PointF Slope2, float Thres)
     {
+        return (InRange(MathF.Abs(Slope1.X), MathF.Abs(Slope2.X), Thres)) && (InRange(MathF.Abs(Slope1.Y), MathF.Abs(Slope2.Y), Thres));
+    }
+
+    private void Refresh(List<PointF> RegionsChanged)
+    {
+        
+    }
+
+
+    private Lclass.Brick MaxDist(List<Lclass.Brick> Group)
+    {
+        PointF Max = new Point(0, 0);
+        PointF Min = new Point(0, 0);
+        double Distance = 0;
+        List<PointF> Points = new List<PointF>();
+        for (int i = 0; i < Group.Count; i++)
+        {
+            Points.Add(Group[i].P1);
+            Points.Add(Group[i].P2);
+        }
+        for (int i = 0; i < Points.Count; i++)
+        {
+            for (int j = i + 1; j < Points.Count; j++)
+            {
+                double D = Dist(Points[i], Points[j]);
+                if (D > Distance)
+                {
+                    Distance = D;
+                    Max = Points[i];
+                    Min = Points[j];
+                }
+            }
+        }
+
+        return new Lclass.Brick()
+        {
+            P1 = Max,
+            P2 = Min,
+            Width = brickWidth
+        };
+    }
+
+    private double MinDistance(Lclass.Line L1, Lclass.Line L2)
+    {
+        double P11 = Dist(L1.P1, L2.P1);
+        double P12 = Dist(L1.P1, L2.P2);
+        double P21 = Dist(L1.P2, L2.P1);
+        double P22 = Dist(L1.P2, L2.P2);
+
+        return Math.Sqrt(Math.Min(P11, Math.Min(P12, Math.Min(P21, P22))));
     }
 
     private double Dist(PointF P1, PointF P2)
     {
         float num = P1.X - P2.X;
         float num2 = P1.Y - P2.Y;
-        return Math.Sqrt(num * num + num2 * num2);
+        return (num * num + num2 * num2);
     }
 
     private PointF midpoint(PointF A, PointF B)
@@ -674,14 +865,21 @@ public class Map
         return ret;
     }
 
+    private float LineDistance(Lclass.Brick Item, PointF Point)
+    {
+        float num = MathF.Abs((Item.P2.X - Item.P1.X) * (Item.P1.Y - Point.Y) - (Item.P1.X - Point.X) * (Item.P2.Y - Item.P1.Y));
+        float dom = MathF.Sqrt(MathF.Pow((Item.P2.X - Item.P1.X), 2) + MathF.Pow((Item.P2.Y - Item.P1.Y), 2));
+        float distance = num / dom;
+        return distance;
+    }
+
+
     private float PointDistanceToLine(Lclass.Brick Item, PointF Point)
     {
         PointF Mid = midpoint(Item.P1, Item.P2);
         if (Dist(Mid, Point) <= (Dist(Mid, Item.P1)))
         {
-            float num = MathF.Abs((Item.P2.X - Item.P1.X) * (Item.P1.Y - Point.Y) - (Item.P1.X - Point.X) * (Item.P2.Y - Item.P1.Y));
-            float dom = MathF.Sqrt(MathF.Pow((Item.P2.X - Item.P1.X), 2) + MathF.Pow((Item.P2.Y - Item.P1.Y), 2));
-            float distance = num / dom;
+            float distance = LineDistance(Item, Point);
             if (distance < Item.Width)
             {
                 return distance;
