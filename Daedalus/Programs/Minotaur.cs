@@ -18,7 +18,6 @@ namespace Daedalus.Daedalus.Programs
         private float[] Angles;
         private float ViewDist;
 
-        private List<PointF> Map = new List<PointF>();
         private Map minotaurMap;
 
         public Minotaur(Knossos KnossosForm, float Size, float ViewDist = 100, int Resolution = 10, float bias = 1)
@@ -70,18 +69,8 @@ namespace Daedalus.Daedalus.Programs
                 LastRes = Res;
             }
 
-            if (KnossosForm.WallDetectAngle(Pos, Angles, ViewDist, out List<PointF?> Hits))
-            {
-                //Add Point to list
-                foreach (PointF? item in Hits)
-                {
-                    if (item != null)
-                        Map.Add((PointF)item);
-                }
-            }
-
-            minotaurMap.CreateBuffer(Map, getPosition(), Diameter + bias);
-            Map.Clear();
+            KnossosForm.WallDetectAngle(Pos, Angles, ViewDist, out List<Lclass.CollisionPoint> Hits);
+            minotaurMap.CreateBuffer(Hits, getPosition(), Diameter + bias);
         }
 
         public void ConstantUpdate()

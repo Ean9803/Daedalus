@@ -178,4 +178,10 @@ public static class Lclass
             Parents.Clear();
         }
     }
+
+    public class CollisionPoint
+    {
+        public PointF Point;
+        public bool Hit;
+    }
 }

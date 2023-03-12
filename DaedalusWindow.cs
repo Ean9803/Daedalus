@@ -786,7 +786,7 @@ namespace Daedalus
             }
         }
 
-        public bool WallDetectAngle(PointF Origin, float[] Angles, float Dist, out List<PointF?> Hits)
+        public bool WallDetectAngle(PointF Origin, float[] Angles, float Dist, out List<Lclass.CollisionPoint> Hits)
         {
             PointF[] Slopes = new PointF[Angles.Length];
             for (int i = 0; i < Slopes.Length; i++)
@@ -796,11 +796,11 @@ namespace Daedalus
             return WallDetect(Origin, Slopes, Dist, out Hits);
         }
 
-        public bool WallDetect(PointF Origin, PointF[] Slopes, float Dist, out List<PointF?> Hits)
+        public bool WallDetect(PointF Origin, PointF[] Slopes, float Dist, out List<Lclass.CollisionPoint> Hits)
         {
             PointF[] Ray = new PointF[Slopes.Length];
             float[] Percents = new float[Slopes.Length];
-            Hits = new List<PointF?>();
+            Hits = new List<Lclass.CollisionPoint>();
             for (int i = 0; i < Ray.Length; i++)
             {
                 PointF Max = Origin;
@@ -815,7 +815,7 @@ namespace Daedalus
 
                 Ray[i] = new PointF(Max.X - Origin.X, Max.Y - Origin.Y);
                 Percents[i] = 1;
-                Hits.Add(null);
+                Hits.Add(new Lclass.CollisionPoint() { Point = Max, Hit = false });
             }
 
             int Count = Walls.Count;
@@ -842,7 +842,8 @@ namespace Daedalus
                             if (t < Percents[i])
                             {
                                 Percents[i] = t;
-                                Hits[i] = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * u));
+                                Hits[i].Point = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * u));
+                                Hits[i].Hit = true;
                                 Hitted = true;
                             }
                         }
