@@ -358,7 +358,7 @@ public class Map
     private List<PointF> BrickCoords(Lclass.Line Wall)
     {
         List<PointF> GridCorrdinates = LineCoords(Wall.P1, Wall.P2);
-        return GridCorrdinates;
+        //return GridCorrdinates;
         foreach (Lclass.Line item in Wall.GenerateRec())
         {
             GridCorrdinates.AddRange(LineCoords(item.P1, item.P2));
