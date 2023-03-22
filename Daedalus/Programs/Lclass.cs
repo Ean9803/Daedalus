@@ -12,31 +12,68 @@ public static class Lclass
         public float Width = 1;
         public bool Highlight;
 
+        private float LastSlope = float.NaN;
+        private float LastDistance = float.NaN;
+        private PointF LastP1 = Point.Empty;
+        private PointF LastP2 = Point.Empty;
+        private PointF Slope = Point.Empty;
+
         public void SetHighlight(bool Val)
         {
             Highlight = Val;
         }
 
+        private void UpdateLineProperties()
+        {
+            if (LastP1 != P1 || LastP2 != P2 || LastSlope == float.NaN || LastDistance == float.NaN)
+            {
+                PointF Direction = new PointF();
+                Direction.X = P1.X - P2.X;
+                Direction.Y = P1.Y - P2.Y;
+
+                LastP1 = P1;
+                LastP2 = P2;
+
+                float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
+
+                float YSlope = (Direction.Y / distance);
+                float XSlope = (Direction.X / distance);
+
+                LastDistance = distance;
+                Slope = new PointF(XSlope, YSlope);
+                LastSlope = YSlope / XSlope;
+            }
+        }
+
         public PointF getSlope()
         {
-            PointF Direction = new PointF();
-            Direction.X = P1.X - P2.X;
-            Direction.Y = P1.Y - P2.Y;
+            UpdateLineProperties();
+            return Slope;
+        }
 
+        public float getSlopeValue()
+        {
+            UpdateLineProperties();
+            return LastSlope;
+        }
 
-            float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
-
-            float YSlope = (Direction.Y / distance);
-            float XSlope = (Direction.X / distance);
-
-            return new PointF(XSlope, YSlope);
+        public float Length()
+        {
+            UpdateLineProperties();
+            return LastDistance;
         }
 
         public Line[] GenerateRec()
         {
+            UpdateLineProperties();
+
+            if (LastDistance == 0)
+                return new Line[0];
+
             Line[] Ret = new Line[4];
             PointF PP1 = P1;
             PointF PP2 = P2;
+            float RectWidth = Width;
 
             for (int i = 0; i < Ret.Length; i++)
             {
@@ -49,34 +86,32 @@ public static class Lclass
                 Ret[i].P2.Y = PP2.Y;
             }
 
-            PointF Direction = new PointF();
-            Direction.X = P1.X - P2.X;
-            Direction.Y = P1.Y - P2.Y;
+            float YSlope = Slope.Y;
+            float XSlope = Slope.X;
 
-            float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
+            Ret[0].P1.X += (YSlope * RectWidth);
+            Ret[0].P1.Y += (XSlope * RectWidth);
+            Ret[0].P2.X += (YSlope * RectWidth);
+            Ret[0].P2.Y += (XSlope * RectWidth);
+            Ret[1].P1.X -= (YSlope * RectWidth);
+            Ret[1].P1.Y -= (XSlope * RectWidth);
+            Ret[1].P2.X -= (YSlope * RectWidth);
+            Ret[1].P2.Y -= (XSlope * RectWidth);
 
-            float YSlope = (Direction.Y / distance);
-            float XSlope = (Direction.X / distance);
-            Ret[0].P1.X += (YSlope * Width);
-            Ret[0].P1.Y += (XSlope * Width);
-            Ret[0].P2.X += (YSlope * Width);
-            Ret[0].P2.Y += (XSlope * Width);
-            Ret[1].P1.X -= (YSlope * Width);
-            Ret[1].P1.Y -= (XSlope * Width);
-            Ret[1].P2.X -= (YSlope * Width);
-            Ret[1].P2.Y -= (XSlope * Width);
 
             Ret[2].P1 = Ret[0].P1;
             Ret[2].P2 = Ret[1].P1;
             Ret[3].P1 = Ret[0].P2;
             Ret[3].P2 = Ret[1].P2;
-
+            
 
             return Ret;
         }
 
         public Line[] GenerateRec(PointF Origin, float ZoomAmount)
         {
+            UpdateLineProperties();
+
             Line[] Ret = new Line[4];
             PointF PP1 = P1;
             PP1.X /= ZoomAmount;
@@ -98,14 +133,9 @@ public static class Lclass
                 Ret[i].P2.Y = (int)((-PP2.Y + Origin.Y));
             }
 
-            PointF Direction = new PointF();
-            Direction.X = P1.X - P2.X;
-            Direction.Y = P1.Y - P2.Y;
+            float YSlope = Slope.Y;
+            float XSlope = Slope.X;
 
-            float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
-
-            float YSlope = (Direction.Y / distance);
-            float XSlope = (Direction.X / distance);
             Ret[0].P1.X += (YSlope * RectWidth);
             Ret[0].P1.Y += (XSlope * RectWidth);
             Ret[0].P2.X += (YSlope * RectWidth);
@@ -130,7 +160,7 @@ public static class Lclass
         public Brick LeftBrick;
         public Brick RightBrick;
         public List<PointF> Regions = new List<PointF>();
-        public List<KeyValuePair<PointF, List<Brick>>> Parents = new List<KeyValuePair<PointF, List<Brick>>>();
+        private Map parentMap;
 
         public Brick AddRegion(PointF Region)
         {
@@ -148,34 +178,30 @@ public static class Lclass
             return this;
         }
 
-        public Brick AddParent(List<Brick> Parent, PointF Region)
-        {
-            Parents.Add(new KeyValuePair<PointF, List<Brick>>(Region, Parent));
-            return this;
-        }
-
-        public List<PointF> AddToParent(Brick NewBrick)
+        public List<PointF> AddToParent(Brick NewBrick, ref Dictionary<PointF, List<Brick>> Dict)
         {
             List<PointF> Affected = new List<PointF>();
-            foreach (KeyValuePair<PointF, List<Brick>> item in Parents)
+            foreach (PointF item in Regions)
             {
-                //if (!item.Value.Contains(NewBrick))
+                if (Dict.ContainsKey(item))
                 {
-                    item.Value.Add(NewBrick);
-                    Affected.Add(item.Key);
+                    Dict[item].Add(NewBrick);
+                    Affected.Add(item);
                 }
             }
             return Affected;
         }
 
-        public void RemoveFromParent()
+        public void RemoveFromParent(ref Dictionary<PointF, List<Brick>> Dict)
         {
-            foreach (KeyValuePair<PointF, List<Brick>> item in Parents)
+            foreach (PointF item in Regions)
             {
-                if (item.Value.Contains(this))
-                    item.Value.Remove(this);
+                if (Dict.ContainsKey(item))
+                {
+                    Dict[item].Remove(this);
+                }
             }
-            Parents.Clear();
+            Regions.Clear();
         }
     }
 
