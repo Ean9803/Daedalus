@@ -55,6 +55,7 @@ namespace Daedalus
             SetLabPenMode(labPenMode.Draw);
             SetMapMode(mapPenMode.Roam);
             SetMinoState(MinoMode.Off);
+            MinoDisplay = MinoMode.On;
             StartWorkers();
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
@@ -184,6 +185,7 @@ namespace Daedalus
 
         private void loadBtn_Click(object sender, EventArgs e)
         {
+            SetMinoState(MinoMode.Off);
             openMapFile.Title = "Load Labyrinth File";
             openMapFile.Multiselect = false;
             openMapFile.DefaultExt = FileExtension;
@@ -212,6 +214,7 @@ namespace Daedalus
 
         private void ProcessLoadFile(string FilePath)
         {
+            MinoDisplay = MinoMode.Off;
             Walls.Clear();
             string input;
             input = File.ReadAllText(FilePath);
@@ -236,7 +239,7 @@ namespace Daedalus
 
                 Walls.Add(new Lclass.Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
             }
-
+            MinoDisplay = MinoMode.On;
         }
 
         #endregion
@@ -744,6 +747,7 @@ namespace Daedalus
 
         public enum MinoMode { On, Off }
         private MinoMode MinoState;
+        private MinoMode MinoDisplay;
 
         private void UpdateMinoControlBar()
         {
@@ -781,8 +785,8 @@ namespace Daedalus
                 {
                     DebugLog("Mino Status", "Mino Disabled", false);
                 }
-
-                Mino.ConstantUpdate();
+                if (MinoDisplay == MinoMode.On)
+                    Mino.ConstantUpdate();
             }
         }
 
