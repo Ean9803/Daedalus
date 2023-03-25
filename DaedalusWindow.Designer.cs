@@ -30,450 +30,513 @@ namespace Daedalus
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Knossos));
-            this.VerticalLayout = new System.Windows.Forms.SplitContainer();
-            this.ControlLayout = new System.Windows.Forms.SplitContainer();
-            this.labyrinthBox = new System.Windows.Forms.GroupBox();
-            this.labyrinthScene = new System.Windows.Forms.PictureBox();
-            this.labyrinthToolStrip = new System.Windows.Forms.ToolStrip();
-            this.labyrinthTool = new System.Windows.Forms.ToolStripLabel();
-            this.clearBtn = new System.Windows.Forms.ToolStripButton();
-            this.loadBtn = new System.Windows.Forms.ToolStripButton();
-            this.saveBtn = new System.Windows.Forms.ToolStripButton();
-            this.eraseBtn = new System.Windows.Forms.ToolStripButton();
-            this.drawBtn = new System.Windows.Forms.ToolStripButton();
-            this.setMinoPos = new System.Windows.Forms.ToolStripButton();
-            this.mapBox = new System.Windows.Forms.GroupBox();
-            this.mapScene = new System.Windows.Forms.PictureBox();
-            this.mapToolStrip = new System.Windows.Forms.ToolStrip();
-            this.targetBtn = new System.Windows.Forms.ToolStripButton();
-            this.roamBtn = new System.Windows.Forms.ToolStripButton();
-            this.ClearMemory = new System.Windows.Forms.ToolStripButton();
-            this.mapMode = new System.Windows.Forms.ToolStripLabel();
-            this.playBtn = new System.Windows.Forms.ToolStripButton();
-            this.stopBtn = new System.Windows.Forms.ToolStripButton();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.zoomBox = new System.Windows.Forms.GroupBox();
-            this.zoomSlider = new System.Windows.Forms.TrackBar();
-            this.MinotaurWorker = new System.ComponentModel.BackgroundWorker();
-            this.LabyrinthUpdate = new System.ComponentModel.BackgroundWorker();
-            this.openMapFile = new System.Windows.Forms.OpenFileDialog();
-            this.saveMapFile = new System.Windows.Forms.SaveFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalLayout)).BeginInit();
-            this.VerticalLayout.Panel1.SuspendLayout();
-            this.VerticalLayout.Panel2.SuspendLayout();
-            this.VerticalLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ControlLayout)).BeginInit();
-            this.ControlLayout.Panel1.SuspendLayout();
-            this.ControlLayout.Panel2.SuspendLayout();
-            this.ControlLayout.SuspendLayout();
-            this.labyrinthBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.labyrinthScene)).BeginInit();
-            this.labyrinthToolStrip.SuspendLayout();
-            this.mapBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mapScene)).BeginInit();
-            this.mapToolStrip.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.zoomBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomSlider)).BeginInit();
-            this.SuspendLayout();
+            VerticalLayout = new System.Windows.Forms.SplitContainer();
+            ControlLayout = new System.Windows.Forms.SplitContainer();
+            labyrinthBox = new System.Windows.Forms.GroupBox();
+            labyrinthScene = new System.Windows.Forms.PictureBox();
+            mapBox = new System.Windows.Forms.GroupBox();
+            mapScene = new System.Windows.Forms.PictureBox();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            zoomBox = new System.Windows.Forms.GroupBox();
+            zoomSlider = new System.Windows.Forms.TrackBar();
+            labyrinthToolStrip = new System.Windows.Forms.ToolStrip();
+            labyrinthTool = new System.Windows.Forms.ToolStripLabel();
+            clearBtn = new System.Windows.Forms.ToolStripButton();
+            loadBtn = new System.Windows.Forms.ToolStripButton();
+            saveBtn = new System.Windows.Forms.ToolStripButton();
+            eraseBtn = new System.Windows.Forms.ToolStripButton();
+            drawBtn = new System.Windows.Forms.ToolStripButton();
+            setMinoPos = new System.Windows.Forms.ToolStripButton();
+            mapToolStrip = new System.Windows.Forms.ToolStrip();
+            targetBtn = new System.Windows.Forms.ToolStripButton();
+            roamBtn = new System.Windows.Forms.ToolStripButton();
+            ClearMemory = new System.Windows.Forms.ToolStripButton();
+            mapMode = new System.Windows.Forms.ToolStripLabel();
+            playBtn = new System.Windows.Forms.ToolStripButton();
+            stopBtn = new System.Windows.Forms.ToolStripButton();
+            MinotaurWorker = new System.ComponentModel.BackgroundWorker();
+            LabyrinthUpdate = new System.ComponentModel.BackgroundWorker();
+            openMapFile = new System.Windows.Forms.OpenFileDialog();
+            saveMapFile = new System.Windows.Forms.SaveFileDialog();
+            MenuSplit = new System.Windows.Forms.SplitContainer();
+            ToolBox = new System.Windows.Forms.GroupBox();
+            tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            MenuPanel = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)VerticalLayout).BeginInit();
+            VerticalLayout.Panel1.SuspendLayout();
+            VerticalLayout.Panel2.SuspendLayout();
+            VerticalLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ControlLayout).BeginInit();
+            ControlLayout.Panel1.SuspendLayout();
+            ControlLayout.Panel2.SuspendLayout();
+            ControlLayout.SuspendLayout();
+            labyrinthBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)labyrinthScene).BeginInit();
+            mapBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)mapScene).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
+            zoomBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)zoomSlider).BeginInit();
+            labyrinthToolStrip.SuspendLayout();
+            mapToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)MenuSplit).BeginInit();
+            MenuSplit.Panel1.SuspendLayout();
+            MenuSplit.Panel2.SuspendLayout();
+            MenuSplit.SuspendLayout();
+            ToolBox.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            MenuPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // VerticalLayout
             // 
-            this.VerticalLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.VerticalLayout.Location = new System.Drawing.Point(0, 0);
-            this.VerticalLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.VerticalLayout.Name = "VerticalLayout";
-            this.VerticalLayout.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            VerticalLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            VerticalLayout.Location = new System.Drawing.Point(0, 0);
+            VerticalLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            VerticalLayout.Name = "VerticalLayout";
+            VerticalLayout.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // VerticalLayout.Panel1
             // 
-            this.VerticalLayout.Panel1.Controls.Add(this.ControlLayout);
-            this.VerticalLayout.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            VerticalLayout.Panel1.Controls.Add(ControlLayout);
+            VerticalLayout.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
             // VerticalLayout.Panel2
             // 
-            this.VerticalLayout.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.VerticalLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.VerticalLayout.Size = new System.Drawing.Size(902, 395);
-            this.VerticalLayout.SplitterDistance = 338;
-            this.VerticalLayout.SplitterWidth = 8;
-            this.VerticalLayout.TabIndex = 4;
-            this.VerticalLayout.TabStop = false;
+            VerticalLayout.Panel2.Controls.Add(tableLayoutPanel1);
+            VerticalLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            VerticalLayout.Size = new System.Drawing.Size(892, 327);
+            VerticalLayout.SplitterDistance = 269;
+            VerticalLayout.SplitterWidth = 8;
+            VerticalLayout.TabIndex = 4;
+            VerticalLayout.TabStop = false;
             // 
             // ControlLayout
             // 
-            this.ControlLayout.BackColor = System.Drawing.SystemColors.MenuText;
-            this.ControlLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ControlLayout.ForeColor = System.Drawing.SystemColors.InactiveBorder;
-            this.ControlLayout.Location = new System.Drawing.Point(0, 0);
-            this.ControlLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ControlLayout.Name = "ControlLayout";
+            ControlLayout.BackColor = System.Drawing.SystemColors.MenuText;
+            ControlLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            ControlLayout.ForeColor = System.Drawing.SystemColors.InactiveBorder;
+            ControlLayout.Location = new System.Drawing.Point(0, 0);
+            ControlLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            ControlLayout.Name = "ControlLayout";
             // 
             // ControlLayout.Panel1
             // 
-            this.ControlLayout.Panel1.Controls.Add(this.labyrinthBox);
-            this.ControlLayout.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            ControlLayout.Panel1.Controls.Add(labyrinthBox);
+            ControlLayout.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
             // ControlLayout.Panel2
             // 
-            this.ControlLayout.Panel2.Controls.Add(this.mapBox);
-            this.ControlLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ControlLayout.Size = new System.Drawing.Size(902, 338);
-            this.ControlLayout.SplitterDistance = 449;
-            this.ControlLayout.SplitterWidth = 9;
-            this.ControlLayout.TabIndex = 3;
-            this.ControlLayout.TabStop = false;
+            ControlLayout.Panel2.Controls.Add(mapBox);
+            ControlLayout.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            ControlLayout.Size = new System.Drawing.Size(892, 269);
+            ControlLayout.SplitterDistance = 443;
+            ControlLayout.SplitterWidth = 9;
+            ControlLayout.TabIndex = 3;
+            ControlLayout.TabStop = false;
             // 
             // labyrinthBox
             // 
-            this.labyrinthBox.BackColor = System.Drawing.SystemColors.Desktop;
-            this.labyrinthBox.Controls.Add(this.labyrinthScene);
-            this.labyrinthBox.Controls.Add(this.labyrinthToolStrip);
-            this.labyrinthBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labyrinthBox.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.labyrinthBox.Location = new System.Drawing.Point(0, 0);
-            this.labyrinthBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.labyrinthBox.Name = "labyrinthBox";
-            this.labyrinthBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.labyrinthBox.Size = new System.Drawing.Size(449, 338);
-            this.labyrinthBox.TabIndex = 0;
-            this.labyrinthBox.TabStop = false;
-            this.labyrinthBox.Text = "Labyrinth";
+            labyrinthBox.BackColor = System.Drawing.SystemColors.Desktop;
+            labyrinthBox.Controls.Add(labyrinthScene);
+            labyrinthBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            labyrinthBox.ForeColor = System.Drawing.SystemColors.HighlightText;
+            labyrinthBox.Location = new System.Drawing.Point(0, 0);
+            labyrinthBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            labyrinthBox.Name = "labyrinthBox";
+            labyrinthBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            labyrinthBox.Size = new System.Drawing.Size(443, 269);
+            labyrinthBox.TabIndex = 0;
+            labyrinthBox.TabStop = false;
+            labyrinthBox.Text = "Labyrinth";
             // 
             // labyrinthScene
             // 
-            this.labyrinthScene.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labyrinthScene.Location = new System.Drawing.Point(3, 68);
-            this.labyrinthScene.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.labyrinthScene.Name = "labyrinthScene";
-            this.labyrinthScene.Size = new System.Drawing.Size(443, 268);
-            this.labyrinthScene.TabIndex = 7;
-            this.labyrinthScene.TabStop = false;
-            this.labyrinthScene.Paint += new System.Windows.Forms.PaintEventHandler(this.labyrinthScene_Paint);
-            this.labyrinthScene.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labyrinthScene_MouseDown);
-            this.labyrinthScene.MouseLeave += new System.EventHandler(this.labyrinthScene_MouseLeave);
-            this.labyrinthScene.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labyrinthScene_Mouse);
-            this.labyrinthScene.MouseUp += new System.Windows.Forms.MouseEventHandler(this.labyrinthScene_MouseUp);
-            // 
-            // labyrinthToolStrip
-            // 
-            this.labyrinthToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.labyrinthToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.labyrinthTool,
-            this.clearBtn,
-            this.loadBtn,
-            this.saveBtn,
-            this.eraseBtn,
-            this.drawBtn,
-            this.setMinoPos});
-            this.labyrinthToolStrip.Location = new System.Drawing.Point(3, 18);
-            this.labyrinthToolStrip.MinimumSize = new System.Drawing.Size(0, 50);
-            this.labyrinthToolStrip.Name = "labyrinthToolStrip";
-            this.labyrinthToolStrip.Size = new System.Drawing.Size(443, 50);
-            this.labyrinthToolStrip.TabIndex = 0;
-            this.labyrinthToolStrip.Text = "toolStrip3";
-            // 
-            // labyrinthTool
-            // 
-            this.labyrinthTool.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.labyrinthTool.Name = "labyrinthTool";
-            this.labyrinthTool.Size = new System.Drawing.Size(45, 47);
-            this.labyrinthTool.Text = "<Tool>";
-            // 
-            // clearBtn
-            // 
-            this.clearBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.clearBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.clearBtn.Image = ((System.Drawing.Image)(resources.GetObject("clearBtn.Image")));
-            this.clearBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.clearBtn.Name = "clearBtn";
-            this.clearBtn.Size = new System.Drawing.Size(24, 47);
-            this.clearBtn.Text = "Clear";
-            this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);
-            // 
-            // loadBtn
-            // 
-            this.loadBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.loadBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.loadBtn.Image = ((System.Drawing.Image)(resources.GetObject("loadBtn.Image")));
-            this.loadBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.loadBtn.Name = "loadBtn";
-            this.loadBtn.Size = new System.Drawing.Size(24, 47);
-            this.loadBtn.Text = "Load Map";
-            this.loadBtn.Click += new System.EventHandler(this.loadBtn_Click);
-            // 
-            // saveBtn
-            // 
-            this.saveBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.saveBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
-            this.saveBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(24, 47);
-            this.saveBtn.Text = "Save";
-            this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
-            // 
-            // eraseBtn
-            // 
-            this.eraseBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.eraseBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.eraseBtn.Image = ((System.Drawing.Image)(resources.GetObject("eraseBtn.Image")));
-            this.eraseBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.eraseBtn.Name = "eraseBtn";
-            this.eraseBtn.Size = new System.Drawing.Size(24, 47);
-            this.eraseBtn.Text = "Erase";
-            this.eraseBtn.Click += new System.EventHandler(this.eraseBtn_Click);
-            // 
-            // drawBtn
-            // 
-            this.drawBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.drawBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.drawBtn.Image = ((System.Drawing.Image)(resources.GetObject("drawBtn.Image")));
-            this.drawBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.drawBtn.Name = "drawBtn";
-            this.drawBtn.Size = new System.Drawing.Size(24, 47);
-            this.drawBtn.Text = "Draw";
-            this.drawBtn.Click += new System.EventHandler(this.drawBtn_Click);
-            // 
-            // setMinoPos
-            // 
-            this.setMinoPos.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.setMinoPos.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.setMinoPos.Image = ((System.Drawing.Image)(resources.GetObject("setMinoPos.Image")));
-            this.setMinoPos.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.setMinoPos.Name = "setMinoPos";
-            this.setMinoPos.Size = new System.Drawing.Size(24, 47);
-            this.setMinoPos.Text = "setMinoPos";
-            this.setMinoPos.ToolTipText = "Set Minotaur Position";
-            this.setMinoPos.Click += new System.EventHandler(this.setMinoPos_Click);
+            labyrinthScene.Dock = System.Windows.Forms.DockStyle.Fill;
+            labyrinthScene.Location = new System.Drawing.Point(3, 18);
+            labyrinthScene.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            labyrinthScene.Name = "labyrinthScene";
+            labyrinthScene.Size = new System.Drawing.Size(437, 249);
+            labyrinthScene.TabIndex = 7;
+            labyrinthScene.TabStop = false;
+            labyrinthScene.Paint += labyrinthScene_Paint;
+            labyrinthScene.MouseDown += labyrinthScene_MouseDown;
+            labyrinthScene.MouseLeave += labyrinthScene_MouseLeave;
+            labyrinthScene.MouseMove += labyrinthScene_Mouse;
+            labyrinthScene.MouseUp += labyrinthScene_MouseUp;
             // 
             // mapBox
             // 
-            this.mapBox.Controls.Add(this.mapScene);
-            this.mapBox.Controls.Add(this.mapToolStrip);
-            this.mapBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapBox.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.mapBox.Location = new System.Drawing.Point(0, 0);
-            this.mapBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.mapBox.Name = "mapBox";
-            this.mapBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.mapBox.Size = new System.Drawing.Size(444, 338);
-            this.mapBox.TabIndex = 0;
-            this.mapBox.TabStop = false;
-            this.mapBox.Text = "Map";
+            mapBox.Controls.Add(mapScene);
+            mapBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            mapBox.ForeColor = System.Drawing.SystemColors.HighlightText;
+            mapBox.Location = new System.Drawing.Point(0, 0);
+            mapBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            mapBox.Name = "mapBox";
+            mapBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            mapBox.Size = new System.Drawing.Size(440, 269);
+            mapBox.TabIndex = 0;
+            mapBox.TabStop = false;
+            mapBox.Text = "Map";
             // 
             // mapScene
             // 
-            this.mapScene.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapScene.Location = new System.Drawing.Point(3, 68);
-            this.mapScene.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.mapScene.Name = "mapScene";
-            this.mapScene.Size = new System.Drawing.Size(438, 268);
-            this.mapScene.TabIndex = 3;
-            this.mapScene.TabStop = false;
-            this.mapScene.Paint += new System.Windows.Forms.PaintEventHandler(this.mapScene_Paint);
-            this.mapScene.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapScene_MouseDown);
-            this.mapScene.MouseLeave += new System.EventHandler(this.mapScene_MouseLeave);
-            this.mapScene.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapScene_Mouse);
-            this.mapScene.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapScene_MouseUp);
-            // 
-            // mapToolStrip
-            // 
-            this.mapToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.mapToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.targetBtn,
-            this.roamBtn,
-            this.ClearMemory,
-            this.mapMode,
-            this.playBtn,
-            this.stopBtn});
-            this.mapToolStrip.Location = new System.Drawing.Point(3, 18);
-            this.mapToolStrip.MinimumSize = new System.Drawing.Size(0, 50);
-            this.mapToolStrip.Name = "mapToolStrip";
-            this.mapToolStrip.Size = new System.Drawing.Size(438, 50);
-            this.mapToolStrip.TabIndex = 1;
-            this.mapToolStrip.Text = "toolStrip2";
-            // 
-            // targetBtn
-            // 
-            this.targetBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.targetBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.targetBtn.Image = ((System.Drawing.Image)(resources.GetObject("targetBtn.Image")));
-            this.targetBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.targetBtn.Name = "targetBtn";
-            this.targetBtn.Size = new System.Drawing.Size(24, 47);
-            this.targetBtn.Text = "Type Mode";
-            this.targetBtn.Click += new System.EventHandler(this.targetBtn_Click);
-            // 
-            // roamBtn
-            // 
-            this.roamBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.roamBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.roamBtn.Image = ((System.Drawing.Image)(resources.GetObject("roamBtn.Image")));
-            this.roamBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.roamBtn.Name = "roamBtn";
-            this.roamBtn.Size = new System.Drawing.Size(24, 47);
-            this.roamBtn.Text = "Roam Mode";
-            this.roamBtn.Click += new System.EventHandler(this.roamBtn_Click);
-            // 
-            // ClearMemory
-            // 
-            this.ClearMemory.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ClearMemory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ClearMemory.Image = ((System.Drawing.Image)(resources.GetObject("ClearMemory.Image")));
-            this.ClearMemory.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ClearMemory.Name = "ClearMemory";
-            this.ClearMemory.Size = new System.Drawing.Size(24, 47);
-            this.ClearMemory.Text = "ClearMemory";
-            this.ClearMemory.ToolTipText = "Clear Memory";
-            this.ClearMemory.Click += new System.EventHandler(this.ClearMemory_Click);
-            // 
-            // mapMode
-            // 
-            this.mapMode.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.mapMode.Name = "mapMode";
-            this.mapMode.Size = new System.Drawing.Size(54, 47);
-            this.mapMode.Text = "<mode>";
-            // 
-            // playBtn
-            // 
-            this.playBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.playBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.playBtn.Image = ((System.Drawing.Image)(resources.GetObject("playBtn.Image")));
-            this.playBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.playBtn.Name = "playBtn";
-            this.playBtn.Size = new System.Drawing.Size(24, 47);
-            this.playBtn.Text = "Activate Minotaur";
-            this.playBtn.Click += new System.EventHandler(this.playBtn_Click);
-            // 
-            // stopBtn
-            // 
-            this.stopBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.stopBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.stopBtn.Image = ((System.Drawing.Image)(resources.GetObject("stopBtn.Image")));
-            this.stopBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.stopBtn.Name = "stopBtn";
-            this.stopBtn.Size = new System.Drawing.Size(24, 47);
-            this.stopBtn.Text = "Deactivate Minotaur";
-            this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
+            mapScene.Dock = System.Windows.Forms.DockStyle.Fill;
+            mapScene.Location = new System.Drawing.Point(3, 18);
+            mapScene.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            mapScene.Name = "mapScene";
+            mapScene.Size = new System.Drawing.Size(434, 249);
+            mapScene.TabIndex = 3;
+            mapScene.TabStop = false;
+            mapScene.Paint += mapScene_Paint;
+            mapScene.MouseDown += mapScene_MouseDown;
+            mapScene.MouseLeave += mapScene_MouseLeave;
+            mapScene.MouseMove += mapScene_Mouse;
+            mapScene.MouseUp += mapScene_MouseUp;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.Controls.Add(this.zoomBox, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(902, 49);
-            this.tableLayoutPanel1.TabIndex = 7;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            tableLayoutPanel1.Controls.Add(zoomBox, 1, 0);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(892, 50);
+            tableLayoutPanel1.TabIndex = 7;
             // 
             // zoomBox
             // 
-            this.zoomBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoomBox.AutoSize = true;
-            this.zoomBox.Controls.Add(this.zoomSlider);
-            this.zoomBox.ForeColor = System.Drawing.SystemColors.Info;
-            this.zoomBox.Location = new System.Drawing.Point(113, 1);
-            this.zoomBox.Margin = new System.Windows.Forms.Padding(1);
-            this.zoomBox.Name = "zoomBox";
-            this.zoomBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.zoomBox.Size = new System.Drawing.Size(674, 47);
-            this.zoomBox.TabIndex = 6;
-            this.zoomBox.TabStop = false;
-            this.zoomBox.Text = "Zoom";
+            zoomBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            zoomBox.AutoSize = true;
+            zoomBox.Controls.Add(zoomSlider);
+            zoomBox.ForeColor = System.Drawing.SystemColors.Info;
+            zoomBox.Location = new System.Drawing.Point(112, 1);
+            zoomBox.Margin = new System.Windows.Forms.Padding(1);
+            zoomBox.Name = "zoomBox";
+            zoomBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            zoomBox.Size = new System.Drawing.Size(667, 48);
+            zoomBox.TabIndex = 6;
+            zoomBox.TabStop = false;
+            zoomBox.Text = "Zoom";
             // 
             // zoomSlider
             // 
-            this.zoomSlider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zoomSlider.LargeChange = 10;
-            this.zoomSlider.Location = new System.Drawing.Point(3, 19);
-            this.zoomSlider.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.zoomSlider.Maximum = 100;
-            this.zoomSlider.Minimum = 1;
-            this.zoomSlider.Name = "zoomSlider";
-            this.zoomSlider.Size = new System.Drawing.Size(668, 25);
-            this.zoomSlider.TabIndex = 5;
-            this.zoomSlider.TabStop = false;
-            this.zoomSlider.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.zoomSlider.Value = 50;
-            this.zoomSlider.Scroll += new System.EventHandler(this.zoomSlider_Scroll);
+            zoomSlider.Dock = System.Windows.Forms.DockStyle.Fill;
+            zoomSlider.LargeChange = 10;
+            zoomSlider.Location = new System.Drawing.Point(3, 19);
+            zoomSlider.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            zoomSlider.Maximum = 100;
+            zoomSlider.Minimum = 1;
+            zoomSlider.Name = "zoomSlider";
+            zoomSlider.Size = new System.Drawing.Size(661, 26);
+            zoomSlider.TabIndex = 5;
+            zoomSlider.TabStop = false;
+            zoomSlider.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            zoomSlider.Value = 50;
+            zoomSlider.Scroll += zoomSlider_Scroll;
+            // 
+            // labyrinthToolStrip
+            // 
+            labyrinthToolStrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            labyrinthToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            labyrinthToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { labyrinthTool, clearBtn, loadBtn, saveBtn, eraseBtn, drawBtn, setMinoPos });
+            labyrinthToolStrip.Location = new System.Drawing.Point(0, 0);
+            labyrinthToolStrip.MinimumSize = new System.Drawing.Size(0, 15);
+            labyrinthToolStrip.Name = "labyrinthToolStrip";
+            labyrinthToolStrip.Size = new System.Drawing.Size(438, 28);
+            labyrinthToolStrip.Stretch = true;
+            labyrinthToolStrip.TabIndex = 0;
+            labyrinthToolStrip.Text = "toolStrip3";
+            // 
+            // labyrinthTool
+            // 
+            labyrinthTool.ForeColor = System.Drawing.SystemColors.WindowText;
+            labyrinthTool.Name = "labyrinthTool";
+            labyrinthTool.Size = new System.Drawing.Size(45, 25);
+            labyrinthTool.Text = "<Tool>";
+            // 
+            // clearBtn
+            // 
+            clearBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            clearBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            clearBtn.Image = (System.Drawing.Image)resources.GetObject("clearBtn.Image");
+            clearBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            clearBtn.Name = "clearBtn";
+            clearBtn.Size = new System.Drawing.Size(24, 25);
+            clearBtn.Text = "Clear";
+            clearBtn.Click += clearBtn_Click;
+            // 
+            // loadBtn
+            // 
+            loadBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            loadBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            loadBtn.Image = (System.Drawing.Image)resources.GetObject("loadBtn.Image");
+            loadBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            loadBtn.Name = "loadBtn";
+            loadBtn.Size = new System.Drawing.Size(24, 25);
+            loadBtn.Text = "Load Map";
+            loadBtn.Click += loadBtn_Click;
+            // 
+            // saveBtn
+            // 
+            saveBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            saveBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            saveBtn.Image = (System.Drawing.Image)resources.GetObject("saveBtn.Image");
+            saveBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            saveBtn.Name = "saveBtn";
+            saveBtn.Size = new System.Drawing.Size(24, 25);
+            saveBtn.Text = "Save";
+            saveBtn.Click += saveBtn_Click;
+            // 
+            // eraseBtn
+            // 
+            eraseBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            eraseBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            eraseBtn.Image = (System.Drawing.Image)resources.GetObject("eraseBtn.Image");
+            eraseBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            eraseBtn.Name = "eraseBtn";
+            eraseBtn.Size = new System.Drawing.Size(24, 25);
+            eraseBtn.Text = "Erase";
+            eraseBtn.Click += eraseBtn_Click;
+            // 
+            // drawBtn
+            // 
+            drawBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            drawBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            drawBtn.Image = (System.Drawing.Image)resources.GetObject("drawBtn.Image");
+            drawBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            drawBtn.Name = "drawBtn";
+            drawBtn.Size = new System.Drawing.Size(24, 25);
+            drawBtn.Text = "Draw";
+            drawBtn.Click += drawBtn_Click;
+            // 
+            // setMinoPos
+            // 
+            setMinoPos.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            setMinoPos.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            setMinoPos.Image = (System.Drawing.Image)resources.GetObject("setMinoPos.Image");
+            setMinoPos.ImageTransparentColor = System.Drawing.Color.Magenta;
+            setMinoPos.Name = "setMinoPos";
+            setMinoPos.Size = new System.Drawing.Size(24, 25);
+            setMinoPos.Text = "setMinoPos";
+            setMinoPos.ToolTipText = "Set Minotaur Position";
+            setMinoPos.Click += setMinoPos_Click;
+            // 
+            // mapToolStrip
+            // 
+            mapToolStrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            mapToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            mapToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { targetBtn, roamBtn, ClearMemory, mapMode, playBtn, stopBtn });
+            mapToolStrip.Location = new System.Drawing.Point(446, 0);
+            mapToolStrip.MinimumSize = new System.Drawing.Size(0, 15);
+            mapToolStrip.Name = "mapToolStrip";
+            mapToolStrip.Size = new System.Drawing.Size(440, 28);
+            mapToolStrip.TabIndex = 1;
+            mapToolStrip.Text = "toolStrip2";
+            // 
+            // targetBtn
+            // 
+            targetBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            targetBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            targetBtn.Image = (System.Drawing.Image)resources.GetObject("targetBtn.Image");
+            targetBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            targetBtn.Name = "targetBtn";
+            targetBtn.Size = new System.Drawing.Size(24, 25);
+            targetBtn.Text = "Type Mode";
+            targetBtn.Click += targetBtn_Click;
+            // 
+            // roamBtn
+            // 
+            roamBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            roamBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            roamBtn.Image = (System.Drawing.Image)resources.GetObject("roamBtn.Image");
+            roamBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            roamBtn.Name = "roamBtn";
+            roamBtn.Size = new System.Drawing.Size(24, 25);
+            roamBtn.Text = "Roam Mode";
+            roamBtn.Click += roamBtn_Click;
+            // 
+            // ClearMemory
+            // 
+            ClearMemory.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            ClearMemory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            ClearMemory.Image = (System.Drawing.Image)resources.GetObject("ClearMemory.Image");
+            ClearMemory.ImageTransparentColor = System.Drawing.Color.Magenta;
+            ClearMemory.Name = "ClearMemory";
+            ClearMemory.Size = new System.Drawing.Size(24, 25);
+            ClearMemory.Text = "ClearMemory";
+            ClearMemory.ToolTipText = "Clear Memory";
+            ClearMemory.Click += ClearMemory_Click;
+            // 
+            // mapMode
+            // 
+            mapMode.ForeColor = System.Drawing.SystemColors.WindowFrame;
+            mapMode.Name = "mapMode";
+            mapMode.Size = new System.Drawing.Size(54, 25);
+            mapMode.Text = "<mode>";
+            // 
+            // playBtn
+            // 
+            playBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            playBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            playBtn.Image = (System.Drawing.Image)resources.GetObject("playBtn.Image");
+            playBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            playBtn.Name = "playBtn";
+            playBtn.Size = new System.Drawing.Size(24, 25);
+            playBtn.Text = "Activate Minotaur";
+            playBtn.Click += playBtn_Click;
+            // 
+            // stopBtn
+            // 
+            stopBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            stopBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            stopBtn.Image = (System.Drawing.Image)resources.GetObject("stopBtn.Image");
+            stopBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            stopBtn.Name = "stopBtn";
+            stopBtn.Size = new System.Drawing.Size(24, 25);
+            stopBtn.Text = "Deactivate Minotaur";
+            stopBtn.Click += stopBtn_Click;
             // 
             // MinotaurWorker
             // 
-            this.MinotaurWorker.WorkerSupportsCancellation = true;
-            this.MinotaurWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.MinotaurWorker_DoWork);
-            this.MinotaurWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_End);
+            MinotaurWorker.WorkerSupportsCancellation = true;
+            MinotaurWorker.DoWork += MinotaurWorker_DoWork;
+            MinotaurWorker.RunWorkerCompleted += backgroundWorker_End;
             // 
             // LabyrinthUpdate
             // 
-            this.LabyrinthUpdate.WorkerSupportsCancellation = true;
-            this.LabyrinthUpdate.DoWork += new System.ComponentModel.DoWorkEventHandler(this.LabyrinthUpdate_DoWork);
-            this.LabyrinthUpdate.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_End);
+            LabyrinthUpdate.WorkerSupportsCancellation = true;
+            LabyrinthUpdate.DoWork += LabyrinthUpdate_DoWork;
+            LabyrinthUpdate.RunWorkerCompleted += backgroundWorker_End;
             // 
             // openMapFile
             // 
-            this.openMapFile.FileName = "openFileDialog1";
-            this.openMapFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openMapFile_FileOk);
+            openMapFile.FileName = "openFileDialog1";
+            openMapFile.FileOk += openMapFile_FileOk;
             // 
             // saveMapFile
             // 
-            this.saveMapFile.FileOk += new System.ComponentModel.CancelEventHandler(this.saveMapFile_FileOk);
+            saveMapFile.FileOk += saveMapFile_FileOk;
+            // 
+            // MenuSplit
+            // 
+            MenuSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+            MenuSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            MenuSplit.Location = new System.Drawing.Point(5, 5);
+            MenuSplit.Margin = new System.Windows.Forms.Padding(1);
+            MenuSplit.Name = "MenuSplit";
+            MenuSplit.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // MenuSplit.Panel1
+            // 
+            MenuSplit.Panel1.Controls.Add(ToolBox);
+            MenuSplit.Panel1MinSize = 50;
+            // 
+            // MenuSplit.Panel2
+            // 
+            MenuSplit.Panel2.Controls.Add(VerticalLayout);
+            MenuSplit.Size = new System.Drawing.Size(892, 385);
+            MenuSplit.SplitterWidth = 8;
+            MenuSplit.TabIndex = 5;
+            // 
+            // ToolBox
+            // 
+            ToolBox.Controls.Add(tableLayoutPanel2);
+            ToolBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            ToolBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            ToolBox.ForeColor = System.Drawing.SystemColors.Info;
+            ToolBox.Location = new System.Drawing.Point(0, 0);
+            ToolBox.Name = "ToolBox";
+            ToolBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            ToolBox.Size = new System.Drawing.Size(892, 50);
+            ToolBox.TabIndex = 3;
+            ToolBox.TabStop = false;
+            ToolBox.Text = "Tool Box";
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 3;
+            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.5F));
+            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 1F));
+            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.5F));
+            tableLayoutPanel2.Controls.Add(labyrinthToolStrip, 0, 0);
+            tableLayoutPanel2.Controls.Add(mapToolStrip, 2, 0);
+            tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel2.Location = new System.Drawing.Point(3, 19);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new System.Drawing.Size(886, 28);
+            tableLayoutPanel2.TabIndex = 2;
+            // 
+            // MenuPanel
+            // 
+            MenuPanel.Controls.Add(MenuSplit);
+            MenuPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            MenuPanel.Location = new System.Drawing.Point(0, 0);
+            MenuPanel.Name = "MenuPanel";
+            MenuPanel.Padding = new System.Windows.Forms.Padding(5);
+            MenuPanel.Size = new System.Drawing.Size(902, 395);
+            MenuPanel.TabIndex = 6;
             // 
             // Knossos
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.BackColor = System.Drawing.SystemColors.WindowText;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(902, 395);
-            this.Controls.Add(this.VerticalLayout);
-            this.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Knossos";
-            this.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Daedalus";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DaedalusForm_Close);
-            this.Load += new System.EventHandler(this.DaedalusForm_Load);
-            this.VerticalLayout.Panel1.ResumeLayout(false);
-            this.VerticalLayout.Panel2.ResumeLayout(false);
-            this.VerticalLayout.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalLayout)).EndInit();
-            this.VerticalLayout.ResumeLayout(false);
-            this.ControlLayout.Panel1.ResumeLayout(false);
-            this.ControlLayout.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ControlLayout)).EndInit();
-            this.ControlLayout.ResumeLayout(false);
-            this.labyrinthBox.ResumeLayout(false);
-            this.labyrinthBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.labyrinthScene)).EndInit();
-            this.labyrinthToolStrip.ResumeLayout(false);
-            this.labyrinthToolStrip.PerformLayout();
-            this.mapBox.ResumeLayout(false);
-            this.mapBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mapScene)).EndInit();
-            this.mapToolStrip.ResumeLayout(false);
-            this.mapToolStrip.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.zoomBox.ResumeLayout(false);
-            this.zoomBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomSlider)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoSize = true;
+            BackColor = System.Drawing.SystemColors.WindowText;
+            BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            ClientSize = new System.Drawing.Size(902, 395);
+            Controls.Add(MenuPanel);
+            ForeColor = System.Drawing.SystemColors.InfoText;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Name = "Knossos";
+            RightToLeft = System.Windows.Forms.RightToLeft.No;
+            SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Daedalus";
+            FormClosing += DaedalusForm_Close;
+            Load += DaedalusForm_Load;
+            VerticalLayout.Panel1.ResumeLayout(false);
+            VerticalLayout.Panel2.ResumeLayout(false);
+            VerticalLayout.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)VerticalLayout).EndInit();
+            VerticalLayout.ResumeLayout(false);
+            ControlLayout.Panel1.ResumeLayout(false);
+            ControlLayout.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)ControlLayout).EndInit();
+            ControlLayout.ResumeLayout(false);
+            labyrinthBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)labyrinthScene).EndInit();
+            mapBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)mapScene).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            zoomBox.ResumeLayout(false);
+            zoomBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)zoomSlider).EndInit();
+            labyrinthToolStrip.ResumeLayout(false);
+            labyrinthToolStrip.PerformLayout();
+            mapToolStrip.ResumeLayout(false);
+            mapToolStrip.PerformLayout();
+            MenuSplit.Panel1.ResumeLayout(false);
+            MenuSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)MenuSplit).EndInit();
+            MenuSplit.ResumeLayout(false);
+            ToolBox.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            MenuPanel.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -506,6 +569,10 @@ namespace Daedalus
         private System.Windows.Forms.ToolStripButton ClearMemory;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.GroupBox zoomBox;
+        private System.Windows.Forms.SplitContainer MenuSplit;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.GroupBox ToolBox;
+        private System.Windows.Forms.Panel MenuPanel;
     }
 }
 

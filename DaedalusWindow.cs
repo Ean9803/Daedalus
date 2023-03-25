@@ -224,7 +224,7 @@ namespace Daedalus
                 Mino.ImportMapData(SplitData[1]);
 
             // Split all lines into individual coordinates
-            string[] delimeters = {"___", "#", "/"};
+            string[] delimeters = { "___", "#", "/" };
             string[] coordinates = input.Split(delimeters, StringSplitOptions.None);
 
             // Four coordinates per line
@@ -595,7 +595,7 @@ namespace Daedalus
         {
             Pen DrawPen = new Pen(Color.White, 2);
             Graphics window = e.Graphics;
-            
+
             int Count = MapPoints.Count;
             CopyMapPoints = new KeyValuePair<PointF, TargetPoint>[Count];
             for (int i = 0; i < Count; i++)

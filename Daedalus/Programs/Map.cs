@@ -989,7 +989,7 @@ public class Map
                     // Clear brick polygon for next incoming brick
                     brickPolygon.Clear();
                 }
-                if (Sortedchunks.ContainsKey(item))
+                if (!Sortedchunks.ContainsKey(item))
                 {
                     Sortedchunks.Add(item, chunk);
                 }
