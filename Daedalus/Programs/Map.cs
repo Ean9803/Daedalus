@@ -380,8 +380,8 @@ public class Map
         mP1 = Snap(P1);
         mP2 = Snap(P2);
         
-        float i, error, errorprev, ddy, ddx;
-        float y = mP1.Y, x = mP1.X;
+        float i, error, errorprev, ddy, ddx, loop;
+        float a, b, astep, bstep, dda, ddb;
         float dx = (mP2.X - mP1.X) / Increment;
         float dy = (mP2.Y - mP1.Y) / Increment;
         GridCorrdinates.Add(mP1);
@@ -392,56 +392,36 @@ public class Map
         dx = Math.Abs(dx);
         ddy = 2 * dy;
         ddx = 2 * dx;
+        bool ByX = ddx >= ddy;
 
-        if (ddx >= ddy)
+        a = (ByX ? mP1.X : mP2.Y);
+        b = (ByX ? mP1.Y : mP2.X);
+        loop = errorprev = error = (ByX ? dx : dy);
+        astep = (ByX ? xstep : ystep);
+        bstep = (ByX ? ystep : xstep);
+        dda = (ByX ? ddx : ddy);
+        ddb = (ByX ? ddy : ddx);
+
+        for (i = 0; i < loop; i++)
         {
-            errorprev = error = dx;
-            for (i = 0; i < dx; i++)
+            a += astep;
+            error += ddb;
+            if (error > dda)
             {
-                x += xstep;
-                error += ddy;
-                if (error > ddx)
+                b += bstep;
+                error -= dda;
+                if (error + errorprev < dda)
+                    GridCorrdinates.Add(new PointF(a - (astep * (ByX ? 0 : 1)), b - (bstep * (ByX ? 1 : 0))));
+                else if (error + errorprev > dda)
+                    GridCorrdinates.Add(new PointF(a - (astep * (ByX ? 1 : 0)), b - (bstep * (ByX ? 0 : 1))));
+                else
                 {
-                    y += ystep;
-                    error -= ddx;
-                    if (error + errorprev < ddx)
-                        GridCorrdinates.Add(new PointF(x, y - ystep));
-                    else if (error + errorprev > ddx)
-                        GridCorrdinates.Add(new PointF(x - xstep, y));
-                    else
-                    {
-                        GridCorrdinates.Add(new PointF(x, y - ystep));
-                        GridCorrdinates.Add(new PointF(x - xstep, y));
-                    }
+                    GridCorrdinates.Add(new PointF(a - (astep * (ByX ? 0 : 1)), b - (bstep * (ByX ? 1 : 0))));
+                    GridCorrdinates.Add(new PointF(a - (astep * (ByX ? 1 : 0)), b - (bstep * (ByX ? 0 : 1))));
                 }
-                GridCorrdinates.Add(new PointF(x, y));
-                errorprev = error;
             }
-        }
-        else
-        {
-            errorprev = error = dy;
-            for (i = 0; i < dy; i++)
-            {
-                y += ystep;
-                error += ddx;
-                if (error > ddy)
-                {
-                    x += xstep;
-                    error -= ddy;
-                    if (error + errorprev < ddy)
-                        GridCorrdinates.Add(new PointF(x - xstep, y));
-                    else if (error + errorprev > ddy)
-                        GridCorrdinates.Add(new PointF(x, y - ystep));
-                    else
-                    {
-                        GridCorrdinates.Add(new PointF(x - xstep, y));
-                        GridCorrdinates.Add(new PointF(x, y - ystep));
-                    }
-                }
-                GridCorrdinates.Add(new PointF(x, y));
-                errorprev = error;
-            }
+            GridCorrdinates.Add(new PointF(a, b));
+            errorprev = error;
         }
 
         return GridCorrdinates;

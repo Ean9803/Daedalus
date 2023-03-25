@@ -895,7 +895,7 @@ namespace Daedalus
             public float ViewWidth;
         }
 
-        public void addLine(TargetLine Line)
+        public void AddLine(TargetLine Line)
         {
             if (!MapLines.Contains(Line))
                 MapLines.Add(Line);
