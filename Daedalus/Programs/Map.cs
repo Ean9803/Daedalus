@@ -11,6 +11,7 @@ using System.Threading.Channels;
 using static Lclass;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using Clipper2Lib;
+using System.Runtime.CompilerServices;
 
 public class Map
 {
@@ -371,6 +372,7 @@ public class Map
     {
         List<PointF> GridCorrdinates = new List<PointF>();
 
+        // Raduis of chunk
         float Increment = (GridSize * 2);
 
         PointF mP1, mP2;
@@ -960,9 +962,36 @@ public class Map
         return (InRange(MathF.Abs(Slope1.X), MathF.Abs(Slope2.X), Thres)) && (InRange(MathF.Abs(Slope1.Y), MathF.Abs(Slope2.Y), Thres));
     }
 
+
     private void Refresh(List<PointF> RegionsChanged)
     {
-        
+        foreach (PointF item in RegionsChanged)
+        {
+            if (Sortedbricks.ContainsKey(item))
+            {   // Create chunk to cut bricks out of
+                PathsD chunk = new PathsD();
+                chunk.Add(Clipper.MakePath(new double[] { item.X + GridSize, item.Y + GridSize,
+                                                          item.X + GridSize, item.Y - GridSize,
+                                                          item.X - GridSize, item.Y - GridSize,
+                                                          item.X - GridSize, item.Y + GridSize}));
+                // Create brick template to cut out of chunk from above ^
+                PathsD brickPolygon = new PathsD();
+                Lclass.Line[] lines = new Lclass.Line[4];
+                for (int i = Sortedbricks[item].Count - 1; i >= 0; i--)
+                {
+                    lines = Sortedbricks[item][i].GenerateRec();
+                    // Adding brick to empty brick polygon
+                    brickPolygon.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+                    // Cuts brick out of chunk
+                    chunk = Clipper.BooleanOp(ClipType.Difference, chunk, brickPolygon, FillRule.Positive);
+                    // Clear brick polygon for next incoming brick
+                    brickPolygon.Clear();
+                }
+            }
+        }
     }
 
 
