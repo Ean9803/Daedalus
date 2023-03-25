@@ -283,7 +283,7 @@ public class Map
                             {
                                 if (LineDistance(Buff, Brick.P1) < brickWidth / 2 && LineDistance(Buff, Brick.P2) < brickWidth / 2)
                                 {
-                                    if (Encaps(Buff, Brick))
+                                    if (Encaps(Buff, Brick) || Touching(Buff, Brick, out sledgeHammer.point PointEdge))
                                     {
                                         foreach (PointF Region in Buff.Regions)
                                         {
@@ -500,6 +500,7 @@ public class Map
         SortedDictionary<double, PointF> uncollidedPoints = new SortedDictionary<double, PointF>();
         double angle;
         double Key;
+        double MaxDist = double.MaxValue;
         for (int i = 0; i < collisionPoints.Count; i++)
         {
             angle = (getAngleRad(location, collisionPoints[i].Point));
@@ -509,14 +510,9 @@ public class Map
             {
                 if (!uncollidedPoints.ContainsKey(Key))
                 {
+                    if (MaxDist == double.MaxValue)
+                        MaxDist = Math.Sqrt(DistSqr(collisionPoints[i].Point, location));
                     uncollidedPoints.Add(Key, collisionPoints[i].Point);
-                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
-                    {
-                        Point = collisionPoints[i].Point,
-                        color = Color.DarkGreen,
-                        Type = Knossos.TargetPoint.DrawType.Diamond,
-                        Diameter = 2.5f
-                    });
                 }
                 continue;
             }
@@ -562,7 +558,7 @@ public class Map
             prevIndex = i - 1;
             index = i % currentPoints.Count;
 
-            if (Dist(currentPoints[index].Value, currentPoints[prevIndex].Value) < Diameter)
+            if (DistSqr(currentPoints[index].Value, currentPoints[prevIndex].Value) < Diameter)
             {
                 preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
                 /*
@@ -657,22 +653,40 @@ public class Map
                         {
                             if (t < 1)
                             {
-                                Delete.Add(new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u)));
+                                PointF DeletePoint = new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u));
+                                if (Math.Sqrt(DistSqr(DeletePoint, location)) < MaxDist / 2)
+                                {
+                                    Delete.Add(DeletePoint);
+                                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                                    {
+                                        Point = DeletePoint,
+                                        color = Color.DarkGreen,
+                                        Type = Knossos.TargetPoint.DrawType.Diamond,
+                                        Diameter = 2.5f
+                                    });
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        for (int i = 1; i < Delete.Count; i++)
+        if (Delete.Count > 1)
         {
-            prevIndex = i - 1;
-            index = i % Delete.Count;
-
-            if (Dist(Delete[index], Delete[prevIndex]) < Diameter)
+            for (int i = 1; i < Delete.Count; i++)
             {
-                DeleteWalls.Add(new Lclass.Line() { P1 = Delete[prevIndex], P2 = Delete[index], Width = brickWidth * 1.5f });
+                prevIndex = i - 1;
+                index = i % Delete.Count;
+
+                if (DistSqr(Delete[index], Delete[prevIndex]) < Diameter)
+                {
+                    DeleteWalls.Add(new Lclass.Line() { P1 = Delete[prevIndex], P2 = Delete[index], Width = brickWidth * 1.5f });
+                }
             }
+        }
+        else if (Delete.Count == 1)
+        {
+            DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(Delete[0].X + brickWidth * 1.1f, Delete[0].Y), P2 = new PointF(Delete[0].X - brickWidth * 1.1f, Delete[0].Y), Width = brickWidth * 1.1f });
         }
 
         CanClear = false;
@@ -682,7 +696,7 @@ public class Map
         {
             processPreBuffers(Diameter, preBuffers, ref NewData);
             processDeletion(Diameter, DeleteWalls, ref NewData);
-            
+            NewData.Add(Snap(location));
             if (NewData.Count > 0 || ForceRefresh)
             {
                 Refresh(Changed ? Sortedbricks.Keys.ToList() : NewData);
@@ -742,24 +756,26 @@ public class Map
                 {
                     foreach (PathD sections in Sortedchunks[item])
                     {
-                        foreach (PointD walls in sections)
+                        for (int i = 1; i < sections.Count + 1; i++)
                         {
-
+                            
                         }
                     }
                     Rendered = true;
                     break;
                 }
             }
-
-            Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+            if (!Rendered)
             {
-                Point = item,
-                color = (Rendered ? HSL2RGB((I / TotalSquares), 0.5, 0.5) : Color.DarkOrange),
-                Type = Knossos.TargetPoint.DrawType.Square,
-                Diameter = GridSize - ((item.X == NewF.X && item.Y == NewF.Y) ? 10 : (Rendered ? 5 : 0)),
-                Scale = true
-            });
+                Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                {
+                    Point = item,
+                    color = (Rendered ? HSL2RGB((I / TotalSquares), 0.5, 0.5) : Color.DarkOrange),
+                    Type = Knossos.TargetPoint.DrawType.Square,
+                    Diameter = GridSize - ((item.X == NewF.X && item.Y == NewF.Y) ? 10 : (Rendered ? 5 : 0)),
+                    Scale = true
+                });
+            }
 
             if (item.X == NewF.X && item.Y == NewF.Y)
             {
@@ -923,8 +939,8 @@ public class Map
             PointF Inner = point1 != float.MaxValue ? Subject.P1 : Subject.P2;
             PointF Outer = point1 != float.MaxValue ? Subject.P2 : Subject.P1;
 
-            double DistInner_1 = Dist(Inner, Object.P1);
-            double DistInner_2 = Dist(Inner, Object.P2);
+            double DistInner_1 = DistSqr(Inner, Object.P1);
+            double DistInner_2 = DistSqr(Inner, Object.P2);
 
             if (DistInner_1 < DistInner_2)
             {
@@ -936,8 +952,8 @@ public class Map
             }
             else
             {
-                double DistOuter_1 = Dist(Outer, Object.P1);
-                double DistOuter_2 = Dist(Outer, Object.P2);
+                double DistOuter_1 = DistSqr(Outer, Object.P1);
+                double DistOuter_2 = DistSqr(Outer, Object.P2);
                 if (DistOuter_1 < DistOuter_2)
                 {
                     pull = sledgeHammer.point.p1;
@@ -979,13 +995,15 @@ public class Map
                 for (int i = Sortedbricks[item].Count - 1; i >= 0; i--)
                 {
                     lines = Sortedbricks[item][i].GenerateRec();
+                    if (lines.Length == 0)
+                        continue;
                     // Adding brick to empty brick polygon
                     brickPolygon.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
                                                                      lines[0].P2.X, lines[0].P2.Y,
                                                                      lines[1].P2.X, lines[1].P2.Y,
                                                                      lines[1].P1.X, lines[1].P1.Y}));
                     // Cuts brick out of chunk
-                    chunk = Clipper.BooleanOp(ClipType.Difference, chunk, brickPolygon, FillRule.Positive);
+                    chunk = Clipper.BooleanOp(ClipType.Difference, chunk, brickPolygon, FillRule.NonZero);
                     // Clear brick polygon for next incoming brick
                     brickPolygon.Clear();
                 }
@@ -1019,7 +1037,7 @@ public class Map
         {
             for (int j = i + 1; j < Points.Count; j++)
             {
-                double D = Dist(Points[i], Points[j]);
+                double D = DistSqr(Points[i], Points[j]);
                 if (D > Distance)
                 {
                     Distance = D;
@@ -1038,15 +1056,15 @@ public class Map
 
     private double MinDistance(Lclass.Line L1, Lclass.Line L2)
     {
-        double P11 = Dist(L1.P1, L2.P1);
-        double P12 = Dist(L1.P1, L2.P2);
-        double P21 = Dist(L1.P2, L2.P1);
-        double P22 = Dist(L1.P2, L2.P2);
+        double P11 = DistSqr(L1.P1, L2.P1);
+        double P12 = DistSqr(L1.P1, L2.P2);
+        double P21 = DistSqr(L1.P2, L2.P1);
+        double P22 = DistSqr(L1.P2, L2.P2);
 
         return Math.Sqrt(Math.Min(P11, Math.Min(P12, Math.Min(P21, P22))));
     }
 
-    private double Dist(PointF P1, PointF P2)
+    private double DistSqr(PointF P1, PointF P2)
     {
         float num = P1.X - P2.X;
         float num2 = P1.Y - P2.Y;
@@ -1075,7 +1093,7 @@ public class Map
         if ((Item.P1 == Point || Item.P2 == Point))
             return 0;
         PointF Mid = midpoint(Item.P1, Item.P2);
-        if (Dist(Mid, Point) <= (Dist(Mid, Item.P1)))
+        if (DistSqr(Mid, Point) <= (DistSqr(Mid, Item.P1)))
         {
             float distance = LineDistance(Item, Point);
             if (distance < Item.Width)

@@ -17,6 +17,7 @@ public static class Lclass
         private PointF LastP1 = Point.Empty;
         private PointF LastP2 = Point.Empty;
         private PointF Slope = Point.Empty;
+        private float LastWidth = float.NaN;
 
         public void SetHighlight(bool Val)
         {
@@ -25,8 +26,10 @@ public static class Lclass
 
         private void UpdateLineProperties()
         {
-            if (LastP1 != P1 || LastP2 != P2 || LastSlope == float.NaN || LastDistance == float.NaN)
+            if (LastP1 != P1 || LastP2 != P2 || LastSlope == float.NaN || LastDistance == float.NaN || LastWidth != Width)
             {
+                LastWidth = Width;
+
                 PointF Direction = new PointF();
                 Direction.X = P1.X - P2.X;
                 Direction.Y = P1.Y - P2.Y;
@@ -90,13 +93,13 @@ public static class Lclass
             float XSlope = Slope.X;
 
             Ret[0].P1.X += (YSlope * RectWidth);
-            Ret[0].P1.Y += (XSlope * RectWidth);
+            Ret[0].P1.Y -= (XSlope * RectWidth);
             Ret[0].P2.X += (YSlope * RectWidth);
-            Ret[0].P2.Y += (XSlope * RectWidth);
+            Ret[0].P2.Y -= (XSlope * RectWidth);
             Ret[1].P1.X -= (YSlope * RectWidth);
-            Ret[1].P1.Y -= (XSlope * RectWidth);
+            Ret[1].P1.Y += (XSlope * RectWidth);
             Ret[1].P2.X -= (YSlope * RectWidth);
-            Ret[1].P2.Y -= (XSlope * RectWidth);
+            Ret[1].P2.Y += (XSlope * RectWidth);
 
 
             Ret[2].P1 = Ret[0].P1;
