@@ -18,6 +18,7 @@ public class Map
     private float brickWidth = 0;
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
     private Dictionary<PointF, List<Lclass.Brick>> Sortedbricks = new Dictionary<PointF, List<Lclass.Brick>>();
+    private Dictionary<PointF, PathsD> Sortedchunks = new Dictionary<PointF, PathsD>();
     private bool CanClear = false;
     private bool Clear = false;
     public bool ClearMem = false;
@@ -739,14 +740,12 @@ public class Map
             {
                 if (item.X == FocusPoint.X && item.Y == FocusPoint.Y)
                 {
-                    foreach (Lclass.Brick wall in Sortedbricks[item])
+                    foreach (PathD sections in Sortedchunks[item])
                     {
-                        Knossos.KnossosUI.addLine(new Knossos.TargetLine()
+                        foreach (PointD walls in sections)
                         {
-                            Line = wall,
-                            color = HSL2RGB((I / TotalSquares), 0.5, 0.5),
-                            Type = Knossos.TargetLine.DrawType.Outline
-                        });
+
+                        }
                     }
                     Rendered = true;
                     break;
@@ -989,6 +988,14 @@ public class Map
                     chunk = Clipper.BooleanOp(ClipType.Difference, chunk, brickPolygon, FillRule.Positive);
                     // Clear brick polygon for next incoming brick
                     brickPolygon.Clear();
+                }
+                if (Sortedchunks.ContainsKey(item))
+                {
+                    Sortedchunks.Add(item, chunk);
+                }
+                else
+                {
+                    Sortedchunks[item] = chunk;
                 }
             }
         }
