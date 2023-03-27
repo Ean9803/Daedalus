@@ -252,6 +252,29 @@ public class Map
         return P1In ^ P2In;
     }
 
+    private bool Overlaps(Lclass.Brick One, Lclass.Brick Two)
+    {
+        Lclass.Line[] lines = One.GenerateRec();
+        if (lines.Length == 0)
+            return false;
+        PathsD OnePoints = new PathsD();
+        OnePoints.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+
+        lines = Two.GenerateRec();
+        if (lines.Length == 0)
+            return false;
+        PathsD TwoPoints = new PathsD();
+        TwoPoints.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+
+        return Clipper.BooleanOp(ClipType.Union, OnePoints, TwoPoints, FillRule.NonZero).Count <= 1;
+    }
+
     private List<PointF> RemoveBrick(Lclass.Brick Brick, float Diameter)
     {
         List<PointF> Coords = BrickCoords(Brick);
@@ -283,7 +306,7 @@ public class Map
                             {
                                 if (LineDistance(Buff, Brick.P1) < brickWidth / 2 && LineDistance(Buff, Brick.P2) < brickWidth / 2)
                                 {
-                                    if (Encaps(Buff, Brick) || Touching(Buff, Brick, out sledgeHammer.point PointEdge))
+                                    if (Overlaps(Buff, Brick))
                                     {
                                         foreach (PointF Region in Buff.Regions)
                                         {
@@ -660,13 +683,13 @@ public class Map
 
                 if (DistSqr(Delete[index], Delete[prevIndex]) < Diameter)
                 {
-                    DeleteWalls.Add(new Lclass.Line() { P1 = Delete[prevIndex], P2 = Delete[index], Width = brickWidth * 1.5f });
+                    DeleteWalls.Add(new Lclass.Line() { P1 = Delete[prevIndex], P2 = Delete[index], Width = brickWidth * 0.5f });
                 }
             }
         }
         else if (Delete.Count == 1)
         {
-            DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(Delete[0].X + brickWidth * 1.1f, Delete[0].Y), P2 = new PointF(Delete[0].X - brickWidth * 1.1f, Delete[0].Y), Width = brickWidth * 1.1f });
+            DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(Delete[0].X + brickWidth * 0.5f, Delete[0].Y), P2 = new PointF(Delete[0].X - brickWidth * 0.5f, Delete[0].Y), Width = brickWidth * 0.5f });
         }
 
         CanClear = false;
