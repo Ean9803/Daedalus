@@ -261,6 +261,7 @@ namespace Daedalus
             Mino = new Minotaur(this);
 
             AssignSettings();
+            HelpData.PopulateManual(treeHelp, richTextHelp);
 
             SetLabPenMode(labPenMode.Draw);
             SetMapMode(mapPenMode.Roam);

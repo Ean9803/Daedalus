@@ -669,7 +669,7 @@ public class Map
                                 {
                                     Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                                     {
-                                        color = Knossos.KnossosUI.Settings.RayColor,
+                                        color = Knossos.KnossosUI.Settings.NonPointColor,
                                         Line = new Line()
                                         {
                                             P1 = DeletePoint,
@@ -700,7 +700,7 @@ public class Map
                 {
                     Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                     {
-                        color = Knossos.KnossosUI.Settings.RayColor,
+                        color = Knossos.KnossosUI.Settings.NonPointColor,
                         Line = new Line()
                         {
                             P1 = item,
