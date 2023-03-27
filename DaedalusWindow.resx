@@ -598,15 +598,15 @@
   <data name="playBtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEMAAABDCAYAAADHyrhzAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHhSURBVHhe7di9SgNBFAXgg4iolYIgVkHQwqCIqEnWHxRs
-        IlhYWfgSlrb6CIK9oI2FvoG92qXQWgsbRSGVxiQ7651wIxFS5GcXnMn54BLBmTt4srM7K4iIiIiIiIiI
-        iIjaFBhsBSHOciEu5OfDrMG4/qq35Az2gwLCIEL0W1/4kM9dHdIbNiIMBiW8/wmioeRKObVjdLjfZEvM
-        NguhsXJVFGTbzOgUf7USRq2K+JSxBzrNTy2HoSXb5motwqhO90u7YdhaLuNZ5q1oC390Eoat1BMq8nmE
-        CH3ayn2dhlGvbIibdYMJbee2bsOwtfSNV3nabGtLd8URRq0KMHJzPUlHGNDW7oktDC05k9xKz5S2d0vc
-        YdjKlPC2ajCvS7gjiTBs2cevc8f4pMKwJS+AeV3GDUmGIb0XdBk3JBZGiEtdwh1JhGHfX2SLDOkS7ogz
-        DOeP6HGF4cXLWxxh2G0hj9ERbemursLw7R8+HYdRwaPcJOe0jR86CUO2xflihGFt4Y82wyjK1bCnU/3T
-        chhV3GUMJnWan+Sbnmr6x2ulH1CV0+SxPC36dYrf5Fu/bxZEUMZLNsKmDusNWYPp2qGpHkIBRq6Ga7lJ
-        jumQ3mLfJaTycg/Z8f7eQERERERERERE9A8AP7BC4ixb58ojAAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHiSURBVHhe7di9LwRBGAbwJyKCikQiKpFQECLiY299hERD
+        olAp/BNKLX+CRC+hUdApJUp0CmoKDSG5inN3O+udy0tIrrhbu4mZfX7Jm5OYeSee29mdBSIiIiIiIiIi
+        IqImhQbLYYSDQoQj+Xk7MOjVX+VLwWAzvEAUxoi/6x2v8rmuQ/JhMUZ7WMLLryB+lFwp+3aMDvebbInR
+        eiH8rEIVN7JthnWKvxoJo1ZFvMnYLZ3mp4bD0JJtczIfo1un+6XZMGxNl/Eg82a1hT+ShGGr/x4V+dxB
+        jBZt5b6kYXxVEOF8waBP27ntr2HYmvrAkzxtVrWlu9IIo1ZnMHJz3RuJ0aat3ZNaGFpyJrmUnv3a3i1p
+        h2FrpoTnOYNxXcIdWYRhyz5+nTvGZxWGLXkBXNFl3JBlGNJ7QpdxQ2ZhRDjWJdyRRRj2/UW2SIcu4Y40
+        w3D+iJ5WGF68vKURht0W8hjt0pbu+lMYvv3DJ3EYFdzJTXJM2/ghSRiyLQ4nY3RqC380GUZRroYNneqf
+        hsOo4mrGYECn+Um+6cG6f7zWyC2qcprcladFq07xm3zr1/WCCMt4DGIs6bB8CAyGaoemrxDOYORqOJWb
+        ZI8OyRf7LiG1IveQNe/vDURERERERERERP8A8Anh4+HjiyJ84wAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="stopBtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -630,6 +630,9 @@
   </metadata>
   <metadata name="saveMapFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>185, 60</value>
+  </metadata>
+  <metadata name="colorDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>304, 60</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>103</value>

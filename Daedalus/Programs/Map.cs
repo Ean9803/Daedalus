@@ -15,13 +15,14 @@ using System.Runtime.CompilerServices;
 
 public class Map
 {
-    private float brickWidth = 0;
+    private float brickWidth { get { return Knossos.KnossosUI.Settings.Mino_Radius + (2 * Knossos.KnossosUI.Settings.ExpansionBias); } }
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
     private Dictionary<PointF, List<Lclass.Brick>> Sortedbricks = new Dictionary<PointF, List<Lclass.Brick>>();
     private Dictionary<PointF, PathsD> Sortedchunks = new Dictionary<PointF, PathsD>();
     private Dictionary<PointF, PathsD> Sortedwalls = new Dictionary<PointF, PathsD>();
     private bool CanClear = false;
     private bool Clear = false;
+    private bool ClearChunks = false;
     public bool ClearMem = false;
     private double[] AngleOffset = new double[10];
     private double ScanSpeed = 1;
@@ -31,14 +32,12 @@ public class Map
     private bool IsDrawing = false;
     private int CurrentSweep = 0;
     private double Clock = 0;
-    private float GridSize;
+    private float GridSize { get { return Knossos.KnossosUI.Settings.GridRadius; } }
     private const float MaxSlopeDiff = 0.5f;
 
-    public Map(float brickWidth = 3, double ScanSpeed = 1, float GridSize = 100)
+    public Map(double ScanSpeed = 1)
     {
-        this.brickWidth = brickWidth;
         this.ScanSpeed = ScanSpeed;
-        this.GridSize = GridSize;
 
         for (int i = 0; i < AngleOffset.Length; i++)
         {
@@ -532,6 +531,19 @@ public class Map
         ClearMem = true;
     }
 
+    public void RefreshChunks()
+    {
+        if (CanClear)
+        {
+            Sortedbricks.Clear();
+            Sortedwalls.Clear();
+            Sortedchunks.Clear();
+        }
+        else
+            ClearChunks = true;
+        ClearMem = true;
+    }
+
     public bool CreateBuffer(List<Lclass.CollisionPoint> collisionPoints, PointF location, float Diameter)
     {
 
@@ -559,14 +571,16 @@ public class Map
             if (!orderedList.ContainsKey(Key))
             {
                 orderedList.Add(Key, collisionPoints[i].Point);
-
-                Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                if (Knossos.KnossosUI.Settings.Collided_Show)
                 {
-                    Point = collisionPoints[i].Point,
-                    color = HSL2RGB(((angle + Clock) % 360.0f) / 360.0f, 0.5, 0.5),
-                    Type = Knossos.TargetPoint.DrawType.Dot,
-                    Diameter = 5
-                });
+                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                    {
+                        Point = collisionPoints[i].Point,
+                        color = HSL2RGB(((angle + Clock) % 360.0f) / 360.0f, 0.5, 0.5),
+                        Type = Knossos.TargetPoint.DrawType.Dot,
+                        Diameter = 5
+                    });
+                }
             }       
         }
         Clock += 0.1f;
@@ -624,13 +638,16 @@ public class Map
                                 DeleteBricks.Add(Barrier);
                                 PointF DeletePoint = new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u));
                                 DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(DeletePoint.X + brickWidth * 1.5f, DeletePoint.Y), P2 = new PointF(DeletePoint.X - brickWidth * 1.5f, DeletePoint.Y), Width = brickWidth * 1.5f });
-                                Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                                if (Knossos.KnossosUI.Settings.Uncollided_Show)
                                 {
-                                    Point = DeletePoint,
-                                    color = Color.DarkGreen,
-                                    Type = Knossos.TargetPoint.DrawType.Diamond,
-                                    Diameter = 2.5f
-                                });
+                                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                                    {
+                                        Point = DeletePoint,
+                                        color = Color.DarkGreen,
+                                        Type = Knossos.TargetPoint.DrawType.Diamond,
+                                        Diameter = 2.5f
+                                    });
+                                }
                             }
                         }
                     }
@@ -676,55 +693,60 @@ public class Map
 
         CanClear = false;
 
-        if (RefreshSort)
+        if (RefreshSort || ClearChunks)
         {
             RefreshSort = false;
+            ClearChunks = false;
             RefreshSortedBricks(Diameter);
         }
 
         CanSort = false;
         IsDrawing = true;
-        List<PointF> Focuses = SnapCoords(Focus, DisplayRadius);
         PointF NewF = Snap(Focus);
         bool Covered = false;
-        bool Rendered = false;
-        float TotalSquares = MathF.Pow((DisplayRadius * 2) + 1, 2);
         float I = 0;
         PointF[] Keys = Sortedchunks.Keys.ToArray();
         foreach (PointF item in Keys)
         {
-            Rendered = false;
-            foreach (PointF FocusPoint in Focuses)
+            if (DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
-                if (item.X == FocusPoint.X && item.Y == FocusPoint.Y)
+                foreach (PathD sections in Sortedchunks[item])
                 {
-                    foreach (PathD sections in Sortedchunks[item])
+                    for (int i = 1; i < sections.Count + 1; i++)
                     {
-                        for (int i = 1; i < sections.Count + 1; i++)
-                        {
-                            int CurrentIndex = i % sections.Count;
-                            int LastIndex = i - 1;
-                            PointF Current = new PointF((float)sections[CurrentIndex].x, (float)sections[CurrentIndex].y);
-                            PointF Last = new PointF((float)sections[LastIndex].x, (float)sections[LastIndex].y);
+                        int CurrentIndex = i % sections.Count;
+                        int LastIndex = i - 1;
+                        PointF Current = new PointF((float)sections[CurrentIndex].x, (float)sections[CurrentIndex].y);
+                        PointF Last = new PointF((float)sections[LastIndex].x, (float)sections[LastIndex].y);
 
-                            Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
-                            {
-                                color = Color.Green,
-                                Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
-                                Type = Knossos.TargetLine.DrawType.Solid
-                            });
-                        }
+                        Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                        {
+                            color = Knossos.KnossosUI.Settings.Object_Color,
+                            Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
+                            Type = Knossos.TargetLine.DrawType.Solid
+                        });
                     }
-                    Rendered = true;
-                    break;
+                }
+
+                if (Knossos.KnossosUI.Settings.Walls_Show && Sortedbricks.ContainsKey(item))
+                {
+                    foreach (Lclass.Brick Wall in Sortedbricks[item])
+                    {
+                        Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                        {
+                            color = Knossos.KnossosUI.Settings.Wall_Color,
+                            Line = Wall,
+                            Type = Knossos.TargetLine.DrawType.Outline
+                        });
+                    }
                 }
             }
-            if (!Rendered && DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius + UnRenderedRadius)) + ((DisplayRadius * 2) * GridSize), 2))
+            else if (DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius + UnRenderedRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
                 Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                 {
                     Point = item,
-                    color = Color.Red,
+                    color = Knossos.KnossosUI.Settings.Chunk_Color,
                     Type = Knossos.TargetPoint.DrawType.Square,
                     Diameter = GridSize,
                     Scale = true
@@ -735,16 +757,14 @@ public class Map
             {
                 Covered = true;
             }
-
-            if (Rendered)
-                I++;
+            I++;
         }
         if (!Covered)
         {
             Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
             {
                 Point = NewF,
-                color = Color.Blue,
+                color = Knossos.KnossosUI.Settings.Mino_Color,
                 Type = Knossos.TargetPoint.DrawType.Square,
                 Diameter = GridSize - (Sortedchunks.Count > 0 ? 10 : 0),
                 Scale = true

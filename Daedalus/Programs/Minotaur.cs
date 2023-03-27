@@ -9,36 +9,34 @@ namespace Daedalus.Daedalus.Programs
 {
     public class Minotaur
     {
-        private float Diameter;
-        private float bias;
-        private int Res;
-        private int LastRes;
         private Knossos KnossosForm;
         private PointF Pos;
         private float[] Angles;
         private float ViewDist;
+        private int LastRes;
 
         private Map minotaurMap;
 
-        public Minotaur(Knossos KnossosForm, float Size, float ViewDist = 100, int Resolution = 10, float bias = 1)
+        public Minotaur(Knossos KnossosForm)
         {
             this.KnossosForm = KnossosForm;
-            Diameter = Size;
-            this.bias = bias;
-            this.ViewDist = ViewDist;
-            LastRes = Res = Resolution;
             CalculateRes();
-            minotaurMap = new Map(Size + (bias * 2), 25, 25);
+            minotaurMap = new Map(25);
         }
 
         public float getRadius()
         {
-            return Diameter;
+            return Knossos.KnossosUI.Settings.Mino_Radius;
         }
 
         public void WipeMemory()
         {
             minotaurMap.ClearMemory();
+        }
+
+        public void RefreshMap()
+        {
+            minotaurMap.RefreshChunks();
         }
 
         public PointF getPosition()
@@ -58,34 +56,34 @@ namespace Daedalus.Daedalus.Programs
 
         public void ImportMapData(string Data)
         {
-            minotaurMap.ImportMapData(Data, Diameter + bias);
+            minotaurMap.ImportMapData(Data, getRadius() + Knossos.KnossosUI.Settings.ExpansionBias);
         }
 
         public void Update()
         {
-            if (LastRes != Res)
+            if (LastRes != (int)Knossos.KnossosUI.Settings.RayCount)
             {
                 CalculateRes();
-                LastRes = Res;
+                LastRes = (int)Knossos.KnossosUI.Settings.RayCount;
             }
 
             KnossosForm.WallDetectAngle(Pos, Angles, ViewDist, out List<Lclass.CollisionPoint> Hits);
-            minotaurMap.CreateBuffer(Hits, getPosition(), Diameter + bias);
+            minotaurMap.CreateBuffer(Hits, getPosition(), Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias);
         }
 
         public void ConstantUpdate()
         {
-            minotaurMap.DisplayMap(getPosition(), 2, 3, Diameter + bias);
+            minotaurMap.DisplayMap(getPosition(), (int)Knossos.KnossosUI.Settings.ObjectRadius_Show, (int)Knossos.KnossosUI.Settings.ChunkRadius_Show, Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias);
             KnossosForm.MinoRefresh();
             KnossosForm.MinoEndUpdate();
         }
 
         private void CalculateRes()
         {
-            Angles = new float[Res + 1];
-            for (int i = 0; i <= Res; i++)
+            Angles = new float[(int)Knossos.KnossosUI.Settings.RayCount + 1];
+            for (int i = 0; i <= (int)Knossos.KnossosUI.Settings.RayCount; i++)
             {
-                Angles[i] = ((float)i / Res) * 360;
+                Angles[i] = ((float)i / (int)Knossos.KnossosUI.Settings.RayCount) * 360;
             }
         }
     }

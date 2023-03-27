@@ -64,5 +64,5 @@ C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.C
 C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.dll
 C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.pdb
 C:\Users\tsc\Documents\GitHub\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.genruntimeconfig.cache
-C:\Users\irobo\source\repos\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Knossos.resources
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Knossos.resources
+C:\Users\irobo\source\repos\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Knossos.resources

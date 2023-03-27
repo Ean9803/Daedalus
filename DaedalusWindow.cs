@@ -18,12 +18,167 @@ namespace Daedalus
 {
     public partial class Knossos : Form
     {
+        public class DaedalusFormSettings
+        {
+            public Color LabMap_Color;
+            public Color Highlight_Color;
+            public Color Mino_Color;
+            public Color Chunk_Color;
+            public Color Object_Color;
+            public Color Wall_Color;
+
+            public bool Collided_Show;
+            public bool Uncollided_Show;
+            public bool Walls_Show;
+            public bool RoamTargets_Show;
+            public bool CurrentTarget_Show;
+            public bool UserTarget_Show;
+            public bool Path_Show;
+
+            public float ObjectRadius_Show;
+            public float ChunkRadius_Show;
+
+            public float Mino_Radius;
+            public float ExpansionBias;
+            public float RayCount;
+            public float Mino_Speed;
+            public float Mino_ViewDist;
+            public float GridRadius;
+
+            public float WallWidth;
+
+            private Color GenerateColor(string Data)
+            {
+                string[] RGBA = Data.Split(':');
+                Color Ret = Color.FromArgb(int.Parse(RGBA[3]), int.Parse(RGBA[0]), int.Parse(RGBA[1]), int.Parse(RGBA[2]));
+                return Ret;
+            }
+
+            public DaedalusFormSettings(string Data)
+            {
+                string[] DataChuncks = Data.Split('/');
+                LabMap_Color = GenerateColor(DataChuncks[0]);
+                Highlight_Color = GenerateColor(DataChuncks[1]);
+                Mino_Color = GenerateColor(DataChuncks[2]);
+                Chunk_Color = GenerateColor(DataChuncks[3]);
+                Object_Color = GenerateColor(DataChuncks[4]);
+                Wall_Color = GenerateColor(DataChuncks[5]);
+
+                Collided_Show = DataChuncks[6].Equals("1");
+                Uncollided_Show = DataChuncks[7].Equals("1");
+                Walls_Show = DataChuncks[8].Equals("1");
+                RoamTargets_Show = DataChuncks[9].Equals("1");
+                CurrentTarget_Show = DataChuncks[10].Equals("1");
+                Path_Show = DataChuncks[11].Equals("1");
+
+                ObjectRadius_Show = float.Parse(DataChuncks[12]);
+                ChunkRadius_Show = float.Parse(DataChuncks[13]);
+
+                Mino_Radius = float.Parse(DataChuncks[14]);
+                ExpansionBias = float.Parse(DataChuncks[15]);
+                RayCount = float.Parse(DataChuncks[16]);
+                Mino_Speed = float.Parse(DataChuncks[17]);
+                Mino_ViewDist = float.Parse(DataChuncks[18]);
+                GridRadius = float.Parse(DataChuncks[19]);
+
+                WallWidth = float.Parse(DataChuncks[20]);
+            }
+
+            public DaedalusFormSettings()
+            {
+                LabMap_Color = Color.White;
+                Highlight_Color = Color.Red;
+                Mino_Color = Color.White;
+                Chunk_Color = Color.Red;
+                Object_Color = Color.Green;
+                Wall_Color = Color.Blue;
+
+                Collided_Show = true;
+                Uncollided_Show = true;
+                Walls_Show = false;
+                RoamTargets_Show = true;
+                CurrentTarget_Show = true;
+                UserTarget_Show = true;
+                Path_Show = true;
+
+                ObjectRadius_Show = 2;
+                ChunkRadius_Show = 3;
+
+                Mino_Radius = 10;
+                ExpansionBias = 1;
+                RayCount = 50;
+                Mino_Speed = 1;
+                Mino_ViewDist = 100;
+                GridRadius = 25;
+                WallWidth = 10;
+            }
+
+            public string Export()
+            {
+                string Out = "";
+                Out += LabMap_Color.R + ":" + LabMap_Color.G + ":" + LabMap_Color.B + ":" + LabMap_Color.A + "/";
+                Out += Highlight_Color.R + ":" + Highlight_Color.G + ":" + Highlight_Color.B + ":" + Highlight_Color.A + "/";
+                Out += Mino_Color.R + ":" + Mino_Color.G + ":" + Mino_Color.B + ":" + Mino_Color.A + "/";
+                Out += Chunk_Color.R + ":" + Chunk_Color.G + ":" + Chunk_Color.B + ":" + Chunk_Color.A + "/";
+                Out += Object_Color.R + ":" + Object_Color.G + ":" + Object_Color.B + ":" + Object_Color.A + "/";
+                Out += Wall_Color.R + ":" + Wall_Color.G + ":" + Wall_Color.B + ":" + Wall_Color.A + "/";
+
+                Out += (Collided_Show ? "1" : "0") + "/";
+                Out += (Uncollided_Show ? "1" : "0") + "/";
+                Out += (Walls_Show ? "1" : "0") + "/";
+                Out += (RoamTargets_Show ? "1" : "0") + "/";
+                Out += (CurrentTarget_Show ? "1" : "0") + "/";
+                Out += (UserTarget_Show ? "1" : "0") + "/";
+                Out += (Path_Show ? "1" : "0") + "/";
+
+                Out += ObjectRadius_Show.ToString() + "/";
+                Out += ChunkRadius_Show.ToString() + "/";
+
+                Out += Mino_Radius.ToString() + "/";
+                Out += ExpansionBias.ToString() + "/";
+                Out += RayCount.ToString() + "/";
+                Out += Mino_Speed.ToString() + "/";
+                Out += Mino_ViewDist.ToString() + "/";
+                Out += GridRadius.ToString() + "/";
+                Out += WallWidth.ToString() + "/";
+
+                return Out;
+            }
+
+            public enum ColorBlindness { Deuteranomaly, Protanomaly, Protanopia, Tritanomaly, Tritanopia, Complete_Color_Blindness }
+            public ColorBlindness Blindness;
+
+            public void ApplyColorChanges()
+            {
+                switch (Blindness)
+                {
+                    case ColorBlindness.Deuteranomaly:
+                        break;
+                    case ColorBlindness.Protanomaly:
+                        break;
+                    case ColorBlindness.Protanopia:
+                        break;
+                    case ColorBlindness.Tritanomaly:
+                        break;
+                    case ColorBlindness.Tritanopia:
+                        break;
+                    case ColorBlindness.Complete_Color_Blindness:
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+
         Minotaur Mino;
         public static Knossos KnossosUI;
+        public DaedalusFormSettings Settings;
+
         public Knossos()
         {
             InitializeComponent();
-            Mino = new Minotaur(this, 10, Resolution: 50);
+            LoadSettings();
             KnossosUI = this;
         }
 
@@ -36,7 +191,6 @@ namespace Daedalus
         private Dictionary<string, string> LogOuput = new Dictionary<string, string>();
         private Dictionary<string, string> MapLogOuput = new Dictionary<string, string>();
 
-        private const float LineWidth = 10;
         private float ZoomAmount;
 
 
@@ -52,6 +206,8 @@ namespace Daedalus
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
+            Mino = new Minotaur(this);
+
             SetLabPenMode(labPenMode.Draw);
             SetMapMode(mapPenMode.Roam);
             SetMinoState(MinoMode.Off);
@@ -60,11 +216,13 @@ namespace Daedalus
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
             ZoomAmount = 1;
+            tabMenu.SelectedIndexChanged += TabMenu_SelectedIndexChanged;
         }
 
         int WorkersOpen = 0;
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            SaveSettings();
             if (MinotaurWorker.IsBusy || LabyrinthUpdate.IsBusy)
             {
                 UpdateFrames = false;
@@ -300,7 +458,7 @@ namespace Daedalus
 
             if (CreatingLine && labPen == labPenMode.Draw)
             {
-                TempLine.Width = LineWidth;
+                TempLine.Width = Settings.WallWidth;
                 TempLine.P1 = StartLine;
                 TempLine.P2 = MouseLocationLab;
             }
@@ -373,7 +531,7 @@ namespace Daedalus
                 if (e.Button == MouseButtons.Left)
                 {
                     StartLine = MouseLocationLab;
-                    TempLine.Width = LineWidth;
+                    TempLine.Width = Settings.WallWidth;
                     TempLine.P1 = StartLine;
                     TempLine.P2 = MouseLocationLab;
                     CreatingLine = true;
@@ -461,7 +619,7 @@ namespace Daedalus
                 {
                     P1 = P1,
                     P2 = P2,
-                    Width = LineWidth
+                    Width = Settings.WallWidth
                 });
             }
         }
@@ -549,8 +707,8 @@ namespace Daedalus
 
         private void labyrinthScene_Paint(object sender, PaintEventArgs e)
         {
-            Pen DrawPen = new Pen(Color.White, 2);
-            Pen RedPen = new Pen(Color.Red, 2);
+            Pen DrawPen = new Pen(Settings.LabMap_Color, 2);
+            Pen RedPen = new Pen(Settings.Highlight_Color, 2);
             Graphics window = e.Graphics;
             UpdateOrigin();
             //TODO
@@ -569,7 +727,7 @@ namespace Daedalus
             DebugLog("Origin Location - Lab", "Origin Location: " + Origin.X.ToString() + " : " + Origin.Y.ToString());
 
 
-            DrawPen = new Pen(Color.Green, 2);
+            DrawPen = new Pen(Settings.Highlight_Color, 2);
             if (CreatingLine && labPen == labPenMode.Draw)
             {
                 if (Dist(TempLine.P1, TempLine.P2) > 0.1f)
@@ -580,6 +738,8 @@ namespace Daedalus
                     }
                 }
             }
+
+            DrawPen.Color = Settings.Mino_Color;
             window.DrawEllipse(DrawPen, ScreenOrigin.X, ScreenOrigin.Y, 1, 1);
 
             DrawMino(window);
@@ -728,7 +888,7 @@ namespace Daedalus
 
         private void DrawMino(Graphics window)
         {
-            Pen DrawPen = new Pen(Color.Pink, 2);
+            Pen DrawPen = new Pen(Settings.Mino_Color, 2);
             PointF MinoPosition = CalculateViewPosition(Mino.getPosition());
             float Radius = Mino.getRadius() / ZoomAmount;
             window.DrawEllipse(DrawPen, new Rectangle()
@@ -901,6 +1061,329 @@ namespace Daedalus
                 MapLines.Add(Line);
         }
 
+
+        #endregion
+
+        #region Settings
+
+        private void treeSettings_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            switch (e.Node.Name)
+            {
+                case "Visual":
+                    SettingControl.SelectTab(0);
+                    AssignVisualSettings();
+                    break;
+                case "Display":
+                    SettingControl.SelectTab(1);
+                    AssignDisplaySettings();
+                    break;
+                case "Internal":
+                    SettingControl.SelectTab(2);
+                    AssignInternalSettings();
+                    break;
+                case "Environment":
+                    SettingControl.SelectTab(3);
+                    AssignEnvironmentSettings();
+                    break;
+                case "Deuteranomaly":
+                    SettingControl.SelectTab(4);
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Deuteranomaly;
+                    break;
+                case "Protanomaly":
+                    SettingControl.SelectTab(4);
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Protanomaly;
+                    break;
+                case "Protanopia":
+                    SettingControl.SelectTab(4);
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Protanopia;
+                    break;
+                case "Tritanomaly":
+                    SettingControl.SelectTab(4);
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Tritanomaly;
+                    break;
+                case "Tritanopia":
+                    SettingControl.SelectTab(4);
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Tritanopia;
+                    break;
+                case "Complete Color Blindness":
+                    SettingControl.SelectTab(4);
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Complete_Color_Blindness;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Apply_Click(object sender, EventArgs e)
+        {
+            Settings.ApplyColorChanges();
+            SettingControl.SelectTab(0);
+            AssignVisualSettings();
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            SettingControl.SelectTab(0);
+        }
+
+        private void SaveSettings()
+        {
+            File.WriteAllText(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings", Settings.Export());
+        }
+
+        private void LoadSettings()
+        {
+            if (File.Exists(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings"))
+                Settings = new DaedalusFormSettings(File.ReadAllText(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings"));
+            else
+                Settings = new DaedalusFormSettings();
+        }
+
+        private void TabMenu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AssignSettings();
+        }
+
+        private void AssignVisualSettings()
+        {
+            LabColor.BackColor = Settings.LabMap_Color;
+            LabHighlightColor.BackColor = Settings.Highlight_Color;
+            MinoColor.BackColor = Settings.Mino_Color;
+            MapChunkColor.BackColor = Settings.Chunk_Color;
+            MapObjectsColor.BackColor = Settings.Object_Color;
+            MapWallColor.BackColor = Settings.Wall_Color;
+        }
+
+        private void AssignDisplaySettings()
+        {
+            ShowCollidedPoints.Checked = Settings.Collided_Show;
+            ShowUncollidedPoints.Checked = Settings.Uncollided_Show;
+            ShowUserTarget.Checked = Settings.UserTarget_Show;
+            ShowWallData.Checked = Settings.Walls_Show;
+            ShowRoamTargets.Checked = Settings.RoamTargets_Show;
+            ShowCurrentTarget.Checked = Settings.CurrentTarget_Show;
+            ShowPath.Checked = Settings.Path_Show;
+
+            ObjectRadius.Text = Settings.ObjectRadius_Show.ToString();
+            ChunkRadius.Text = Settings.ChunkRadius_Show.ToString();
+
+            ObjectRadiusSlider.Value = (int)Math.Clamp(Settings.ObjectRadius_Show, ObjectRadiusSlider.Minimum, ObjectRadiusSlider.Maximum);
+            ChunkRadiusSlider.Value = (int)Math.Clamp(Settings.ChunkRadius_Show, ChunkRadiusSlider.Minimum, ChunkRadiusSlider.Maximum);
+        }
+
+        private void AssignInternalSettings()
+        {
+            MinoRadius.Text = Settings.Mino_Radius.ToString();
+            ExpansionBias.Text = Settings.ExpansionBias.ToString();
+            MinoRayRes.Text = Settings.RayCount.ToString();
+            MinoSpeed.Text = Settings.Mino_Speed.ToString();
+            MinoViewDistance.Text = Settings.Mino_ViewDist.ToString();
+            GridRadius.Text = Settings.GridRadius.ToString();
+
+            MinoRadiusSlider.Value = (int)Math.Clamp(Settings.Mino_Radius, MinoRadiusSlider.Minimum, MinoRadiusSlider.Maximum);
+            ExpansionBiasSlider.Value = (int)Math.Clamp(Settings.ExpansionBias, ExpansionBiasSlider.Minimum, ExpansionBiasSlider.Maximum);
+            MinoRayResSlider.Value = (int)Math.Clamp(Settings.RayCount, MinoRadiusSlider.Minimum, MinoRayResSlider.Maximum);
+            MinoSpeedSlider.Value = (int)Math.Clamp(Settings.Mino_Speed, MinoSpeedSlider.Minimum, MinoSpeedSlider.Maximum);
+            MinoViewDistanceSlider.Value = (int)Math.Clamp(Settings.Mino_ViewDist, MinoViewDistanceSlider.Minimum, MinoViewDistanceSlider.Maximum);
+            GridRadiusSlider.Value = (int)Math.Clamp(Settings.GridRadius, GridRadiusSlider.Minimum, GridRadiusSlider.Maximum);
+        }
+
+        private void AssignEnvironmentSettings()
+        {
+            WallWidth.Text = Settings.WallWidth.ToString();
+            WallWidthSlider.Value = (int)Math.Clamp(Settings.WallWidth, WallWidthSlider.Minimum, WallWidthSlider.Maximum);
+        }
+
+        private void AssignSettings()
+        {
+            AssignDisplaySettings();
+            AssignVisualSettings();
+            AssignInternalSettings();
+            AssignEnvironmentSettings();
+        }
+
+        private void SetColorSetting(ref Color subject)
+        {
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                subject = colorDialog.Color;
+            }
+            AssignVisualSettings();
+        }
+
+        private void SetFloatSetting(string Value, System.Windows.Forms.TrackBar Slider, ref float ValueResult)
+        {
+            if (float.TryParse(Value, out float Result))
+            {
+                Result = Math.Clamp(Result, Slider.Minimum, Slider.Maximum);
+                ValueResult = Result;
+                Slider.Value = (int)Result;
+            }
+        }
+
+        private void SetFloatSetting(int Value, System.Windows.Forms.TextBox Text, ref float ValueResult)
+        {
+            Text.Text = Value.ToString();
+            ValueResult = Value;
+        }
+
+        private void ChangeMapColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.LabMap_Color);
+        }
+
+        private void ChangeHighlightColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.Highlight_Color);
+        }
+
+        private void ChangeMinoColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.Mino_Color);
+        }
+
+        private void ChangeMapObjectsColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.Object_Color);
+        }
+
+        private void ChangeMapChunckColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.Chunk_Color);
+        }
+
+        private void ChangeMapWallColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.Wall_Color);
+        }
+
+        private void ShowCollidedPoints_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Collided_Show = ShowCollidedPoints.Checked;
+        }
+
+        private void ShowUncollidedPoints_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Uncollided_Show = ShowUncollidedPoints.Checked;
+        }
+
+        private void ObjectRadius_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(ObjectRadius.Text, ObjectRadiusSlider, ref Settings.ObjectRadius_Show);
+        }
+
+        private void ObjectRadiusSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(ObjectRadiusSlider.Value, ObjectRadius, ref Settings.ObjectRadius_Show);
+        }
+
+        private void ChunkRadius_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(ChunkRadius.Text, ChunkRadiusSlider, ref Settings.ChunkRadius_Show);
+        }
+
+        private void ChunkRadiusSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(ChunkRadiusSlider.Value, ChunkRadius, ref Settings.ChunkRadius_Show);
+        }
+
+        private void ShowWallData_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Walls_Show = ShowWallData.Checked;
+        }
+
+        private void ShowRoamTargets_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.RoamTargets_Show = ShowRoamTargets.Checked;
+        }
+
+        private void ShowCurrentTarget_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.CurrentTarget_Show = ShowCurrentTarget.Checked;
+        }
+
+        private void ShowPath_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Path_Show = ShowPath.Checked;
+        }
+
+        private void ShowUserTarget_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.UserTarget_Show = ShowUserTarget.Checked;
+        }
+
+        private void MinoRadius_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoRadius.Text, MinoRadiusSlider, ref Settings.Mino_Radius);
+        }
+
+        private void MinoRadiusSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(ChunkRadiusSlider.Value, ChunkRadius, ref Settings.Mino_Radius);
+        }
+
+        private void ExapansionBias_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(ExpansionBias.Text, ExpansionBiasSlider, ref Settings.ExpansionBias);
+        }
+
+        private void ExpansionBiasSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(ExpansionBiasSlider.Value, ExpansionBias, ref Settings.ExpansionBias);
+        }
+
+        private void MinoRayRes_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoRayRes.Text, MinoRayResSlider, ref Settings.RayCount);
+        }
+
+        private void MinoRayResSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoRayResSlider.Value, MinoRayRes, ref Settings.RayCount);
+        }
+
+        private void MinoSpeed_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoSpeed.Text, MinoSpeedSlider, ref Settings.Mino_Speed);
+        }
+
+        private void MinoSpeedSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoSpeedSlider.Value, MinoSpeed, ref Settings.Mino_Speed);
+        }
+
+        private void MinoViewDistance_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoViewDistance.Text, MinoViewDistanceSlider, ref Settings.Mino_ViewDist);
+        }
+
+        private void MinoViewDistanceSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(MinoViewDistanceSlider.Value, MinoViewDistance, ref Settings.Mino_ViewDist);
+        }
+
+        private void GridRadius_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(GridRadius.Text, GridRadiusSlider, ref Settings.GridRadius);
+            Mino.RefreshMap();
+        }
+
+        private void GridRadiusSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(GridRadiusSlider.Value, GridRadius, ref Settings.GridRadius);
+            Mino.RefreshMap();
+        }
+
+        private void WallWidth_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(WallWidth.Text, WallWidthSlider, ref Settings.WallWidth);
+        }
+
+        private void WallWidthSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(WallWidthSlider.Value, WallWidth, ref Settings.WallWidth);
+        }
 
         #endregion
     }
