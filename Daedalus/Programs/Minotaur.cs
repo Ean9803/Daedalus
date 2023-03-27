@@ -75,7 +75,7 @@ namespace Daedalus.Daedalus.Programs
 
         public void ConstantUpdate()
         {
-            minotaurMap.DisplayMap(getPosition(), 1, Diameter + bias);
+            minotaurMap.DisplayMap(getPosition(), 2, 3, Diameter + bias);
             KnossosForm.MinoRefresh();
             KnossosForm.MinoEndUpdate();
         }

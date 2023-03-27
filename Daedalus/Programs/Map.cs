@@ -19,6 +19,7 @@ public class Map
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
     private Dictionary<PointF, List<Lclass.Brick>> Sortedbricks = new Dictionary<PointF, List<Lclass.Brick>>();
     private Dictionary<PointF, PathsD> Sortedchunks = new Dictionary<PointF, PathsD>();
+    private Dictionary<PointF, PathsD> Sortedwalls = new Dictionary<PointF, PathsD>();
     private bool CanClear = false;
     private bool Clear = false;
     public bool ClearMem = false;
@@ -56,14 +57,21 @@ public class Map
                     output += brick.P1.X + "/" + brick.P1.Y + "#" + brick.P2.X + "/" + brick.P2.Y + "#" + brick.Width + "___";
             }
         }
+        output += ";";
+        foreach (PointF Point in Sortedchunks.Keys)
+        {
+            output += Point.X + "|" + Point.Y + "|";
+        }
         return output;
     }
 
     public void ImportMapData(string Data, float Diameter)
     {
         bricks.Clear();
+        string[] Sections = Data.Split(';');
+
         string[] delimeters = { "___", "#", "/" };
-        string[] coordinates = Data.Split(delimeters, StringSplitOptions.None);
+        string[] coordinates = Sections[0].Split(delimeters, StringSplitOptions.None);
 
         // Four coordinates per line
         float x1, y1, x2, y2, width;
@@ -78,6 +86,23 @@ public class Map
             if (NewBrick.Length() != 0)
                 bricks.Add(NewBrick);
         }
+
+        if (Sections.Length >= 2)
+        {
+            PointF Coord;
+            coordinates = Sections[1].Split('|', StringSplitOptions.None);
+            for (int i = 0; i < coordinates.Length - 1; i += 2)
+            {
+                x1 = float.Parse(coordinates[i]);
+                y1 = float.Parse(coordinates[i + 1]);
+                Coord = new PointF(x1, y1);
+                if (!Sortedchunks.ContainsKey(Coord))
+                {
+                    Sortedchunks.Add(Coord, ChunkShape(Coord));
+                }
+            }
+        }
+
         if (CanSort)
             RefreshSortedBricks(Diameter);
         else
@@ -112,12 +137,15 @@ public class Map
         bool Same = false;
         bool NewRegions = true;
         item.AddRegions(Coords);
+        PathsD WallPoly = new PathsD();
+        Lclass.Line[] lines;
         while (NewRegions)
         {
             foreach (PointF Point in Coords)
             {
                 if (Sortedbricks.ContainsKey(Point))
                 {
+                    /*
                     for (int i = Sortedbricks[Point].Count - 1; i >= 0 && !Added && !Same; i--)
                     {
                         Lclass.Brick Buff = (Sortedbricks[Point][i]);
@@ -154,7 +182,7 @@ public class Map
                                             NewGroup.Add(item);
                                             NewGroup.Add(Sortedbricks[Point][i]);
                                             Lclass.Brick NewBuff = MaxDist(NewGroup);
-                                            
+
                                             if (BrickCoords(NewBuff).Contains(Point))
                                             {
                                                 item.AddRegions(Buff.Regions);
@@ -174,6 +202,7 @@ public class Map
                             Added = false;
                         }
                     }
+                    */
                     item.AddRegion(Point);
                     if (!Sortedbricks[Point].Contains(item))
                         Sortedbricks[Point].Add(item);
@@ -181,11 +210,31 @@ public class Map
                 }
                 else
                 {
-                    List<Lclass.Brick> Collection =  new List<Lclass.Brick>();
+                    List<Lclass.Brick> Collection = new List<Lclass.Brick>();
                     item.AddRegion(Point);
                     Collection.Add(item);
                     Sortedbricks.Add(Point, Collection);
                 }
+
+                lines = item.GenerateRec();
+                if (lines.Length == 0)
+                    continue;
+                // Adding brick to empty brick polygon
+                WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+
+                if (Sortedwalls.ContainsKey(Point))
+                {
+                    Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Union, Sortedwalls[Point], WallPoly, FillRule.NonZero);
+                }
+                else
+                {
+                    Sortedwalls.Add(Point, new PathsD(WallPoly));
+                }
+                WallPoly.Clear();
+                Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Intersection, Sortedwalls[Point], ChunkShape(Point), FillRule.NonZero);
             }
             if (item.Regions.Count != Coords.Count)
             {
@@ -244,7 +293,7 @@ public class Map
 
         if (P1In && P2In)
             InnerPoint = sledgeHammer.point.both;
-        else if(P1In)
+        else if (P1In)
             InnerPoint = sledgeHammer.point.p1;
         else
             InnerPoint = sledgeHammer.point.p2;
@@ -252,94 +301,113 @@ public class Map
         return P1In ^ P2In;
     }
 
-    private bool Overlaps(Lclass.Brick One, Lclass.Brick Two)
-    {
-        Lclass.Line[] lines = One.GenerateRec();
-        if (lines.Length == 0)
-            return false;
-        PathsD OnePoints = new PathsD();
-        OnePoints.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
-                                                                     lines[0].P2.X, lines[0].P2.Y,
-                                                                     lines[1].P2.X, lines[1].P2.Y,
-                                                                     lines[1].P1.X, lines[1].P1.Y}));
-
-        lines = Two.GenerateRec();
-        if (lines.Length == 0)
-            return false;
-        PathsD TwoPoints = new PathsD();
-        TwoPoints.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
-                                                                     lines[0].P2.X, lines[0].P2.Y,
-                                                                     lines[1].P2.X, lines[1].P2.Y,
-                                                                     lines[1].P1.X, lines[1].P1.Y}));
-
-        return Clipper.BooleanOp(ClipType.Union, OnePoints, TwoPoints, FillRule.NonZero).Count <= 1;
-    }
-
     private List<PointF> RemoveBrick(Lclass.Brick Brick, float Diameter)
     {
         List<PointF> Coords = BrickCoords(Brick);
-        List<PointF> removed = new List<PointF>();
+        List<PointF> removed = new List<PointF>(Coords);
         bool Del = true;
-        while (Del)
+        PathsD WallPoly = new PathsD();
+        Lclass.Line[] lines;
+
+        foreach (PointF Point in Coords)
         {
-            for (int R = 0; R < Coords.Count; R++)
+            lines = Brick.GenerateRec();
+            if (lines.Length != 0)
             {
-                PointF Point = Coords[R];
-                if (Sortedbricks.ContainsKey(Point))
+                // Adding brick to empty brick polygon
+                WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+
+                if (Sortedwalls.ContainsKey(Point))
                 {
-                    for (int i = Sortedbricks[Point].Count - 1; i >= 0; i--)
+                    Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Difference, Sortedwalls[Point], WallPoly, FillRule.NonZero);
+                    if (Sortedwalls[Point].Count != 0)
                     {
-                        if (i >= Sortedbricks[Point].Count)
+                        bool Empty = true;
+                        foreach (PathD item in Sortedwalls[Point])
                         {
-                            continue;
-                        }
-                        if (Sortedbricks[Point][i].Length() == 0)
-                        {
-                            Sortedbricks[Point].RemoveAt(i);
-                            continue;
-                        }
-
-                        Lclass.Brick Buff = (Sortedbricks[Point][i]);
-                        if (Buff.P1 != Brick.P1 && Buff.P2 != Brick.P2)
-                        {
-                            if (SimilarSlope(Buff.getSlope(), Brick.getSlope(), MaxSlopeDiff))
+                            if (item.Count != 0)
                             {
-                                if (LineDistance(Buff, Brick.P1) < brickWidth / 2 && LineDistance(Buff, Brick.P2) < brickWidth / 2)
+                                Empty = false;
+                                break;
+                            }
+                        }
+
+                        if (!Empty)
+                        {
+                            for (int i = Sortedbricks[Point].Count - 1; i >= 0; i--)
+                            {
+                                WallPoly.Clear();
+                                lines = Sortedbricks[Point][i].GenerateRec();
+                                if (lines.Length > 0)
                                 {
-                                    if (Overlaps(Buff, Brick))
+                                    WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+                                    PathsD Overlap = Clipper.BooleanOp(ClipType.Intersection, WallPoly, Sortedwalls[Point], FillRule.NonZero);
+                                    if (Overlap.Count == 0)
                                     {
-                                        foreach (PointF Region in Buff.Regions)
-                                        {
-                                            if (!removed.Contains(Region))
-                                                removed.Add(Region);
-                                        }
-                                        if (!removed.Contains(Point))
-                                            removed.Add(Point);
-
-                                        Brick.P1 = Buff.P1;
-                                        Brick.P2 = Buff.P2;
-                                        Brick.Width = Buff.Width;
-
-                                        Sortedbricks[Point].Remove(Buff);
-                                        Buff.RemoveFromParent(ref Sortedbricks);
-                                        Buff.Width = 0;
-                                        Buff.P1 = new PointF(0, 0);
-                                        Buff.P2 = new PointF(0, 0);
+                                        Sortedbricks[Point].RemoveAt(i);
                                     }
+                                }
+                                else
+                                {
+                                    Sortedbricks[Point].RemoveAt(i);
                                 }
                             }
                         }
+                        else
+                        {
+                            Sortedbricks[Point].Clear();
+                        }
+                    }
+                    else
+                    {
+                        if (Sortedbricks.ContainsKey(Point))
+                            Sortedbricks[Point].Clear();
                     }
                 }
+                WallPoly.Clear();
             }
-            if (removed.Count != Coords.Count)
+        }
+        
+        return removed;
+    }
+
+    private List<PointF> RemoveBuffers(ref List<Lclass.Brick> Buffers)
+    {
+        List<PointF> removed = new List<PointF>();
+        List<PointF> BrickCoord = new List<PointF>();
+        PathsD WallPoly = new PathsD();
+        Lclass.Line[] lines;
+
+        foreach (Lclass.Brick item in Buffers)
+        {
+            BrickCoord.Clear();
+            BrickCoord.AddRange(item.Regions);
+            BrickCoord.AddRange(BrickCoords(item));
+            lines = item.GenerateRec();
+            if (lines.Length != 0)
             {
-                Coords = removed;
+                WallPoly.Clear();
+                WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
+                                                                     lines[0].P2.X, lines[0].P2.Y,
+                                                                     lines[1].P2.X, lines[1].P2.Y,
+                                                                     lines[1].P1.X, lines[1].P1.Y}));
+                foreach (PointF Point in BrickCoord)
+                {
+                    Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Difference, Sortedwalls[Point], WallPoly, FillRule.NonZero);
+                }
             }
-            else
-            {
-                Del = false;
-            }
+
+            removed.AddRange(BrickCoord);
+
+            item.Width = 0;
+            item.P1 = new PointF(0, 0);
+            item.P2 = new PointF(0, 0);
         }
         return removed;
     }
@@ -456,47 +524,16 @@ public class Map
         {
             bricks.Clear();
             Sortedbricks.Clear();
+            Sortedwalls.Clear();
+            Sortedchunks.Clear();
         }
         else
             Clear = true;
         ClearMem = true;
     }
 
-    //public void test()
-    //{
-    //    PointF[] currentPoints = new PointF[5] {new PointF(2.85f*20, 0), new PointF(2.2f*20, 1.6f*20), new PointF(-0.7f*20, 2*20), new PointF(-1.84f*20, 0.4f*20), new PointF(-2.2f*20, -3.06f*20) };
-
-    //    List<Lclass.Line> preBuffers = new List<Lclass.Line>();
-
-    //    for (int i = 1; i < currentPoints.Length; i++)
-    //    {
-    //        int prevIndex = i - 1;
-    //        int index = i % currentPoints.Length;
-
-    //        // Check to see if we have reached the end of the list
-
-
-    //        if (ruleCheck(currentPoints[index], currentPoints[prevIndex], 40))
-    //        {
-
-    //            preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex], P2 = currentPoints[index], Width = 2 });
-
-    //        }
-    //    }
-
-    //    double ValI = 0;
-    //    foreach (Lclass.Line item in preBuffers)
-    //    {
-    //        Knossos.KnossosUI.addLine(item, HSL2RGB(ValI, 0.5, 0.5));
-    //        ValI += 0.25;
-    //        if (ValI >= 1)
-    //            ValI = 0;
-    //    }
-    //}
     public bool CreateBuffer(List<Lclass.CollisionPoint> collisionPoints, PointF location, float Diameter)
     {
-        //test();
-        //return;
 
         // Sorting Points
         SortedDictionary<double, PointF> orderedList = new SortedDictionary<double, PointF>();
@@ -553,8 +590,6 @@ public class Map
 
         // Connecting points
         List<Lclass.Line> preBuffers = new List<Lclass.Line>();
-        //PointF? PrevSlope = null;
-        //float PrevSlope = float.NaN;
         List<KeyValuePair<double, PointF>> currentPoints = orderedList.ToList();
         for (int i = 1; i < currentPoints.Count; i++)
         {
@@ -564,81 +599,11 @@ public class Map
             if (DistSqr(currentPoints[index].Value, currentPoints[prevIndex].Value) < Diameter)
             {
                 preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
-                /*
-                // Check to see if we have reached the end of the list
-                
-                //float currentSlopeX = currentPoints[index].Value.X - currentPoints[prevIndex].Value.X;
-                //float currentSlopeY = currentPoints[index].Value.Y - currentPoints[prevIndex].Value.Y;
-                //float normalizedSlopeX = currentSlopeX / MathF.Max(currentSlopeX, currentSlopeY);
-                //float normalizedSlopeY = currentSlopeY / MathF.Max(currentSlopeX, currentSlopeY);
-                //currentSlopeX = normalizedSlopeX;
-                //currentSlopeY = normalizedSlopeY;
-                
-
-                float currentSlopeX = currentPoints[index].Value.X - currentPoints[prevIndex].Value.X;
-                float currentSlopeY = currentPoints[index].Value.Y - currentPoints[prevIndex].Value.Y;
-                float Slope = (currentSlopeY / currentSlopeX);
-
-                //if (ruleCheck(currentPoints[index].Value, currentPoints[prevIndex].Value, Radius))
-                {
-                    if (PrevSlope == float.NaN)
-
-                    {
-                        //PrevSlope = new PointF(currentSlopeX, currentSlopeY);
-                        PrevSlope = Slope;
-                        preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
-                    }
-
-                    else
-                    {
-                        //bool match = InRange(((PointF)(PrevSlope)).X, currentSlopeX, 0.1f) && InRange(((PointF)(PrevSlope)).Y, currentSlopeY, 0.1f);
-                        bool match = InRange(PrevSlope, Slope, 0.1f);
-                        if (match)
-                        {
-                            Lclass.Line existingLine = preBuffers[preBuffers.Count - 1];
-                            existingLine.P2 = currentPoints[index].Value;
-                        }
-                        else
-                        {
-                            //PrevSlope = new PointF(currentSlopeX, currentSlopeY);
-                            PrevSlope = Slope;
-                            preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
-                        }
-                    }
-
-                }
-                */
             }
         }
 
-        //foreach(Lclass.Brick item in bricks)
-        //{
-        //    foreach (Lclass.Line anotherWord in preBuffers)
-        //    {
-        //        float point1 = PointDistanceToLine(item, anotherWord.P1);
-        //        float point2 = PointDistanceToLine(item, anotherWord.P2);
-        //        if (point1 != float.MaxValue || point2 != float.MaxValue)
-        //        {
-
-        //        }
-        //        else
-        //        {
-
-        //        }
-        //    }
-        //}
-        /*
-        double ValI = 0;
-        foreach (Lclass.Line item in preBuffers)
-        {
-            Knossos.KnossosUI.addLine(item, HSL2RGB(ValI, 0.5, 0.5));
-            ValI += 0.25;
-            if (ValI >= 1)
-                ValI = 0;
-        }
-        */
-        List<PointF> Delete = new List<PointF>();
         List<Lclass.Line> DeleteWalls = new List<Lclass.Line>();
+        List<Lclass.Brick> DeleteBricks = new List<Lclass.Brick>();
         foreach (PointF item in uncollidedPoints.Values)
         {
             List<PointF> Regions = LineCoords(item, location);
@@ -656,40 +621,21 @@ public class Map
                         {
                             if (t < 1)
                             {
+                                DeleteBricks.Add(Barrier);
                                 PointF DeletePoint = new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u));
-                                if (Math.Sqrt(DistSqr(DeletePoint, location)) < MaxDist / 2)
+                                DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(DeletePoint.X + brickWidth * 1.5f, DeletePoint.Y), P2 = new PointF(DeletePoint.X - brickWidth * 1.5f, DeletePoint.Y), Width = brickWidth * 1.5f });
+                                Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                                 {
-                                    Delete.Add(DeletePoint);
-                                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
-                                    {
-                                        Point = DeletePoint,
-                                        color = Color.DarkGreen,
-                                        Type = Knossos.TargetPoint.DrawType.Diamond,
-                                        Diameter = 2.5f
-                                    });
-                                }
+                                    Point = DeletePoint,
+                                    color = Color.DarkGreen,
+                                    Type = Knossos.TargetPoint.DrawType.Diamond,
+                                    Diameter = 2.5f
+                                });
                             }
                         }
                     }
                 }
             }
-        }
-        if (Delete.Count > 1)
-        {
-            for (int i = 1; i < Delete.Count; i++)
-            {
-                prevIndex = i - 1;
-                index = i % Delete.Count;
-
-                if (DistSqr(Delete[index], Delete[prevIndex]) < Diameter)
-                {
-                    DeleteWalls.Add(new Lclass.Line() { P1 = Delete[prevIndex], P2 = Delete[index], Width = brickWidth * 0.5f });
-                }
-            }
-        }
-        else if (Delete.Count == 1)
-        {
-            DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(Delete[0].X + brickWidth * 0.5f, Delete[0].Y), P2 = new PointF(Delete[0].X - brickWidth * 0.5f, Delete[0].Y), Width = brickWidth * 0.5f });
         }
 
         CanClear = false;
@@ -699,12 +645,14 @@ public class Map
         {
             processPreBuffers(Diameter, preBuffers, ref NewData);
             processDeletion(Diameter, DeleteWalls, ref NewData);
-            NewData.Add(Snap(location));
+            RemoveBuffers(ref DeleteBricks);
             if (NewData.Count > 0 || ForceRefresh)
             {
                 Refresh(Changed ? Sortedbricks.Keys.ToList() : NewData);
                 Changed |= true;
             }
+
+            Refresh(new List<PointF>() { Snap(location) });
         }
         CanClear = true;
 
@@ -718,15 +666,8 @@ public class Map
         return Changed;
     }
 
-    public void DisplayMap(PointF Focus, int DisplayRadius, float Diameter)
+    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius, float Diameter)
     {
-        /*
-        foreach (Lclass.Brick item in bricks)
-        {
-            Knossos.KnossosUI.addLine(item, HSL2RGB(3, 0.5, 0.5));
-        }
-        */
-
         if (Clear)
         {
             ClearMemory();
@@ -749,7 +690,7 @@ public class Map
         bool Rendered = false;
         float TotalSquares = MathF.Pow((DisplayRadius * 2) + 1, 2);
         float I = 0;
-        PointF[] Keys = Sortedbricks.Keys.ToArray();
+        PointF[] Keys = Sortedchunks.Keys.ToArray();
         foreach (PointF item in Keys)
         {
             Rendered = false;
@@ -768,8 +709,8 @@ public class Map
 
                             Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                             {
-                                color = Color.Red,
-                                Line = new Line() { P1 = Current, P2 = Last, Width = 3 },
+                                color = Color.Green,
+                                Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
                                 Type = Knossos.TargetLine.DrawType.Solid
                             });
                         }
@@ -778,14 +719,14 @@ public class Map
                     break;
                 }
             }
-            if (!Rendered)
+            if (!Rendered && DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius + UnRenderedRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
                 Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                 {
                     Point = item,
-                    color = (Rendered ? HSL2RGB((I / TotalSquares), 0.5, 0.5) : Color.DarkOrange),
+                    color = Color.Red,
                     Type = Knossos.TargetPoint.DrawType.Square,
-                    Diameter = GridSize - ((item.X == NewF.X && item.Y == NewF.Y) ? 10 : (Rendered ? 5 : 0)),
+                    Diameter = GridSize,
                     Scale = true
                 });
             }
@@ -805,7 +746,7 @@ public class Map
                 Point = NewF,
                 color = Color.Blue,
                 Type = Knossos.TargetPoint.DrawType.Square,
-                Diameter = GridSize - (Sortedbricks.Count > 0 ? 10 : 0),
+                Diameter = GridSize - (Sortedchunks.Count > 0 ? 10 : 0),
                 Scale = true
             });
         }
@@ -849,7 +790,7 @@ public class Map
 
     private void processPreBuffers(float Diameter, List<Lclass.Line> preBuffers, ref List<PointF> Regions)
     {
-        if(preBuffers.Count == 0)
+        if (preBuffers.Count == 0)
         {
             return;
         }
@@ -990,36 +931,23 @@ public class Map
         return (InRange(MathF.Abs(Slope1.X), MathF.Abs(Slope2.X), Thres)) && (InRange(MathF.Abs(Slope1.Y), MathF.Abs(Slope2.Y), Thres));
     }
 
+    private PathsD ChunkShape(PointF item)
+    {
+        PathsD chunk = new PathsD();
+        chunk.Add(Clipper.MakePath(new double[] { item.X + GridSize, item.Y + GridSize,
+                                                  item.X + GridSize, item.Y - GridSize,
+                                                  item.X - GridSize, item.Y - GridSize,
+                                                  item.X - GridSize, item.Y + GridSize}));
+        return chunk;
+    }
 
     private void Refresh(List<PointF> RegionsChanged)
     {
         foreach (PointF item in RegionsChanged)
         {
-            if (Sortedbricks.ContainsKey(item))
+            if (Sortedwalls.ContainsKey(item))
             {   // Create chunk to cut bricks out of
-                PathsD chunk = new PathsD();
-                chunk.Add(Clipper.MakePath(new double[] { item.X + GridSize, item.Y + GridSize,
-                                                          item.X + GridSize, item.Y - GridSize,
-                                                          item.X - GridSize, item.Y - GridSize,
-                                                          item.X - GridSize, item.Y + GridSize}));
-                // Create brick template to cut out of chunk from above ^
-                PathsD brickPolygon = new PathsD();
-                Lclass.Line[] lines = new Lclass.Line[4];
-                for (int i = Sortedbricks[item].Count - 1; i >= 0; i--)
-                {
-                    lines = Sortedbricks[item][i].GenerateRec();
-                    if (lines.Length == 0)
-                        continue;
-                    // Adding brick to empty brick polygon
-                    brickPolygon.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
-                                                                     lines[0].P2.X, lines[0].P2.Y,
-                                                                     lines[1].P2.X, lines[1].P2.Y,
-                                                                     lines[1].P1.X, lines[1].P1.Y}));
-                    // Cuts brick out of chunk
-                    chunk = Clipper.BooleanOp(ClipType.Difference, chunk, brickPolygon, FillRule.NonZero);
-                    // Clear brick polygon for next incoming brick
-                    brickPolygon.Clear();
-                }
+                PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), Sortedwalls[item], FillRule.NonZero);
                 if (!Sortedchunks.ContainsKey(item))
                 {
                     Sortedchunks.Add(item, chunk);
@@ -1027,6 +955,14 @@ public class Map
                 else
                 {
                     Sortedchunks[item] = chunk;
+                }
+            }
+            else
+            {
+                Sortedwalls.Add(item, new PathsD());
+                if (!Sortedchunks.ContainsKey(item))
+                {
+                    Sortedchunks.Add(item, ChunkShape(item));
                 }
             }
         }
