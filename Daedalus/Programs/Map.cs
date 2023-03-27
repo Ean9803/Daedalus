@@ -590,7 +590,7 @@ public class Map
                         {
                             P1 = collisionPoints[i].Point,
                             P2 = location,
-                            Width = 1
+                            Width = 2
                         },
                         Type = Knossos.TargetLine.DrawType.Solid
                     });
@@ -632,8 +632,10 @@ public class Map
 
         List<Lclass.Line> DeleteWalls = new List<Lclass.Line>();
         List<Lclass.Brick> DeleteBricks = new List<Lclass.Brick>();
+        bool UnHit = true;
         foreach (PointF item in uncollidedPoints.Values)
         {
+            UnHit = true;
             List<PointF> Regions = LineCoords(item, location);
             foreach (PointF Region in Regions)
             {
@@ -649,6 +651,7 @@ public class Map
                         {
                             if (t < 1)
                             {
+                                UnHit = false;
                                 DeleteBricks.Add(Barrier);
                                 PointF DeletePoint = new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u));
                                 DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(DeletePoint.X + brickWidth * 1.5f, DeletePoint.Y), P2 = new PointF(DeletePoint.X - brickWidth * 1.5f, DeletePoint.Y), Width = brickWidth * 1.5f });
@@ -671,7 +674,7 @@ public class Map
                                         {
                                             P1 = DeletePoint,
                                             P2 = location,
-                                            Width = 1
+                                            Width = 2
                                         },
                                         Type = Knossos.TargetLine.DrawType.Solid
                                     });
@@ -679,6 +682,33 @@ public class Map
                             }
                         }
                     }
+                }
+            }
+            if (UnHit)
+            {
+                if (Knossos.KnossosUI.Settings.Uncollided_Show)
+                {
+                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                    {
+                        Point = item,
+                        color = Knossos.KnossosUI.Settings.NonPointColor,
+                        Type = Knossos.TargetPoint.DrawType.Diamond,
+                        Diameter = 2.5f
+                    });
+                }
+                if (Knossos.KnossosUI.Settings.NonRayHit_Show)
+                {
+                    Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                    {
+                        color = Knossos.KnossosUI.Settings.RayColor,
+                        Line = new Line()
+                        {
+                            P1 = item,
+                            P2 = location,
+                            Width = 2
+                        },
+                        Type = Knossos.TargetLine.DrawType.Solid
+                    });
                 }
             }
         }

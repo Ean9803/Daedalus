@@ -63,7 +63,7 @@ namespace Daedalus
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
-                if (DataChuncks.Length != 26)
+                if (DataChuncks.Length != 27)
                 {
                     SetDefaults();
                 }
@@ -1205,6 +1205,9 @@ namespace Daedalus
             MapChunkColor.BackColor = Settings.Chunk_Color;
             MapObjectsColor.BackColor = Settings.Object_Color;
             MapWallColor.BackColor = Settings.Wall_Color;
+
+            NonHitColor.BackColor = Settings.NonPointColor;
+            RayLineColor.BackColor = Settings.RayColor;
         }
 
         private void AssignDisplaySettings()
@@ -1222,6 +1225,9 @@ namespace Daedalus
 
             ObjectRadiusSlider.Value = (int)Math.Clamp(Settings.ObjectRadius_Show, ObjectRadiusSlider.Minimum, ObjectRadiusSlider.Maximum);
             ChunkRadiusSlider.Value = (int)Math.Clamp(Settings.ChunkRadius_Show, ChunkRadiusSlider.Minimum, ChunkRadiusSlider.Maximum);
+
+            ShowHitRays.Checked = Settings.RayHit_Show;
+            ShowNonHitRays.Checked = Settings.NonRayHit_Show;
         }
 
         private void AssignInternalSettings()
@@ -1377,12 +1383,12 @@ namespace Daedalus
 
         private void ShowNonHitRays_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.RayHit_Show = ShowHitRays.Checked;
+            Settings.NonRayHit_Show = ShowNonHitRays.Checked;
         }
 
         private void ShowHitRays_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.NonRayHit_Show = ShowNonHitRays.Checked;
+            Settings.RayHit_Show = ShowHitRays.Checked;
         }
 
         private void MinoRadius_TextChanged(object sender, EventArgs e)

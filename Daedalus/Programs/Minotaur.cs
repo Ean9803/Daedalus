@@ -12,7 +12,6 @@ namespace Daedalus.Daedalus.Programs
         private Knossos KnossosForm;
         private PointF Pos;
         private float[] Angles;
-        private float ViewDist;
         private int LastRes;
 
         private Map minotaurMap;
@@ -67,7 +66,7 @@ namespace Daedalus.Daedalus.Programs
                 LastRes = (int)Knossos.KnossosUI.Settings.RayCount;
             }
 
-            KnossosForm.WallDetectAngle(Pos, Angles, ViewDist, out List<Lclass.CollisionPoint> Hits);
+            KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
             minotaurMap.CreateBuffer(Hits, getPosition(), Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias);
         }
 
