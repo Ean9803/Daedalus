@@ -581,6 +581,20 @@ public class Map
                         Diameter = 5
                     });
                 }
+                if (Knossos.KnossosUI.Settings.RayHit_Show)
+                {
+                    Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                    {
+                        color = Knossos.KnossosUI.Settings.RayColor,
+                        Line = new Line()
+                        {
+                            P1 = collisionPoints[i].Point,
+                            P2 = location,
+                            Width = 1
+                        },
+                        Type = Knossos.TargetLine.DrawType.Solid
+                    });
+                }
             }       
         }
         Clock += 0.1f;
@@ -643,9 +657,23 @@ public class Map
                                     Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                                     {
                                         Point = DeletePoint,
-                                        color = Color.DarkGreen,
+                                        color = Knossos.KnossosUI.Settings.NonPointColor,
                                         Type = Knossos.TargetPoint.DrawType.Diamond,
                                         Diameter = 2.5f
+                                    });
+                                }
+                                if (Knossos.KnossosUI.Settings.NonRayHit_Show)
+                                {
+                                    Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                                    {
+                                        color = Knossos.KnossosUI.Settings.RayColor,
+                                        Line = new Line()
+                                        {
+                                            P1 = DeletePoint,
+                                            P2 = location,
+                                            Width = 1
+                                        },
+                                        Type = Knossos.TargetLine.DrawType.Solid
                                     });
                                 }
                             }

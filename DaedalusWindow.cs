@@ -27,6 +27,9 @@ namespace Daedalus
             public Color Object_Color;
             public Color Wall_Color;
 
+            public Color NonPointColor;
+            public Color RayColor;
+
             public bool Collided_Show;
             public bool Uncollided_Show;
             public bool Walls_Show;
@@ -34,6 +37,9 @@ namespace Daedalus
             public bool CurrentTarget_Show;
             public bool UserTarget_Show;
             public bool Path_Show;
+
+            public bool RayHit_Show;
+            public bool NonRayHit_Show;
 
             public float ObjectRadius_Show;
             public float ChunkRadius_Show;
@@ -57,34 +63,53 @@ namespace Daedalus
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
-                LabMap_Color = GenerateColor(DataChuncks[0]);
-                Highlight_Color = GenerateColor(DataChuncks[1]);
-                Mino_Color = GenerateColor(DataChuncks[2]);
-                Chunk_Color = GenerateColor(DataChuncks[3]);
-                Object_Color = GenerateColor(DataChuncks[4]);
-                Wall_Color = GenerateColor(DataChuncks[5]);
+                if (DataChuncks.Length != 26)
+                {
+                    SetDefaults();
+                }
+                else
+                {
+                    LabMap_Color = GenerateColor(DataChuncks[0]);
+                    Highlight_Color = GenerateColor(DataChuncks[1]);
+                    Mino_Color = GenerateColor(DataChuncks[2]);
+                    Chunk_Color = GenerateColor(DataChuncks[3]);
+                    Object_Color = GenerateColor(DataChuncks[4]);
+                    Wall_Color = GenerateColor(DataChuncks[5]);
 
-                Collided_Show = DataChuncks[6].Equals("1");
-                Uncollided_Show = DataChuncks[7].Equals("1");
-                Walls_Show = DataChuncks[8].Equals("1");
-                RoamTargets_Show = DataChuncks[9].Equals("1");
-                CurrentTarget_Show = DataChuncks[10].Equals("1");
-                Path_Show = DataChuncks[11].Equals("1");
+                    Collided_Show = DataChuncks[6].Equals("1");
+                    Uncollided_Show = DataChuncks[7].Equals("1");
+                    Walls_Show = DataChuncks[8].Equals("1");
+                    RoamTargets_Show = DataChuncks[9].Equals("1");
+                    CurrentTarget_Show = DataChuncks[10].Equals("1");
+                    UserTarget_Show = DataChuncks[11].Equals("1");
+                    Path_Show = DataChuncks[12].Equals("1");
 
-                ObjectRadius_Show = float.Parse(DataChuncks[12]);
-                ChunkRadius_Show = float.Parse(DataChuncks[13]);
+                    ObjectRadius_Show = float.Parse(DataChuncks[13]);
+                    ChunkRadius_Show = float.Parse(DataChuncks[14]);
 
-                Mino_Radius = float.Parse(DataChuncks[14]);
-                ExpansionBias = float.Parse(DataChuncks[15]);
-                RayCount = float.Parse(DataChuncks[16]);
-                Mino_Speed = float.Parse(DataChuncks[17]);
-                Mino_ViewDist = float.Parse(DataChuncks[18]);
-                GridRadius = float.Parse(DataChuncks[19]);
+                    Mino_Radius = float.Parse(DataChuncks[15]);
+                    ExpansionBias = float.Parse(DataChuncks[16]);
+                    RayCount = float.Parse(DataChuncks[17]);
+                    Mino_Speed = float.Parse(DataChuncks[18]);
+                    Mino_ViewDist = float.Parse(DataChuncks[19]);
+                    GridRadius = float.Parse(DataChuncks[20]);
 
-                WallWidth = float.Parse(DataChuncks[20]);
+                    WallWidth = float.Parse(DataChuncks[21]);
+
+                    NonPointColor = GenerateColor(DataChuncks[22]);
+                    RayColor = GenerateColor(DataChuncks[23]);
+
+                    RayHit_Show = DataChuncks[24].Equals("1");
+                    NonRayHit_Show = DataChuncks[25].Equals("1");
+                }
             }
 
             public DaedalusFormSettings()
+            {
+                SetDefaults();
+            }
+
+            public void SetDefaults()
             {
                 LabMap_Color = Color.White;
                 Highlight_Color = Color.Red;
@@ -111,6 +136,12 @@ namespace Daedalus
                 Mino_ViewDist = 100;
                 GridRadius = 25;
                 WallWidth = 10;
+
+                RayHit_Show = false;
+                NonRayHit_Show = false;
+
+                NonPointColor = Color.ForestGreen;
+                RayColor = Color.LightSeaGreen;
             }
 
             public string Export()
@@ -142,27 +173,48 @@ namespace Daedalus
                 Out += GridRadius.ToString() + "/";
                 Out += WallWidth.ToString() + "/";
 
+                Out += NonPointColor.R + ":" + NonPointColor.G + ":" + NonPointColor.B + ":" + NonPointColor.A + "/";
+                Out += RayColor.R + ":" + RayColor.G + ":" + RayColor.B + ":" + RayColor.A + "/";
+
+                Out += (RayHit_Show ? "1" : "0") + "/";
+                Out += (NonRayHit_Show ? "1" : "0") + "/";
+
                 return Out;
             }
 
-            public enum ColorBlindness { Deuteranomaly, Protanomaly, Protanopia, Tritanomaly, Tritanopia, Complete_Color_Blindness }
+            public enum ColorBlindness { Protanopia, Tritanopia, Achromatopsia }
             public ColorBlindness Blindness;
 
             public void ApplyColorChanges()
             {
                 switch (Blindness)
                 {
-                    case ColorBlindness.Deuteranomaly:
-                        break;
-                    case ColorBlindness.Protanomaly:
-                        break;
                     case ColorBlindness.Protanopia:
-                        break;
-                    case ColorBlindness.Tritanomaly:
+                        LabMap_Color = Color.BlueViolet;
+                        Highlight_Color = Color.PaleGoldenrod;
+                        Mino_Color = Color.Gold;
+                        Object_Color = Color.LightGoldenrodYellow;
+                        Chunk_Color = Color.LightSteelBlue;
+                        NonPointColor = Color.DarkGoldenrod;
+                        RayColor = Color.LightYellow;
                         break;
                     case ColorBlindness.Tritanopia:
+                        LabMap_Color = Color.DarkCyan;
+                        Highlight_Color = Color.SeaGreen;
+                        Mino_Color = Color.LightSeaGreen;
+                        Object_Color = Color.Tomato;
+                        Chunk_Color = Color.Teal;
+                        NonPointColor = Color.HotPink;
+                        RayColor = Color.LightPink;
                         break;
-                    case ColorBlindness.Complete_Color_Blindness:
+                    case ColorBlindness.Achromatopsia:
+                        LabMap_Color = Color.White;
+                        Highlight_Color = Color.Tan;
+                        Mino_Color = Color.FloralWhite;
+                        Object_Color = Color.AntiqueWhite;
+                        Chunk_Color = Color.DimGray;
+                        NonPointColor = Color.NavajoWhite;
+                        RayColor = Color.WhiteSmoke;
                         break;
                     default:
                         break;
@@ -208,6 +260,8 @@ namespace Daedalus
         {
             Mino = new Minotaur(this);
 
+            AssignSettings();
+
             SetLabPenMode(labPenMode.Draw);
             SetMapMode(mapPenMode.Roam);
             SetMinoState(MinoMode.Off);
@@ -216,7 +270,6 @@ namespace Daedalus
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
             ZoomAmount = 1;
-            tabMenu.SelectedIndexChanged += TabMenu_SelectedIndexChanged;
         }
 
         int WorkersOpen = 0;
@@ -1086,33 +1139,37 @@ namespace Daedalus
                     SettingControl.SelectTab(3);
                     AssignEnvironmentSettings();
                     break;
-                case "Deuteranomaly":
-                    SettingControl.SelectTab(4);
-                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Deuteranomaly;
-                    break;
-                case "Protanomaly":
-                    SettingControl.SelectTab(4);
-                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Protanomaly;
-                    break;
                 case "Protanopia":
                     SettingControl.SelectTab(4);
                     Settings.Blindness = DaedalusFormSettings.ColorBlindness.Protanopia;
-                    break;
-                case "Tritanomaly":
-                    SettingControl.SelectTab(4);
-                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Tritanomaly;
                     break;
                 case "Tritanopia":
                     SettingControl.SelectTab(4);
                     Settings.Blindness = DaedalusFormSettings.ColorBlindness.Tritanopia;
                     break;
-                case "Complete Color Blindness":
+                case "Achromatopsia":
                     SettingControl.SelectTab(4);
-                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Complete_Color_Blindness;
+                    Settings.Blindness = DaedalusFormSettings.ColorBlindness.Achromatopsia;
+                    break;
+                case "Reset":
+                    SettingControl.SelectTab(5);
                     break;
                 default:
                     break;
             }
+        }
+
+        private void Reset_Click(object sender, EventArgs e)
+        {
+            Settings.SetDefaults();
+            SettingControl.SelectTab(0);
+            AssignSettings();
+        }
+
+        private void CancelSet_Click(object sender, EventArgs e)
+        {
+            SettingControl.SelectTab(0);
+            AssignSettings();
         }
 
         private void Apply_Click(object sender, EventArgs e)
@@ -1138,11 +1195,6 @@ namespace Daedalus
                 Settings = new DaedalusFormSettings(File.ReadAllText(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings"));
             else
                 Settings = new DaedalusFormSettings();
-        }
-
-        private void TabMenu_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            AssignSettings();
         }
 
         private void AssignVisualSettings()
@@ -1228,6 +1280,16 @@ namespace Daedalus
             ValueResult = Value;
         }
 
+        private void ChangeNonHitColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.NonPointColor);
+        }
+
+        private void ChangeRayColor_Click(object sender, EventArgs e)
+        {
+            SetColorSetting(ref Settings.RayColor);
+        }
+
         private void ChangeMapColor_Click(object sender, EventArgs e)
         {
             SetColorSetting(ref Settings.LabMap_Color);
@@ -1311,6 +1373,16 @@ namespace Daedalus
         private void ShowUserTarget_CheckedChanged(object sender, EventArgs e)
         {
             Settings.UserTarget_Show = ShowUserTarget.Checked;
+        }
+
+        private void ShowNonHitRays_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.RayHit_Show = ShowHitRays.Checked;
+        }
+
+        private void ShowHitRays_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.NonRayHit_Show = ShowNonHitRays.Checked;
         }
 
         private void MinoRadius_TextChanged(object sender, EventArgs e)
