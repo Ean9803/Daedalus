@@ -761,7 +761,17 @@ public class Map
                     {
                         for (int i = 1; i < sections.Count + 1; i++)
                         {
-                            
+                            int CurrentIndex = i % sections.Count;
+                            int LastIndex = i - 1;
+                            PointF Current = new PointF((float)sections[CurrentIndex].x, (float)sections[CurrentIndex].y);
+                            PointF Last = new PointF((float)sections[LastIndex].x, (float)sections[LastIndex].y);
+
+                            Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                            {
+                                color = Color.Red,
+                                Line = new Line() { P1 = Current, P2 = Last, Width = 3 },
+                                Type = Knossos.TargetLine.DrawType.Solid
+                            });
                         }
                     }
                     Rendered = true;
