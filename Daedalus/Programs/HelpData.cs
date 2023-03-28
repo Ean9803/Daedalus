@@ -15,22 +15,23 @@ namespace Daedalus.Daedalus.Programs
                 "Made by:\n" +
                 "Ian R. Poll\n" +
                 "Fillip L. Cannard\n" +
-                "Alexus A. Fry\n" +
-                "James P. Clark\n" +
-                "Sophia A. Rodrigue\n" +
+                "Veerain Arya Manchikanti\n" +
                 "Mohammed Hani Shaik\n" +
-                "Veerain Arya Manchikanti\n\n" +
+                "Sophia A. Rodrigue\n" +
+                "James P. Clark\n" +
+                "Alexus A. Fry\n\n" +
+
                 "OBJECTIVE:\n" +
                 "The objective of this project is to develop a program capable of pathfinding though an unknown environment\n\n" +
-                "INSPERATION:\n" +
+                "INSPIRATION:\n" +
                 "Named after the architect of the labyrinth, Daedalus is a pathfinding system made to navigate a \"labyrinth\" made by you, the user. " +
                 "The system works in a similar way a person might navigate a maze. The subject navigating the labyrinth is the Minotaur, but we will call him Mino for short. " +
-                "Mino works in two parts: one part scans the nearby environment and the other records and navigates though what Mino has seen. The main insperation for this project was " +
+                "Mino works in two parts: one part scans the nearby environment and the other records and navigates though what Mino has seen. The main inspiration for this project was " +
                 "from the Project Lead, Ian Poll, who wanted to design a system that would be capable of quickly mapping an area similar to a scene in the movie \"Promethius\", where drones " +
                 "would project light in a spherical shape and from the information gathered, was able to produce a mapped-out interior. The idea further developed into a pathfinding system which would use the data recorded " +
                 "and the idea of Daedalus came to be.\n\n" +
                 "MANUAL:\n" +
-                "This is the help section of the application. On the left hand side of the application is an expandable hierarchy, which contains information on how to operatate this program. " +
+                "This is the help section of the application. On the left hand side of the application is an expandable hierarchy, which contains information on how to operate this program. " +
                 "When an element is clicked in the hierarchy, information pretaining to said element will be displayed here."
             },
             {
@@ -96,7 +97,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Reset/",
-                "In Progress"
+                "Resets settings to default values."
             },
         };
 
