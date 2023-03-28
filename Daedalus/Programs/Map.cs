@@ -33,7 +33,6 @@ public class Map
     private int CurrentSweep = 0;
     private double Clock = 0;
     private float GridSize { get { return Knossos.KnossosUI.Settings.GridRadius; } }
-    private const float MaxSlopeDiff = 0.5f;
 
     public Map(double ScanSpeed = 1)
     {
@@ -539,8 +538,7 @@ public class Map
             Sortedwalls.Clear();
             Sortedchunks.Clear();
         }
-        else
-            ClearChunks = true;
+        ClearChunks = true;
         ClearMem = true;
     }
 
@@ -754,6 +752,12 @@ public class Map
         if (RefreshSort || ClearChunks)
         {
             RefreshSort = false;
+            if (ClearChunks)
+            {
+                Sortedbricks.Clear();
+                Sortedwalls.Clear();
+                Sortedchunks.Clear();
+            }
             ClearChunks = false;
             RefreshSortedBricks(Diameter);
         }

@@ -1399,7 +1399,7 @@ namespace Daedalus
 
         private void MinoRadiusSlider_Scroll(object sender, EventArgs e)
         {
-            SetFloatSetting(ChunkRadiusSlider.Value, ChunkRadius, ref Settings.Mino_Radius);
+            SetFloatSetting(MinoRadiusSlider.Value, MinoRadius, ref Settings.Mino_Radius);
         }
 
         private void ExapansionBias_TextChanged(object sender, EventArgs e)

@@ -663,6 +663,7 @@ namespace Daedalus
             // 
             this.openMapFile.FileName = "";
             this.openMapFile.FileOk += openMapFile_FileOk;
+            this.saveMapFile.FileOk += saveMapFile_FileOk;
             // 
             // MenuSplit
             // 
