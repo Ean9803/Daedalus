@@ -35,7 +35,68 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/",
-                "Located at the top of the window are three tabs:\n\n-Tower\n-Settings\n-Help\n\nYou are currently on the "
+                "Located at the top of the window are three tabs:\n\n" +
+                "-Tower\n" +
+                "-Settings\n" +
+                "-Help\n\n" +
+                "You are currently on the Help Tab. Tower and Settings control different aspects of how Mino can move and how information is processed."
+            },
+            {
+                "Manual/Tabs/Tower/",
+                "This is the main tab. In here the user is able to create/save blueprints. Each blueprint contains data about the user made labyrinth and map made from Mino."
+            },
+            {
+                "Manual/Tabs/Tower/Tool_Box/",
+                "Located at the top of the Tower tab, the Tool Box contains the various actions a user can make in this program. The Tool Box is split in two sections. The left hand side contains actions which can be performed in the " +
+                "Labyrinth area and the right side contains the controls for the Mino and data displayed in the Map area.\n" +
+                "-Labyrinth Tools:\n" +
+                "(Left to Right) MinoPos, Draw, Erase, Save, Load, Clear\n\n" +
+                "--MinoPos:\n" +
+                "Sets the Mino (represented by a circle) to the current mouse position when left mouse button is pressed and continues to set the position until the left mouse button is released.\n\n" +
+                "--Draw:\n" +
+                "Creates a new wall in the Labyrinth starting at the position the mouse is at in the Labyrinth when the left mouse is pressed. As the button is held down, the user will be able to mose the cursor to " +
+                "change where the end point is located. Wall creation ends when the left mouse is released and the new wall is added for observation by the Mino. The Mino cannot see a wall being made.\n\n" +
+                "-Erase:\n" +
+                "Will highlight a wall when the current mouse position is in the labyrinth and the mouse position is located within the bounds of said wall. When a wall is highlighted and the user uses the left mouse, " +
+                "the highlighted wall will be removed from the Labyrinth. NOTE: Information about the deleted wall will remain in the Mino's memory until the Mino sees that the wall is missing.\n\n" +
+                "--Save:\n" +
+                "Will prompt the user to enter a file name and navigate to a directory where the blueprint file will be saved at.\n\n" +
+                "--Load:\n" +
+                "Will prompt the user to select a file with the blueprint extension and when a valid file is selected, will clear the exising Labyrinth and Map data and replace it with the file's contents.\n\n" +
+                "--Clear:\n" +
+                "Erases all Labyrith walls, works the same way as erase, so the Mino will retain the wall information until it sees that the wall no longer exists."
+            },
+            {
+                "Manual/Tabs/Tower/Labyrinth/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Tower/Map/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Tower/Zoom/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Settings/",
+                "In this tab properites can be chaged which effect color, Mino, what data will be displayed on the map, and extra settings for people with color blindness."
+            },
+            {
+                "Manual/Tabs/Settings/Visual/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Settings/Display/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Settings/Internal/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Settings/Reset/",
+                "In Progress"
             },
         };
 
