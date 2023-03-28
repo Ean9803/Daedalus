@@ -116,7 +116,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Visual/",
-                "In Progress"
+                "This section containts settings for the color that is displayed."
             },
             {
                 "Manual/Tabs/Settings/Display/",
