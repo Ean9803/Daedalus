@@ -51,7 +51,8 @@ namespace Daedalus.Daedalus.Programs
                 "Located at the top of the Tower tab, the Tool Box contains the various actions a user can make in this program. The Tool Box is split in two sections. The left hand side contains actions which can be performed in the " +
                 "Labyrinth area and the right side contains the controls for the Mino and data displayed in the Map area.\n" +
                 "-Labyrinth Tools:\n" +
-                "(Left to Right) MinoPos, Draw, Erase, Save, Load, Clear\n\n" +
+                "(Left to Right) MinoPos, Draw, Erase, Save, Load, Clear\n" +
+                "Located on the far right of the Labyrinth's tool bar is text which changes based on the active tool selected.\n\n" +
                 "--MinoPos:\n" +
                 "Sets the Mino (represented by a circle) to the current mouse position when left mouse button is pressed and continues to set the position until the left mouse button is released.\n\n" +
                 "--Draw:\n" +
@@ -65,23 +66,53 @@ namespace Daedalus.Daedalus.Programs
                 "--Load:\n" +
                 "Will prompt the user to select a file with the blueprint extension and when a valid file is selected, will clear the exising Labyrinth and Map data and replace it with the file's contents.\n\n" +
                 "--Clear:\n" +
-                "Erases all Labyrith walls, works the same way as erase, so the Mino will retain the wall information until it sees that the wall no longer exists."
+                "Erases all Labyrith walls, works the same way as erase, so the Mino will retain the wall information until it sees that the wall no longer exists.\n\n\n" +
+                "-Map Tools:\n" +
+                "(Left to Right) Play/Stop, Clear Memory, Roam, Target\n" +
+                "Located on the far right of the Map's tool bar is text which changes based on the active mode the Mino is in, Roam or Target.\n\n" +
+                "-Play/Stop:\n" +
+                "Activates or deactivates the Mino. When the Mino is active, the Mino will scan the nearby environment and will add or delete data from the Map.\n\n" +
+                "-Clear Memory:\n" +
+                "Clears the Mino's memory of the environment and clears objects displayed in the Map area.\n\n" +
+                "-Roam:\n" +
+                "Sets the Mino to the Roam state. In Roam state, the Mino will navigate to areas which are undiscovered.\n\n" +
+                "-Target:\n" +
+                "Sets the Mino to the Target state. In Target state, the Mino will navigate to a selected point by the user or to a point closest to it.\n\n\n" +
+                "The size of the Tool Box can also be changed vertically. A divider is located between the Tool Box area and the Labryinth and Map area. When the mouse cursor is over the divider, " +
+                "the mouse cursor sprite will change. When the Left Mouse is held and dragged, the divider will follow the mouse and change the size of the Tool Box."
             },
             {
                 "Manual/Tabs/Tower/Labyrinth/",
-                "In Progress"
+                "The Labyrinth is the area of the application which displays the environment from a top down view. In this area the user is able to create/erase walls and move the Mino position with the use of the Tool Box. " +
+                "While the mouse cursor is in the Labyrinth area, the user is able to pan the current view by holding down Right Mouse and dragging the cursor. Pan also works the same way in the Map. NOTE: Both views, Labyrinth and Map, " +
+                "will be moved when panned so the Labyrinth view and Map view match.\n" +
+                "A divider is located between the Labryinth and Map area. When the mouse cursor is over the divider, " +
+                "the mouse cursor sprite will change. When the Left Mouse is held and dragged, the divider will follow the mouse and change the size of the Labyrinth and Map areas."
             },
             {
                 "Manual/Tabs/Tower/Map/",
-                "In Progress"
+                "The Map is the area of the application which displays the Minio's view of the environment from a top down view. In this area the user is able to set the Mino's Target destination with the use of the Tool Box. " +
+                "While the mouse cursor is in the Map area, the user is able to pan the current view by holding down Right Mouse and dragging the cursor. Pan also works the same way in the Labyrinth. NOTE: Both views, Labyrinth and Map, " +
+                "will be moved when panned so the Labyrinth view and Map view match.\n" +
+                "A divider is located between the Labryinth and Map area. When the mouse cursor is over the divider, " +
+                "the mouse cursor sprite will change. When the Left Mouse is held and dragged, the divider will follow the mouse and change the size of the Labyrinth and Map areas."
             },
             {
                 "Manual/Tabs/Tower/Zoom/",
-                "In Progress"
+                "The Zoom control is located at the bottom of the application. The control is a slider which can be dragged left and right. " +
+                "Dragging the control left will increase the view area shown. Dragging it right will decrease the area shown. " +
+                "A divider is located between the Zoom area and the Labryinth and Map area. When the mouse cursor is over the divider, " +
+                "the mouse cursor sprite will change. When the Left Mouse is held and dragged, the divider will follow the mouse and change the size of the Zoom control."
             },
             {
                 "Manual/Tabs/Settings/",
-                "In this tab properites can be chaged which effect color, Mino, what data will be displayed on the map, and extra settings for people with color blindness."
+                "In Settings tab, properites can be chaged which effect color, Mino, what data will be displayed on the map, and extra settings for people with color blindness.\n" +
+                "In the Settings section of the application, located on the left hand side of the application is an expandable hierarchy, which contains settings which can be customized by the user. " +
+                "When an element is clicked in the hierarchy, information pretaining to said element will be displayed.\n" +
+                "The main settings are:\n" +
+                "-Visual => Contains settings related to colors shown, this can be expanded to show three profiles that can be applyed for people with color blindness\n" +
+                "-Display => Contains settings related to what information is displayed in the Map area\n" +
+                "-Internal => Contains settings to change how data is collected and processed to generate a path from Mino to Target\n"
             },
             {
                 "Manual/Tabs/Settings/Visual/",
@@ -93,6 +124,10 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Internal/",
+                "In Progress"
+            },
+            {
+                "Manual/Tabs/Settings/Environment/",
                 "In Progress"
             },
             {
