@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -11,7 +13,7 @@ namespace Daedalus.Daedalus.Programs
         {
             {
                 "Manual/",
-                "Daedalus\n\n" +
+                "Daedalus\nROTATE\n" +
                 "Made by:\n" +
                 "Ian R. Poll\n" +
                 "Fillip L. Cannard\n" +
@@ -138,6 +140,27 @@ namespace Daedalus.Daedalus.Programs
 
         private static Dictionary<TreeNode, string> HelpTree = new Dictionary<TreeNode, string>();
         private static RichTextBox HelpTextBox = new RichTextBox();
+        private static string DisplayText = "";
+        private static float Frame = 0;
+        private const int Rate = 10;
+        private static float TimeFrame;
+        private static int MaxFrames = 100;
+        private static int Clock = 0;
+
+        private static Dictionary<string, List<string>> Animations = new Dictionary<string, List<string>>()
+        {
+            {
+                "ROTATE",
+                new List<string>
+                {
+                    "-",
+                    "\\",
+                    "|",
+                    "/"
+                }
+            }
+        };
+
 
         public static void PopulateManual(TreeView Tree, RichTextBox Text)
         {
@@ -158,13 +181,54 @@ namespace Daedalus.Daedalus.Programs
             }
             Tree.AfterSelect += Tree_AfterSelect;
             Tree.SelectedNode = Tree.Nodes[0];
+            HelpTextBox.Font = new Font(FontFamily.GenericMonospace, 8);
+
+            int[] FrameCounts = new int[Animations.Count];
+            int i = 0;
+            foreach (List<string> item in Animations.Values)
+            {
+                FrameCounts[i++] = item.Count;
+            }
+            MaxFrames = FrameCounts.Aggregate(GCD);
+            TimeFrame = 1.0f / (float)Rate;
+            Frame = TimeFrame;
+        }
+
+        public static int GCD(int a, int b)
+        {
+            return b == 0 ? a : GCD(b, a % b);
         }
 
         private static void Tree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (HelpTree.ContainsKey(e.Node))
             {
-                HelpTextBox.Text = HelpTree[e.Node];
+                DisplayText = HelpTree[e.Node];
+                Frame = TimeFrame;
+            }
+        }
+
+        public static void Update(float DTime)
+        {
+            if (Frame >= TimeFrame)
+            {
+                string Display = DisplayText;
+                foreach (string item in Animations.Keys)
+                {
+                    List<string> Val = Animations[item];
+                    Display = Display.Replace(item, Val[Clock % Val.Count]);
+                }
+                HelpTextBox.Text = Display;
+                if (Clock >= MaxFrames)
+                {
+                    Clock = 0;
+                }
+                Clock++;
+                Frame = 0;
+            }
+            else if (Frame < TimeFrame)
+            {
+                Frame += DTime;
             }
         }
 

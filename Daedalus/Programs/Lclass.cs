@@ -66,7 +66,7 @@ public static class Lclass
             return LastDistance;
         }
 
-        public Line[] GenerateRec()
+        public Line[] GenerateRec(bool EqualExtensions = false)
         {
             UpdateLineProperties();
 
@@ -78,6 +78,9 @@ public static class Lclass
             PointF PP2 = P2;
             float RectWidth = Width;
 
+            float YSlope = Slope.Y;
+            float XSlope = Slope.X;
+
             for (int i = 0; i < Ret.Length; i++)
             {
                 Ret[i] = new Line();
@@ -87,20 +90,27 @@ public static class Lclass
                 Ret[i].P1.Y = PP1.Y;
                 Ret[i].P2.X = PP2.X;
                 Ret[i].P2.Y = PP2.Y;
-            }
 
-            float YSlope = Slope.Y;
-            float XSlope = Slope.X;
+                if (EqualExtensions)
+                {
+                    Ret[i].P1.X += (XSlope * RectWidth);
+                    Ret[i].P1.Y += (YSlope * RectWidth);
+                    Ret[i].P2.X -= (XSlope * RectWidth);
+                    Ret[i].P2.Y -= (YSlope * RectWidth);
+                }
+            }
 
             Ret[0].P1.X += (YSlope * RectWidth);
             Ret[0].P1.Y -= (XSlope * RectWidth);
+
             Ret[0].P2.X += (YSlope * RectWidth);
             Ret[0].P2.Y -= (XSlope * RectWidth);
+
             Ret[1].P1.X -= (YSlope * RectWidth);
             Ret[1].P1.Y += (XSlope * RectWidth);
+
             Ret[1].P2.X -= (YSlope * RectWidth);
             Ret[1].P2.Y += (XSlope * RectWidth);
-
 
             Ret[2].P1 = Ret[0].P1;
             Ret[2].P2 = Ret[1].P1;
@@ -141,10 +151,13 @@ public static class Lclass
 
             Ret[0].P1.X += (YSlope * RectWidth);
             Ret[0].P1.Y += (XSlope * RectWidth);
+
             Ret[0].P2.X += (YSlope * RectWidth);
             Ret[0].P2.Y += (XSlope * RectWidth);
+
             Ret[1].P1.X -= (YSlope * RectWidth);
             Ret[1].P1.Y -= (XSlope * RectWidth);
+
             Ret[1].P2.X -= (YSlope * RectWidth);
             Ret[1].P2.Y -= (XSlope * RectWidth);
 

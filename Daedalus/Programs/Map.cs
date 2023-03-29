@@ -214,7 +214,7 @@ public class Map
                     Sortedbricks.Add(Point, Collection);
                 }
 
-                lines = item.GenerateRec();
+                lines = item.GenerateRec(true);
                 if (lines.Length == 0)
                     continue;
                 // Adding brick to empty brick polygon
@@ -309,7 +309,7 @@ public class Map
 
         foreach (PointF Point in Coords)
         {
-            lines = Brick.GenerateRec();
+            lines = Brick.GenerateRec(true);
             if (lines.Length != 0)
             {
                 // Adding brick to empty brick polygon
@@ -338,7 +338,7 @@ public class Map
                             for (int i = Sortedbricks[Point].Count - 1; i >= 0; i--)
                             {
                                 WallPoly.Clear();
-                                lines = Sortedbricks[Point][i].GenerateRec();
+                                lines = Sortedbricks[Point][i].GenerateRec(true);
                                 if (lines.Length > 0)
                                 {
                                     WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
@@ -387,7 +387,7 @@ public class Map
             BrickCoord.Clear();
             BrickCoord.AddRange(item.Regions);
             BrickCoord.AddRange(BrickCoords(item));
-            lines = item.GenerateRec();
+            lines = item.GenerateRec(true);
             if (lines.Length != 0)
             {
                 WallPoly.Clear();

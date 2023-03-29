@@ -18,6 +18,7 @@ namespace Daedalus
 {
     public partial class Knossos : Form
     {
+        #region SettingProfile
         public class DaedalusFormSettings
         {
             public Color LabMap_Color;
@@ -222,10 +223,12 @@ namespace Daedalus
             }
 
         }
+        #endregion
 
         Minotaur Mino;
         public static Knossos KnossosUI;
         public DaedalusFormSettings Settings;
+        public float DeltaTime = 0;
 
         public Knossos()
         {
@@ -715,7 +718,15 @@ namespace Daedalus
             }
         }
 
-        private static void RefreshScene(Knossos Form) { Form.PaintWindows(); }
+        private static void RefreshScene(Knossos Form)
+        {
+            long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            Form.PaintWindows();
+            float DT = (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - milliseconds) / 100.0f;
+            if (DT != 0)
+                Form.DeltaTime = DT;
+            HelpData.Update(Form.DeltaTime);
+        }
 
         public void PaintWindows()
         {
