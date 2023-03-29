@@ -67,12 +67,12 @@ namespace Daedalus.Daedalus.Programs
             }
 
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            minotaurMap.CreateBuffer(Hits, getPosition(), Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias);
+            minotaurMap.CreateBuffer(Hits, getPosition());
         }
 
         public void ConstantUpdate()
         {
-            minotaurMap.DisplayMap(getPosition(), (int)Knossos.KnossosUI.Settings.ObjectRadius_Show, (int)Knossos.KnossosUI.Settings.ChunkRadius_Show, Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias);
+            minotaurMap.DisplayMap(getPosition(), (int)Knossos.KnossosUI.Settings.ObjectRadius_Show, (int)Knossos.KnossosUI.Settings.ChunkRadius_Show);
             KnossosForm.MinoRefresh();
             KnossosForm.MinoEndUpdate();
         }

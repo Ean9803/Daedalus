@@ -33,6 +33,7 @@ public class Map
     private int CurrentSweep = 0;
     private double Clock = 0;
     private float GridSize { get { return Knossos.KnossosUI.Settings.GridRadius; } }
+    private float Diameter { get { return Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias; } }
 
     public Map(double ScanSpeed = 1)
     {
@@ -131,8 +132,6 @@ public class Map
     private List<PointF> AddBrick(Lclass.Brick item, float Diameter)
     {
         List<PointF> Coords = BrickCoords(item);
-        bool Added = false;
-        bool Same = false;
         bool NewRegions = true;
         item.AddRegions(Coords);
         PathsD WallPoly = new PathsD();
@@ -143,68 +142,9 @@ public class Map
             {
                 if (Sortedbricks.ContainsKey(Point))
                 {
-                    /*
-                    for (int i = Sortedbricks[Point].Count - 1; i >= 0 && !Added && !Same; i--)
-                    {
-                        Lclass.Brick Buff = (Sortedbricks[Point][i]);
-                        if (Buff.P1 != item.P1 && Buff.P2 != item.P2)
-                        {
-                            if (SimilarSlope(Buff.getSlope(), item.getSlope(), MaxSlopeDiff))
-                            {
-                                if (LineDistance(Buff, item.P1) < brickWidth / 2 && LineDistance(Buff, item.P2) < brickWidth / 2)
-                                {
-                                    if (Encaps(Buff, item))
-                                    {
-                                        item.AddRegions(Buff.Regions);
-                                        item.P1 = Buff.P1;
-                                        item.P2 = Buff.P2;
-
-                                        AddToChunkList(Sortedbricks, item, Buff, Point);
-
-                                        Added = true;
-                                    }
-                                    else if (Encaps(item, Buff))
-                                    {
-                                        item.AddRegions(Buff.Regions);
-
-                                        AddToChunkList(Sortedbricks, item, Buff, Point);
-
-                                        Added = true;
-                                    }
-                                    else
-                                    {
-                                        if (Touching(Buff, item, out sledgeHammer.point Inner) || MinDistance(Buff, item) < Diameter)
-                                        {
-                                            Added = true;
-                                            List<Lclass.Brick> NewGroup = new List<Lclass.Brick>();
-                                            NewGroup.Add(item);
-                                            NewGroup.Add(Sortedbricks[Point][i]);
-                                            Lclass.Brick NewBuff = MaxDist(NewGroup);
-
-                                            if (BrickCoords(NewBuff).Contains(Point))
-                                            {
-                                                item.AddRegions(Buff.Regions);
-                                                item.P1 = NewBuff.P1;
-                                                item.P2 = NewBuff.P2;
-
-                                                AddToChunkList(Sortedbricks, item, Buff, Point);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Same = true;
-                            Added = false;
-                        }
-                    }
-                    */
                     item.AddRegion(Point);
                     if (!Sortedbricks[Point].Contains(item))
                         Sortedbricks[Point].Add(item);
-                    Added = true;
                 }
                 else
                 {
@@ -534,15 +474,25 @@ public class Map
     {
         if (CanClear)
         {
+            bricks.Clear();
+            foreach (List<Lclass.Brick> item in Sortedbricks.Values)
+            {
+                foreach (Lclass.Brick Wall in item)
+                {
+                    bricks.Add(Wall);
+                }
+            }
             Sortedbricks.Clear();
             Sortedwalls.Clear();
             Sortedchunks.Clear();
+            RefreshSortedBricks(Diameter);
         }
-        ClearChunks = true;
+        else
+            ClearChunks = true;
         ClearMem = true;
     }
 
-    public bool CreateBuffer(List<Lclass.CollisionPoint> collisionPoints, PointF location, float Diameter)
+    public bool CreateBuffer(List<Lclass.CollisionPoint> collisionPoints, PointF location)
     {
 
         // Sorting Points
@@ -735,30 +685,34 @@ public class Map
             Clear = false;
             Changed |= true;
         }
+        if (ClearChunks)
+        {
+            RefreshChunks();
+            ClearChunks = false;
+            Changed |= true;
+        }
         ForceRefresh = false;
         return Changed;
     }
 
-    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius, float Diameter)
+    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius)
     {
         if (Clear)
         {
             ClearMemory();
             Clear = false;
         }
+        if (ClearChunks)
+        {
+            RefreshChunks();
+            ClearChunks = false;
+        }
 
         CanClear = false;
 
-        if (RefreshSort || ClearChunks)
+        if (RefreshSort)
         {
             RefreshSort = false;
-            if (ClearChunks)
-            {
-                Sortedbricks.Clear();
-                Sortedwalls.Clear();
-                Sortedchunks.Clear();
-            }
-            ClearChunks = false;
             RefreshSortedBricks(Diameter);
         }
 
@@ -780,10 +734,13 @@ public class Map
                         int LastIndex = i - 1;
                         PointF Current = new PointF((float)sections[CurrentIndex].x, (float)sections[CurrentIndex].y);
                         PointF Last = new PointF((float)sections[LastIndex].x, (float)sections[LastIndex].y);
-
+                        bool Boarder = (Current.X == item.X + GridSize || Current.X == item.X - GridSize) || (Current.Y == item.Y + GridSize || Current.Y == item.Y - GridSize);
+                        Boarder = Boarder && ((Last.X == item.X + GridSize || Last.X == item.X - GridSize) || (Last.Y == item.Y + GridSize || Last.Y == item.Y - GridSize));
+                        PointF MidPoint = midpoint(Current, Last);
+                        Boarder = Boarder && ((MidPoint.X == item.X + GridSize || MidPoint.X == item.X - GridSize) || (MidPoint.Y == item.Y + GridSize || MidPoint.Y == item.Y - GridSize));
                         Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                         {
-                            color = Knossos.KnossosUI.Settings.Object_Color,
+                            color = Boarder ? Knossos.KnossosUI.Settings.Chunk_Color : Knossos.KnossosUI.Settings.Object_Color,
                             Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
                             Type = Knossos.TargetLine.DrawType.Solid
                         });
