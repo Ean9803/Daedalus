@@ -118,7 +118,14 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Visual/",
-                "This section containts settings for the color that is displayed."
+                "This section containts settings for the color that is displayed. Each color is labeled with a name which describes what item will be set to the color and a change button which, when pressed, will open a color prompt to change the color.\n" +
+                "Colors that can be chaged:\n" +
+                "-\n" +
+                "-\n" +
+                "-\n" +
+                "-\n" +
+                "\n\n" +
+                "Within the Visual section are profiles which, when selected, will present a prompt to apply the assigned color profile."
             },
             {
                 "Manual/Tabs/Settings/Display/",
@@ -130,7 +137,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Environment/",
-                "In Progress"
+                "This contains the setting which controls the width a newly created wall will have. This does not affect previous walls made."
             },
             {
                 "Manual/Tabs/Settings/Reset/",
