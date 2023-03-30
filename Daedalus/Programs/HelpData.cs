@@ -173,17 +173,17 @@ namespace Daedalus.Daedalus.Programs
                 "This section containts settings for how data is processed in Daedalus. Each setting is labeled with a name which describes what variable will be set.\n" +
                 "Settings that can be changed:\n" +
                 "-Mino Radius:\n" +
-                "\n\n" +
+                "Sets the radius of the Mino and the minimum distance the Mino can be near a wall it detects.\n\n" +
                 "-Object Expansion Bias:\n" +
-                "\n\n" +
+                "Sets an additional value to the radius of the Mino when doing calculations, this does not affect the Mino size, but it does affect the minimum distance the Mino can be near a wall.\n\n" +
                 "-Grid Radius:\n" +
-                "\n\n" +
+                "Sets the Chunk radius. This radius controls how much is displayed to the screen and how detailed the path the Mino will take to is destination.\n\n" +
                 "-Mino Ray Count:\n" +
-                "\n\n" +
+                "Sets the amount of rays emitted from the Mino position. Each ray contributes to how detailed the Mino will see its surroundings.\n\n" +
                 "-Mino Speed:\n" +
-                "\n\n" +
+                "Sets how fast the Mino will tavel along its calulated path.\n\n" +
                 "-Mino View Distance:\n" +
-                "\n\n" +
+                "Sets how far the Mino can see its surroundings.\n\n" +
                 "\n\n"
             },
             {
@@ -204,6 +204,7 @@ namespace Daedalus.Daedalus.Programs
         private static float TimeFrame;
         private static int MaxFrames = 100;
         private static int Clock = 0;
+        private static bool UpdateFrame = true;
 
         private static Dictionary<string, List<string>> Animations = new Dictionary<string, List<string>>()
         {
@@ -240,6 +241,7 @@ namespace Daedalus.Daedalus.Programs
             Tree.AfterSelect += Tree_AfterSelect;
             Tree.SelectedNode = Tree.Nodes[0];
             HelpTextBox.Font = new Font(FontFamily.GenericMonospace, 8);
+            HelpTextBox.MouseWheel += HelpTextBox_MouseWheel;
 
             int[] FrameCounts = new int[Animations.Count];
             int i = 0;
@@ -250,6 +252,11 @@ namespace Daedalus.Daedalus.Programs
             MaxFrames = FrameCounts.Aggregate(GCD);
             TimeFrame = 1.0f / (float)Rate;
             Frame = TimeFrame;
+        }
+
+        private static void HelpTextBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            UpdateFrame = false;
         }
 
         public static int GCD(int a, int b)
@@ -268,9 +275,14 @@ namespace Daedalus.Daedalus.Programs
 
         public static void Update(float DTime)
         {
+            if (!UpdateFrame)
+            {
+                UpdateFrame = true;
+                return;
+            }
             if (Frame >= TimeFrame)
             {
-                string Display = DisplayText;
+                string Display = DisplayText + "\n\n\n";
                 foreach (string item in Animations.Keys)
                 {
                     List<string> Val = Animations[item];

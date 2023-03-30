@@ -6,10 +6,13 @@
       "version": "3.1.0"
     },
     "additionalProbingPaths": [
-      "C:\\Users\\Hani\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Hani\\.nuget\\packages"
+      "C:\\Users\\irobo\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\irobo\\.nuget\\packages",
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
     ],
     "configProperties": {
+      "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true
     }
   }
