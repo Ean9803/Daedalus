@@ -218,6 +218,7 @@ namespace Daedalus.Daedalus.Programs
         private static int MaxFrames = 100;
         private static int Clock = 0;
         private static bool UpdateFrame = true;
+        private static string BUFFER = "BUFFER=";
 
         private static Dictionary<string, List<string>> Animations = new Dictionary<string, List<string>>()
         {
@@ -299,7 +300,16 @@ namespace Daedalus.Daedalus.Programs
                 foreach (string item in Animations.Keys)
                 {
                     List<string> Val = Animations[item];
-                    Display = Display.Replace("[" + item + "]", Val[Clock % Val.Count]);
+                    string NewText = Val[Clock % Val.Count];
+                    if (NewText.StartsWith(BUFFER))
+                    {
+                        if (int.TryParse(NewText.Remove(0, BUFFER.Length), out int Result))
+                        {
+                            if (Result >= 0 && Result < Val.Count)
+                                NewText = Val[Result];
+                        }
+                    }
+                    Display = Display.Replace("[" + item + "]", NewText);
                 }
                 HelpTextBox.Text = Display;
                 if (Clock >= MaxFrames)
