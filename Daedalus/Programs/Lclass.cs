@@ -176,7 +176,6 @@ public static class Lclass
         public Brick LeftBrick;
         public Brick RightBrick;
         public List<PointF> Regions = new List<PointF>();
-        private Map parentMap;
 
         public Brick AddRegion(PointF Region)
         {

@@ -32,6 +32,7 @@ public class Map
     private bool IsDrawing = false;
     private int CurrentSweep = 0;
     private double Clock = 0;
+    public bool CanRefresh = true;
     private float GridSize { get { return Knossos.KnossosUI.Settings.GridRadius; } }
     private float Diameter { get { return Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias; } }
 
@@ -48,12 +49,19 @@ public class Map
     public string ExportMapData()
     {
         string output = "";
+        bricks.Clear();
         foreach (List<Lclass.Brick> Group in Sortedbricks.Values)
         {
             foreach (Lclass.Brick brick in Group)
             {
-                if (brick.Length() != 0)
-                    output += brick.P1.X + "/" + brick.P1.Y + "#" + brick.P2.X + "/" + brick.P2.Y + "#" + brick.Width + "___";
+                if (!bricks.Contains(brick))
+                {
+                    bricks.Add(brick);
+                    if (brick.Length() != 0)
+                    {
+                        output += brick.P1.X + "/" + brick.P1.Y + "#" + brick.P2.X + "/" + brick.P2.Y + "#" + brick.Width + "___";
+                    }
+                }
             }
         }
         output += ";";
@@ -61,6 +69,7 @@ public class Map
         {
             output += Point.X + "|" + Point.Y + "|";
         }
+        output += ";" + GridSize + ";";
         return output;
     }
 
@@ -86,7 +95,7 @@ public class Map
                 bricks.Add(NewBrick);
         }
 
-        if (Sections.Length >= 2)
+        if (Sections.Length >= 3)
         {
             PointF Coord;
             coordinates = Sections[1].Split('|', StringSplitOptions.None);
@@ -102,8 +111,13 @@ public class Map
             }
         }
 
+        if (Sections.Length >= 3)
+        {
+            Knossos.KnossosUI.Settings.GridRadius = float.Parse(Sections[2]);
+        }
+
         if (CanSort)
-            RefreshSortedBricks(Diameter);
+            RefreshSortedBricks();
         else
             RefreshSort = true;
         ForceRefresh = true;
@@ -350,8 +364,9 @@ public class Map
         return removed;
     }
 
-    private void RefreshSortedBricks(float Diameter)
+    private void RefreshSortedBricks()
     {
+        CanRefresh = false;
         Sortedbricks.Clear();
         foreach (Lclass.Brick item in bricks)
         {
@@ -360,6 +375,7 @@ public class Map
         List<PointF> items = Sortedbricks.Keys.ToList();
         Refresh(items);
         ForceRefresh = true;
+        CanRefresh = true;
     }
 
     private PointF Snap(PointF Point)
@@ -479,13 +495,18 @@ public class Map
             {
                 foreach (Lclass.Brick Wall in item)
                 {
-                    bricks.Add(Wall);
+                    if (!bricks.Contains(Wall))
+                    {
+                        Wall.Width = brickWidth;
+                        Wall.Regions.Clear();
+                        bricks.Add(Wall);
+                    }
                 }
             }
             Sortedbricks.Clear();
             Sortedwalls.Clear();
             Sortedchunks.Clear();
-            RefreshSortedBricks(Diameter);
+            RefreshSortedBricks();
         }
         else
             ClearChunks = true;
@@ -713,7 +734,7 @@ public class Map
         if (RefreshSort)
         {
             RefreshSort = false;
-            RefreshSortedBricks(Diameter);
+            RefreshSortedBricks();
         }
 
         CanSort = false;

@@ -265,6 +265,7 @@ namespace Daedalus
 
             AssignSettings();
             HelpData.PopulateManual(treeHelp, richTextHelp);
+            tabMenu.SelectedIndexChanged += TabMenu_SelectedIndexChanged;
             //AssignCallBacks();
 
             SetLabPenMode(labPenMode.Draw);
@@ -275,6 +276,12 @@ namespace Daedalus
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
             ZoomAmount = 1;
+        }
+
+        private void TabMenu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabMenu.SelectedIndex == 0)
+                Mino.RefreshMap();
         }
 
         int WorkersOpen = 0;
@@ -1550,13 +1557,11 @@ namespace Daedalus
         private void GridRadius_TextChanged(object sender, EventArgs e)
         {
             SetFloatSetting(GridRadius.Text, GridRadiusSlider, ref Settings.GridRadius);
-            Mino.RefreshMap();
         }
 
         private void GridRadiusSlider_Scroll(object sender, EventArgs e)
         {
             SetFloatSetting(GridRadiusSlider.Value, GridRadius, ref Settings.GridRadius);
-            Mino.RefreshMap();
         }
 
         private void WallWidth_TextChanged(object sender, EventArgs e)
