@@ -700,7 +700,7 @@ namespace Daedalus
             MenuPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             MenuPanel.Location = new System.Drawing.Point(3, 3);
             MenuPanel.Name = "MenuPanel";
-            MenuPanel.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            MenuPanel.Padding = new System.Windows.Forms.Padding(5);
             MenuPanel.Size = new System.Drawing.Size(888, 423);
             MenuPanel.TabIndex = 6;
             // 
@@ -723,7 +723,7 @@ namespace Daedalus
             MenuTab.Controls.Add(MenuPanel);
             MenuTab.Location = new System.Drawing.Point(4, 24);
             MenuTab.Name = "MenuTab";
-            MenuTab.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            MenuTab.Padding = new System.Windows.Forms.Padding(3);
             MenuTab.Size = new System.Drawing.Size(894, 429);
             MenuTab.TabIndex = 0;
             MenuTab.Text = "Tower";
@@ -734,7 +734,7 @@ namespace Daedalus
             SettingsTab.Controls.Add(tableSettings);
             SettingsTab.Location = new System.Drawing.Point(4, 24);
             SettingsTab.Name = "SettingsTab";
-            SettingsTab.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            SettingsTab.Padding = new System.Windows.Forms.Padding(3);
             SettingsTab.Size = new System.Drawing.Size(894, 429);
             SettingsTab.TabIndex = 1;
             SettingsTab.Text = "Settings";
@@ -779,7 +779,7 @@ namespace Daedalus
             Visual.Controls.Add(groupBox1);
             Visual.Location = new System.Drawing.Point(4, 5);
             Visual.Name = "Visual";
-            Visual.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            Visual.Padding = new System.Windows.Forms.Padding(3);
             Visual.Size = new System.Drawing.Size(697, 408);
             Visual.TabIndex = 0;
             Visual.Text = "1";
@@ -1226,8 +1226,8 @@ namespace Daedalus
             Display.Controls.Add(groupBox2);
             Display.Location = new System.Drawing.Point(4, 5);
             Display.Name = "Display";
-            Display.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            Display.Size = new System.Drawing.Size(699, 411);
+            Display.Padding = new System.Windows.Forms.Padding(3);
+            Display.Size = new System.Drawing.Size(697, 408);
             Display.TabIndex = 1;
             Display.Text = "2";
             // 
@@ -1238,7 +1238,7 @@ namespace Daedalus
             groupBox2.ForeColor = System.Drawing.SystemColors.Info;
             groupBox2.Location = new System.Drawing.Point(3, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new System.Drawing.Size(693, 405);
+            groupBox2.Size = new System.Drawing.Size(691, 402);
             groupBox2.TabIndex = 0;
             groupBox2.TabStop = false;
             groupBox2.Text = "Display Settings";
@@ -1261,7 +1261,7 @@ namespace Daedalus
             flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             flowLayoutPanel2.Location = new System.Drawing.Point(3, 19);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new System.Drawing.Size(687, 383);
+            flowLayoutPanel2.Size = new System.Drawing.Size(685, 380);
             flowLayoutPanel2.TabIndex = 1;
             flowLayoutPanel2.WrapContents = false;
             // 
@@ -1597,8 +1597,8 @@ namespace Daedalus
             Internal.Controls.Add(groupBox3);
             Internal.Location = new System.Drawing.Point(4, 5);
             Internal.Name = "Internal";
-            Internal.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            Internal.Size = new System.Drawing.Size(699, 411);
+            Internal.Padding = new System.Windows.Forms.Padding(3);
+            Internal.Size = new System.Drawing.Size(697, 408);
             Internal.TabIndex = 2;
             Internal.Text = "3";
             // 
@@ -1609,7 +1609,7 @@ namespace Daedalus
             groupBox3.ForeColor = System.Drawing.SystemColors.Info;
             groupBox3.Location = new System.Drawing.Point(3, 3);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new System.Drawing.Size(693, 405);
+            groupBox3.Size = new System.Drawing.Size(691, 402);
             groupBox3.TabIndex = 0;
             groupBox3.TabStop = false;
             groupBox3.Text = "Internal Settings";
@@ -1627,7 +1627,7 @@ namespace Daedalus
             flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             flowLayoutPanel3.Location = new System.Drawing.Point(3, 19);
             flowLayoutPanel3.Name = "flowLayoutPanel3";
-            flowLayoutPanel3.Size = new System.Drawing.Size(687, 383);
+            flowLayoutPanel3.Size = new System.Drawing.Size(685, 380);
             flowLayoutPanel3.TabIndex = 2;
             flowLayoutPanel3.WrapContents = false;
             // 
@@ -1940,8 +1940,8 @@ namespace Daedalus
             Environment.Controls.Add(groupBox27);
             Environment.Location = new System.Drawing.Point(4, 5);
             Environment.Name = "Environment";
-            Environment.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            Environment.Size = new System.Drawing.Size(699, 411);
+            Environment.Padding = new System.Windows.Forms.Padding(3);
+            Environment.Size = new System.Drawing.Size(697, 408);
             Environment.TabIndex = 3;
             Environment.Text = "Environment";
             // 
@@ -1952,7 +1952,7 @@ namespace Daedalus
             groupBox27.ForeColor = System.Drawing.SystemColors.Info;
             groupBox27.Location = new System.Drawing.Point(3, 3);
             groupBox27.Name = "groupBox27";
-            groupBox27.Size = new System.Drawing.Size(693, 405);
+            groupBox27.Size = new System.Drawing.Size(691, 402);
             groupBox27.TabIndex = 1;
             groupBox27.TabStop = false;
             groupBox27.Text = "Internal Settings";
@@ -1965,7 +1965,7 @@ namespace Daedalus
             flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             flowLayoutPanel4.Location = new System.Drawing.Point(3, 19);
             flowLayoutPanel4.Name = "flowLayoutPanel4";
-            flowLayoutPanel4.Size = new System.Drawing.Size(687, 383);
+            flowLayoutPanel4.Size = new System.Drawing.Size(685, 380);
             flowLayoutPanel4.TabIndex = 2;
             flowLayoutPanel4.WrapContents = false;
             // 
@@ -2026,8 +2026,8 @@ namespace Daedalus
             ApplyColor.Controls.Add(groupBox29);
             ApplyColor.Location = new System.Drawing.Point(4, 5);
             ApplyColor.Name = "ApplyColor";
-            ApplyColor.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            ApplyColor.Size = new System.Drawing.Size(699, 411);
+            ApplyColor.Padding = new System.Windows.Forms.Padding(3);
+            ApplyColor.Size = new System.Drawing.Size(697, 408);
             ApplyColor.TabIndex = 4;
             ApplyColor.Text = "Apply Color";
             // 
@@ -2038,7 +2038,7 @@ namespace Daedalus
             groupBox29.ForeColor = System.Drawing.SystemColors.Info;
             groupBox29.Location = new System.Drawing.Point(3, 3);
             groupBox29.Name = "groupBox29";
-            groupBox29.Size = new System.Drawing.Size(693, 405);
+            groupBox29.Size = new System.Drawing.Size(691, 402);
             groupBox29.TabIndex = 0;
             groupBox29.TabStop = false;
             groupBox29.Text = "Apply Color Group?";
@@ -2051,7 +2051,7 @@ namespace Daedalus
             flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             flowLayoutPanel5.Location = new System.Drawing.Point(3, 19);
             flowLayoutPanel5.Name = "flowLayoutPanel5";
-            flowLayoutPanel5.Size = new System.Drawing.Size(687, 383);
+            flowLayoutPanel5.Size = new System.Drawing.Size(685, 380);
             flowLayoutPanel5.TabIndex = 0;
             // 
             // Apply
@@ -2089,7 +2089,7 @@ namespace Daedalus
             Reset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             Reset.Name = "Reset";
             Reset.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            Reset.Size = new System.Drawing.Size(699, 411);
+            Reset.Size = new System.Drawing.Size(697, 408);
             Reset.TabIndex = 5;
             Reset.Text = "Reset";
             // 
@@ -2100,7 +2100,7 @@ namespace Daedalus
             groupBox34.ForeColor = System.Drawing.SystemColors.Info;
             groupBox34.Location = new System.Drawing.Point(3, 2);
             groupBox34.Name = "groupBox34";
-            groupBox34.Size = new System.Drawing.Size(693, 407);
+            groupBox34.Size = new System.Drawing.Size(691, 404);
             groupBox34.TabIndex = 1;
             groupBox34.TabStop = false;
             groupBox34.Text = "Reset Settings?";
@@ -2113,7 +2113,7 @@ namespace Daedalus
             flowLayoutPanel6.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             flowLayoutPanel6.Location = new System.Drawing.Point(3, 19);
             flowLayoutPanel6.Name = "flowLayoutPanel6";
-            flowLayoutPanel6.Size = new System.Drawing.Size(687, 385);
+            flowLayoutPanel6.Size = new System.Drawing.Size(685, 382);
             flowLayoutPanel6.TabIndex = 0;
             // 
             // ResetSet

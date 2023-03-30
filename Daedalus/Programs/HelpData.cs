@@ -13,7 +13,8 @@ namespace Daedalus.Daedalus.Programs
         {
             {
                 "Manual/",
-                "Daedalus\nROTATE\n" +
+                "Daedalus\n" +
+                "[ROTATE]\n" +
                 "Made by:\n" +
                 "Ian R. Poll\n" +
                 "Fillip L. Cannard\n" +
@@ -119,21 +120,71 @@ namespace Daedalus.Daedalus.Programs
             {
                 "Manual/Tabs/Settings/Visual/",
                 "This section containts settings for the color that is displayed. Each color is labeled with a name which describes what item will be set to the color and a change button which, when pressed, will open a color prompt to change the color.\n" +
-                "Colors that can be chaged:\n" +
-                "-\n" +
-                "-\n" +
-                "-\n" +
-                "-\n" +
+                "Settings that can be changed:\n" +
+                "-Labyrinth Map Color:\n" +
+                "Sets the color of the walls displayed in the Labyrinth area.\n\n" +
+                "-Labyrinth Highlight Color:\n" +
+                "Is the color a wall in the process of being set is colored to and when a wall is selected to be erased.\n\n" +
+                "-Mino Color:\n" +
+                "The color of the Mino in both the Labryinth and Map area. This is also the color of non-explored chunks the Mino is in that are displayed in the Map area.\n\n" +
+                "-Non-Hit Point Color:\n" +
+                "The color of end points and the rays that do not collide with the Labyrinth walls which are displayed in the Map area.\n\n" +
+                "-Ray Line Color:\n" +
+                "The color of the rays that do collide with the Labyrinth walls which are displayed in the Map area. NOTE: The color of collided points are set to rainbow and cannot be changed because it looks too cool.\n\n" +
+                "-Map Object Color:\n" +
+                "The color of objects the Mino recognizes from detecting the Labyrinth.\n\n" +
+                "-Map Chunck Color:\n" +
+                "The color of the grid of chuncks which divide the map into squares for optimized performance.\n\n" +
+                "-Map Wall Color:\n" +
+                "The color of the raw data the Mino is collecting from detections with the Labyrinth.\n\n" +
                 "\n\n" +
                 "Within the Visual section are profiles which, when selected, will present a prompt to apply the assigned color profile."
             },
             {
                 "Manual/Tabs/Settings/Display/",
-                "In Progress"
+                "This section containts settings for what data is displayed. Each setting is labeled with a name which describes what item will be set to display.\n" +
+                "Settings that can be changed:\n" +
+                "-Collided Points:\n" +
+                "Sets if the points that collide with the Labyrinth are displayed.\n\n" +
+                "-UnCollided Points:\n" +
+                "Sets if the points that do not collide with the Labyrinth are displayed.\n\n" +
+                "-Current Target:\n" +
+                "Sets if the point that the Mino will navigate to is displayed.\n\n" +
+                "-Roam Target:\n" +
+                "Sets if the points that the Mino need to explore when in Roam mode are displayed.\n\n" +
+                "-User Target:\n" +
+                "Sets if the point that is set by the user that the Mino will navigate to when in Target mode is displayed.\n\n" +
+                "-Target Path:\n" +
+                "Sets if the path the Mino is taking to its target point is displayed.\n\n" +
+                "-Map Object Radius:\n" +
+                "Sets the maximum range that Objects the Mino knows exist are displayed.\n\n" +
+                "-Map Chunk Radius:\n" +
+                "Sets the how much extra range is needed for Chunks the Mino knows exist are displayed. NOTE: The range that chunks are displayed is the Object radius PLUS this setting value. \n\n" +
+                "-Non-Hit Rays:\n" +
+                "Sets if the line connecting the Mino to a point that did not collide with the Labyrinth is displayed.\n\n" +
+                "-Hit Rays:\n" +
+                "Sets if the line connecting the Mino to a point that did collide with the Labyrinth is displayed.\n\n" +
+                "-Wall Data:\n" +
+                "Sets if the raw data the Mino has collected from detections is displayed.\n\n" +
+                "\n\n"
             },
             {
                 "Manual/Tabs/Settings/Internal/",
-                "In Progress"
+                "This section containts settings for how data is processed in Daedalus. Each setting is labeled with a name which describes what variable will be set.\n" +
+                "Settings that can be changed:\n" +
+                "-Mino Radius:\n" +
+                "\n\n" +
+                "-Object Expansion Bias:\n" +
+                "\n\n" +
+                "-Grid Radius:\n" +
+                "\n\n" +
+                "-Mino Ray Count:\n" +
+                "\n\n" +
+                "-Mino Speed:\n" +
+                "\n\n" +
+                "-Mino View Distance:\n" +
+                "\n\n" +
+                "\n\n"
             },
             {
                 "Manual/Tabs/Settings/Environment/",
@@ -147,7 +198,7 @@ namespace Daedalus.Daedalus.Programs
 
         private static Dictionary<TreeNode, string> HelpTree = new Dictionary<TreeNode, string>();
         private static RichTextBox HelpTextBox = new RichTextBox();
-        private static string DisplayText = "";
+        private static string DisplayText = "\n\n";
         private static float Frame = 0;
         private const int Rate = 10;
         private static float TimeFrame;
@@ -223,7 +274,7 @@ namespace Daedalus.Daedalus.Programs
                 foreach (string item in Animations.Keys)
                 {
                     List<string> Val = Animations[item];
-                    Display = Display.Replace(item, Val[Clock % Val.Count]);
+                    Display = Display.Replace("[" + item + "]", Val[Clock % Val.Count]);
                 }
                 HelpTextBox.Text = Display;
                 if (Clock >= MaxFrames)
