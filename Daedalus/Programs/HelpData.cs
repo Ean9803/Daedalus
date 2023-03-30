@@ -13,6 +13,7 @@ namespace Daedalus.Daedalus.Programs
         {
             {
                 "Manual/",
+
                 "Daedalus\n" +
                 "[ROTATE]\n" +
                 "Made by:\n" +
@@ -39,6 +40,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/",
+
                 "Located at the top of the window are three tabs:\n\n" +
                 "-Tower\n" +
                 "-Settings\n" +
@@ -47,10 +49,12 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Tower/",
+
                 "This is the main tab. In here the user is able to create/save blueprints. Each blueprint contains data about the user made labyrinth and map made from Mino."
             },
             {
                 "Manual/Tabs/Tower/Tool_Box/",
+
                 "Located at the top of the Tower tab, the Tool Box contains the various actions a user can make in this program. The Tool Box is split in two sections. The left hand side contains actions which can be performed in the " +
                 "Labyrinth area and the right side contains the controls for the Mino and data displayed in the Map area.\n" +
                 "-Labyrinth Tools:\n" +
@@ -86,6 +90,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Tower/Labyrinth/",
+
                 "The Labyrinth is the area of the application which displays the environment from a top down view. In this area the user is able to create/erase walls and move the Mino position with the use of the Tool Box. " +
                 "While the mouse cursor is in the Labyrinth area, the user is able to pan the current view by holding down Right Mouse and dragging the cursor. Pan also works the same way in the Map. NOTE: Both views, Labyrinth and Map, " +
                 "will be moved when panned so the Labyrinth view and Map view match.\n" +
@@ -94,6 +99,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Tower/Map/",
+
                 "The Map is the area of the application which displays the Minio's view of the environment from a top down view. In this area the user is able to set the Mino's Target destination with the use of the Tool Box. " +
                 "While the mouse cursor is in the Map area, the user is able to pan the current view by holding down Right Mouse and dragging the cursor. Pan also works the same way in the Labyrinth. NOTE: Both views, Labyrinth and Map, " +
                 "will be moved when panned so the Labyrinth view and Map view match.\n" +
@@ -102,6 +108,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Tower/Zoom/",
+
                 "The Zoom control is located at the bottom of the application. The control is a slider which can be dragged left and right. " +
                 "Dragging the control left will increase the view area shown. Dragging it right will decrease the area shown. " +
                 "A divider is located between the Zoom area and the Labryinth and Map area. When the mouse cursor is over the divider, " +
@@ -109,6 +116,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/",
+
                 "In Settings tab, properites can be chaged which effect color, Mino, what data will be displayed on the map, and extra settings for people with color blindness.\n" +
                 "In the Settings section of the application, located on the left hand side of the application is an expandable hierarchy, which contains settings which can be customized by the user. " +
                 "When an element is clicked in the hierarchy, information pretaining to said element will be displayed.\n" +
@@ -119,6 +127,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Visual/",
+
                 "This section containts settings for the color that is displayed. Each color is labeled with a name which describes what item will be set to the color and a change button which, when pressed, will open a color prompt to change the color.\n" +
                 "Settings that can be changed:\n" +
                 "-Labyrinth Map Color:\n" +
@@ -142,6 +151,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Display/",
+
                 "This section containts settings for what data is displayed. Each setting is labeled with a name which describes what item will be set to display.\n" +
                 "Settings that can be changed:\n" +
                 "-Collided Points:\n" +
@@ -170,6 +180,7 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Internal/",
+
                 "This section containts settings for how data is processed in Daedalus. Each setting is labeled with a name which describes what variable will be set.\n" +
                 "Settings that can be changed:\n" +
                 "-Mino Radius:\n" +
@@ -188,10 +199,12 @@ namespace Daedalus.Daedalus.Programs
             },
             {
                 "Manual/Tabs/Settings/Environment/",
+
                 "This contains the setting which controls the width a newly created wall will have. This does not affect previous walls made."
             },
             {
                 "Manual/Tabs/Settings/Reset/",
+
                 "Resets settings to default values."
             },
         };
