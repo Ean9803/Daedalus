@@ -2248,6 +2248,7 @@ namespace Daedalus
             richTextHelp.BackColor = System.Drawing.SystemColors.WindowText;
             richTextHelp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             richTextHelp.Cursor = System.Windows.Forms.Cursors.IBeam;
+            richTextHelp.DetectUrls = false;
             richTextHelp.Dock = System.Windows.Forms.DockStyle.Fill;
             richTextHelp.ForeColor = System.Drawing.SystemColors.Menu;
             richTextHelp.Location = new System.Drawing.Point(180, 2);
