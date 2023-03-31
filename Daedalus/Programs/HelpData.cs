@@ -354,7 +354,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "                                     \r\n" +
+                    "           X                         \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
@@ -366,7 +366,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "                                     \r\n" +
+                    "           X                         \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
                     " _                                   \r\n" +
@@ -378,7 +378,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "                                     \r\n" +
+                    "           X                         \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
                     " _|                                  \r\n" +
@@ -390,7 +390,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "                                     \r\n" +
+                    "           X                         \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
                     " _|                                  \r\n" +
@@ -402,7 +402,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "                                     \r\n" +
+                    "           X                         \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
                     " _|@|                                \r\n" +
@@ -414,7 +414,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "                                     \r\n" +
+                    "           X                         \r\n" +
                     "                                     \r\n" +
                     "  |@|                                \r\n" +
                     " _| |                                \r\n" +
@@ -426,7 +426,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   _                                 \r\n" +
+                    "   _       X                         \r\n" +
                     "   @_                                \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -438,7 +438,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   __                                \r\n" +
+                    "   __      X                         \r\n" +
                     "    @_                               \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -450,7 +450,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   ___                               \r\n" +
+                    "   ___     X                         \r\n" +
                     "    _@                               \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -462,7 +462,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   ____                              \r\n" +
+                    "   ____    X                         \r\n" +
                     "    __@                              \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -474,7 +474,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   _____                             \r\n" +
+                    "   _____   X                         \r\n" +
                     "    ___@                             \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -486,7 +486,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   ______                            \r\n" +
+                    "   ______  X                         \r\n" +
                     "    ____@                            \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -498,7 +498,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   _______                           \r\n" +
+                    "   _______ X                         \r\n" +
                     "    _____@                           \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -510,7 +510,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   ________                          \r\n" +
+                    "   ________X                         \r\n" +
                     "    ______@                          \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
@@ -522,7 +522,7 @@ namespace Daedalus.Daedalus.Programs
                     "                                     \r\n" +
                     "                                     \r\n" +
                     "                                     \r\n" +
-                    "   ________                          \r\n" +
+                    "   ________X                         \r\n" +
                     "    _______@|                        \r\n" +
                     "  | |                                \r\n" +
                     " _| |                                \r\n" +
