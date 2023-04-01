@@ -164,7 +164,6 @@ public class Map
                     item.AddRegion(Point);
                     if (!SortedBricks[Point].Contains(item))
                         SortedBricks[Point].Add(item);
-                    Added = true;
                 }
                 else
                 {
@@ -735,7 +734,7 @@ public class Map
                 SortedNet.Clear();
             }
             ClearChunks = false;
-            RefreshSortedBricks(Diameter);
+            RefreshSortedBricks();
         }
 
         CanSort = false;
