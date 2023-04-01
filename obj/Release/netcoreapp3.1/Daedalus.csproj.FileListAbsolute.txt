@@ -5,7 +5,6 @@ C:\Users\irobo\source\repos\Daedalus\bin\Release\netcoreapp3.1\Daedalus.runtimec
 C:\Users\irobo\source\repos\Daedalus\bin\Release\netcoreapp3.1\Daedalus.dll
 C:\Users\irobo\source\repos\Daedalus\bin\Release\netcoreapp3.1\Daedalus.pdb
 C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.csproj.AssemblyReference.cache
-C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.DaedalusForm.resources
 C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.csproj.GenerateResource.cache
 C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.AssemblyInfoInputs.cache
@@ -37,3 +36,5 @@ C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.csproj.Co
 C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.dll
 C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.pdb
 C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.genruntimeconfig.cache
+C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.Knossos.resources
+C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.Properties.Resources.resources

@@ -18,6 +18,7 @@ namespace Daedalus
 {
     public partial class Knossos : Form
     {
+        #region SettingProfile
         public class DaedalusFormSettings
         {
             public Color LabMap_Color;
@@ -222,10 +223,12 @@ namespace Daedalus
             }
 
         }
+        #endregion
 
         Minotaur Mino;
         public static Knossos KnossosUI;
         public DaedalusFormSettings Settings;
+        public float DeltaTime = 0;
 
         public Knossos()
         {
@@ -262,6 +265,8 @@ namespace Daedalus
 
             AssignSettings();
             HelpData.PopulateManual(treeHelp, richTextHelp);
+            tabMenu.SelectedIndexChanged += TabMenu_SelectedIndexChanged;
+            //AssignCallBacks();
 
             SetLabPenMode(labPenMode.Draw);
             SetMapMode(mapPenMode.Roam);
@@ -271,6 +276,12 @@ namespace Daedalus
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
             ZoomAmount = 1;
+        }
+
+        private void TabMenu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabMenu.SelectedIndex == 0)
+                Mino.RefreshMap();
         }
 
         int WorkersOpen = 0;
@@ -294,6 +305,99 @@ namespace Daedalus
         {
             DisposeWorkers();
             Dispose(true);
+        }
+
+        private void AssignCallBacks()
+        {
+            //Serves as a backup in case the designer messes up
+            this.labyrinthScene.Paint += labyrinthScene_Paint;
+            this.labyrinthScene.MouseDown += labyrinthScene_MouseDown;
+            this.labyrinthScene.MouseLeave += labyrinthScene_MouseLeave;
+            this.labyrinthScene.MouseMove += labyrinthScene_Mouse;
+            this.labyrinthScene.MouseUp += labyrinthScene_MouseUp;
+
+            this.mapScene.Paint += mapScene_Paint;
+            this.mapScene.MouseDown += mapScene_MouseDown;
+            this.mapScene.MouseLeave += mapScene_MouseLeave;
+            this.mapScene.MouseMove += mapScene_Mouse;
+            this.mapScene.MouseUp += mapScene_MouseUp;
+
+            this.zoomSlider.Scroll += zoomSlider_Scroll;
+
+            this.clearBtn.Click += clearBtn_Click;
+
+            this.loadBtn.Click += loadBtn_Click;
+
+            this.saveBtn.Click += saveBtn_Click;
+
+            this.eraseBtn.Click += eraseBtn_Click;
+
+            this.drawBtn.Click += drawBtn_Click;
+
+            this.setMinoPos.Click += setMinoPos_Click;
+
+            this.targetBtn.Click += targetBtn_Click;
+
+            this.roamBtn.Click += roamBtn_Click;
+
+            this.ClearMemory.Click += ClearMemory_Click;
+
+            this.playBtn.Click += playBtn_Click;
+
+            this.stopBtn.Click += stopBtn_Click;
+
+            this.MinotaurWorker.DoWork += MinotaurWorker_DoWork;
+            this.MinotaurWorker.RunWorkerCompleted += backgroundWorker_End;
+
+            this.LabyrinthUpdate.DoWork += LabyrinthUpdate_DoWork;
+            this.LabyrinthUpdate.RunWorkerCompleted += backgroundWorker_End;
+
+            this.openMapFile.FileOk += openMapFile_FileOk;
+            this.saveMapFile.FileOk += saveMapFile_FileOk;
+
+            this.ChangeMapColor.Click += new System.EventHandler(this.ChangeMapColor_Click);
+            this.ChangeHighlightColor.Click += new System.EventHandler(this.ChangeHighlightColor_Click);
+            this.ChangeMinoColor.Click += new System.EventHandler(this.ChangeMinoColor_Click);
+            this.ChangeNonHitColor.Click += new System.EventHandler(this.ChangeNonHitColor_Click);
+            this.ChangeRayColor.Click += new System.EventHandler(this.ChangeRayColor_Click);
+            this.ChangeMapObjectsColor.Click += new System.EventHandler(this.ChangeMapObjectsColor_Click);
+            this.ChangeMapChunckColor.Click += new System.EventHandler(this.ChangeMapChunckColor_Click);
+            this.ChangeMapWallColor.Click += new System.EventHandler(this.ChangeMapWallColor_Click);
+            this.ShowCollidedPoints.CheckedChanged += ShowCollidedPoints_CheckedChanged;
+            this.ShowUncollidedPoints.CheckedChanged += ShowUncollidedPoints_CheckedChanged;
+            this.ShowCurrentTarget.CheckedChanged += ShowCurrentTarget_CheckedChanged;
+            this.ShowRoamTargets.CheckedChanged += ShowRoamTargets_CheckedChanged;
+            this.ShowUserTarget.CheckedChanged += ShowUserTarget_CheckedChanged;
+            this.ShowPath.CheckedChanged += ShowPath_CheckedChanged;
+            this.ObjectRadius.TextChanged += ObjectRadius_TextChanged;
+            this.ObjectRadiusSlider.Scroll += ObjectRadiusSlider_Scroll;
+            this.ChunkRadius.TextChanged += ChunkRadius_TextChanged;
+            this.ChunkRadiusSlider.Scroll += ChunkRadiusSlider_Scroll;
+            this.ShowNonHitRays.CheckedChanged += new System.EventHandler(this.ShowNonHitRays_CheckedChanged);
+            this.ShowHitRays.CheckedChanged += new System.EventHandler(this.ShowHitRays_CheckedChanged);
+            this.ShowWallData.CheckedChanged += ShowWallData_CheckedChanged;
+            this.MinoRadius.TextChanged += MinoRadius_TextChanged;
+            this.MinoRadiusSlider.Scroll += MinoRadiusSlider_Scroll;
+            this.ExpansionBias.TextChanged += ExapansionBias_TextChanged;
+            this.ExpansionBiasSlider.Scroll += ExpansionBiasSlider_Scroll;
+            this.GridRadius.TextChanged += GridRadius_TextChanged;
+            this.GridRadiusSlider.Scroll += GridRadiusSlider_Scroll;
+            this.MinoRayRes.TextChanged += MinoRayRes_TextChanged;
+            this.MinoRayResSlider.Scroll += MinoRayResSlider_Scroll;
+            this.MinoSpeed.TextChanged += MinoSpeed_TextChanged;
+            this.MinoSpeedSlider.Scroll += MinoSpeedSlider_Scroll;
+            this.MinoViewDistance.TextChanged += MinoViewDistance_TextChanged;
+            this.MinoViewDistanceSlider.Scroll += MinoViewDistanceSlider_Scroll;
+            this.WallWidth.TextChanged += WallWidth_TextChanged;
+            this.WallWidthSlider.Scroll += WallWidthSlider_Scroll;
+            this.Apply.Click += Apply_Click;
+            this.Cancel.Click += Cancel_Click;
+            this.treeSettings.AfterSelect += treeSettings_AfterSelect;
+            this.ResetSet.Click += new System.EventHandler(this.Reset_Click);
+            this.CancelSet.Click += new System.EventHandler(this.CancelSet_Click);
+            this.FormClosing += DaedalusForm_Close;
+            this.Load += DaedalusForm_Load;
+
         }
 
         private void StartWorkers()
@@ -715,7 +819,15 @@ namespace Daedalus
             }
         }
 
-        private static void RefreshScene(Knossos Form) { Form.PaintWindows(); }
+        private static void RefreshScene(Knossos Form)
+        {
+            long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            Form.PaintWindows();
+            float DT = (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - milliseconds) / 100.0f;
+            if (DT != 0)
+                Form.DeltaTime = DT;
+            HelpData.Update(Form.DeltaTime);
+        }
 
         public void PaintWindows()
         {
@@ -1445,13 +1557,11 @@ namespace Daedalus
         private void GridRadius_TextChanged(object sender, EventArgs e)
         {
             SetFloatSetting(GridRadius.Text, GridRadiusSlider, ref Settings.GridRadius);
-            Mino.RefreshMap();
         }
 
         private void GridRadiusSlider_Scroll(object sender, EventArgs e)
         {
             SetFloatSetting(GridRadiusSlider.Value, GridRadius, ref Settings.GridRadius);
-            Mino.RefreshMap();
         }
 
         private void WallWidth_TextChanged(object sender, EventArgs e)
