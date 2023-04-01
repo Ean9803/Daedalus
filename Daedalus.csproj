@@ -29,4 +29,10 @@
     <Folder Include="Daedalus\Maps\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Solver.Foundation">
+      <HintPath>Earclipper\Microsoft.Solver.Foundation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
