@@ -11,15 +11,21 @@ using System.Threading.Channels;
 using static Lclass;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using Clipper2Lib;
+using EarClipperLib;
 using System.Runtime.CompilerServices;
+using Microsoft.SolverFoundation.Common;
+using System.Security.Cryptography;
+using System.Numerics;
+using System.Drawing.Design;
 
 public class Map
 {
     private float brickWidth { get { return Knossos.KnossosUI.Settings.Mino_Radius + (2 * Knossos.KnossosUI.Settings.ExpansionBias); } }
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
-    private Dictionary<PointF, List<Lclass.Brick>> Sortedbricks = new Dictionary<PointF, List<Lclass.Brick>>();
-    private Dictionary<PointF, PathsD> Sortedchunks = new Dictionary<PointF, PathsD>();
-    private Dictionary<PointF, PathsD> Sortedwalls = new Dictionary<PointF, PathsD>();
+    private Dictionary<PointF, List<Lclass.Brick>> SortedBricks = new Dictionary<PointF, List<Lclass.Brick>>();
+    private Dictionary<PointF, PathsD> SortedChunks = new Dictionary<PointF, PathsD>();
+    private Dictionary<PointF, PathsD> SortedWalls = new Dictionary<PointF, PathsD>();
+    private Dictionary<PointF, List<Vector3m>> SortedNet = new Dictionary<PointF, List<Vector3m>>();
     private bool CanClear = false;
     private bool Clear = false;
     private bool ClearChunks = false;
@@ -49,8 +55,7 @@ public class Map
     public string ExportMapData()
     {
         string output = "";
-        bricks.Clear();
-        foreach (List<Lclass.Brick> Group in Sortedbricks.Values)
+        foreach (List<Lclass.Brick> Group in SortedBricks.Values)
         {
             foreach (Lclass.Brick brick in Group)
             {
@@ -65,7 +70,7 @@ public class Map
             }
         }
         output += ";";
-        foreach (PointF Point in Sortedchunks.Keys)
+        foreach (PointF Point in SortedChunks.Keys)
         {
             output += Point.X + "|" + Point.Y + "|";
         }
@@ -104,9 +109,9 @@ public class Map
                 x1 = float.Parse(coordinates[i]);
                 y1 = float.Parse(coordinates[i + 1]);
                 Coord = new PointF(x1, y1);
-                if (!Sortedchunks.ContainsKey(Coord))
+                if (!SortedChunks.ContainsKey(Coord))
                 {
-                    Sortedchunks.Add(Coord, ChunkShape(Coord));
+                    SortedChunks.Add(Coord, ChunkShape(Coord));
                 }
             }
         }
@@ -129,13 +134,13 @@ public class Map
         List<Lclass.Brick> Overlap = new List<Lclass.Brick>();
         foreach (PointF item in GridCoords)
         {
-            if (Sortedbricks.ContainsKey(item))
+            if (SortedBricks.ContainsKey(item))
             {
-                for (int i = Sortedbricks[item].Count - 1; i >= 0; i--)
+                for (int i = SortedBricks[item].Count - 1; i >= 0; i--)
                 {
-                    if (!Overlap.Contains(Sortedbricks[item][i]))
+                    if (!Overlap.Contains(SortedBricks[item][i]))
                     {
-                        Overlap.Add(Sortedbricks[item][i]);
+                        Overlap.Add(SortedBricks[item][i]);
                     }
                 }
             }
@@ -154,18 +159,18 @@ public class Map
         {
             foreach (PointF Point in Coords)
             {
-                if (Sortedbricks.ContainsKey(Point))
+                if (SortedBricks.ContainsKey(Point))
                 {
                     item.AddRegion(Point);
-                    if (!Sortedbricks[Point].Contains(item))
-                        Sortedbricks[Point].Add(item);
+                    if (!SortedBricks[Point].Contains(item))
+                        SortedBricks[Point].Add(item);
                 }
                 else
                 {
                     List<Lclass.Brick> Collection = new List<Lclass.Brick>();
                     item.AddRegion(Point);
                     Collection.Add(item);
-                    Sortedbricks.Add(Point, Collection);
+                    SortedBricks.Add(Point, Collection);
                 }
 
                 lines = item.GenerateRec(true);
@@ -177,16 +182,16 @@ public class Map
                                                                      lines[1].P2.X, lines[1].P2.Y,
                                                                      lines[1].P1.X, lines[1].P1.Y}));
 
-                if (Sortedwalls.ContainsKey(Point))
+                if (SortedWalls.ContainsKey(Point))
                 {
-                    Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Union, Sortedwalls[Point], WallPoly, FillRule.NonZero);
+                    SortedWalls[Point] = Clipper.BooleanOp(ClipType.Union, SortedWalls[Point], WallPoly, FillRule.NonZero);
                 }
                 else
                 {
-                    Sortedwalls.Add(Point, new PathsD(WallPoly));
+                    SortedWalls.Add(Point, new PathsD(WallPoly));
                 }
                 WallPoly.Clear();
-                Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Intersection, Sortedwalls[Point], ChunkShape(Point), FillRule.NonZero);
+                SortedWalls[Point] = Clipper.BooleanOp(ClipType.Intersection, SortedWalls[Point], ChunkShape(Point), FillRule.NonZero);
             }
             if (item.Regions.Count != Coords.Count)
             {
@@ -206,8 +211,8 @@ public class Map
         List<Lclass.Brick> Collections = new List<Lclass.Brick>(Collection[Point]);
         foreach (Lclass.Brick Brick in Collections)
         {
-            item.AddRegions(Brick.AddToParent(item, ref Sortedbricks));
-            Brick.RemoveFromParent(ref Sortedbricks);
+            item.AddRegions(Brick.AddToParent(item, ref SortedBricks));
+            Brick.RemoveFromParent(ref SortedBricks);
         }
         foreach (PointF Regions in item.Regions)
         {
@@ -272,13 +277,13 @@ public class Map
                                                                      lines[1].P2.X, lines[1].P2.Y,
                                                                      lines[1].P1.X, lines[1].P1.Y}));
 
-                if (Sortedwalls.ContainsKey(Point))
+                if (SortedWalls.ContainsKey(Point))
                 {
-                    Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Difference, Sortedwalls[Point], WallPoly, FillRule.NonZero);
-                    if (Sortedwalls[Point].Count != 0)
+                    SortedWalls[Point] = Clipper.BooleanOp(ClipType.Difference, SortedWalls[Point], WallPoly, FillRule.NonZero);
+                    if (SortedWalls[Point].Count != 0)
                     {
                         bool Empty = true;
-                        foreach (PathD item in Sortedwalls[Point])
+                        foreach (PathD item in SortedWalls[Point])
                         {
                             if (item.Count != 0)
                             {
@@ -289,37 +294,37 @@ public class Map
 
                         if (!Empty)
                         {
-                            for (int i = Sortedbricks[Point].Count - 1; i >= 0; i--)
+                            for (int i = SortedBricks[Point].Count - 1; i >= 0; i--)
                             {
                                 WallPoly.Clear();
-                                lines = Sortedbricks[Point][i].GenerateRec(true);
+                                lines = SortedBricks[Point][i].GenerateRec();
                                 if (lines.Length > 0)
                                 {
                                     WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
                                                                      lines[0].P2.X, lines[0].P2.Y,
                                                                      lines[1].P2.X, lines[1].P2.Y,
                                                                      lines[1].P1.X, lines[1].P1.Y}));
-                                    PathsD Overlap = Clipper.BooleanOp(ClipType.Intersection, WallPoly, Sortedwalls[Point], FillRule.NonZero);
+                                    PathsD Overlap = Clipper.BooleanOp(ClipType.Intersection, WallPoly, SortedWalls[Point], FillRule.NonZero);
                                     if (Overlap.Count == 0)
                                     {
-                                        Sortedbricks[Point].RemoveAt(i);
+                                        SortedBricks[Point].RemoveAt(i);
                                     }
                                 }
                                 else
                                 {
-                                    Sortedbricks[Point].RemoveAt(i);
+                                    SortedBricks[Point].RemoveAt(i);
                                 }
                             }
                         }
                         else
                         {
-                            Sortedbricks[Point].Clear();
+                            SortedBricks[Point].Clear();
                         }
                     }
                     else
                     {
-                        if (Sortedbricks.ContainsKey(Point))
-                            Sortedbricks[Point].Clear();
+                        if (SortedBricks.ContainsKey(Point))
+                            SortedBricks[Point].Clear();
                     }
                 }
                 WallPoly.Clear();
@@ -351,7 +356,7 @@ public class Map
                                                                      lines[1].P1.X, lines[1].P1.Y}));
                 foreach (PointF Point in BrickCoord)
                 {
-                    Sortedwalls[Point] = Clipper.BooleanOp(ClipType.Difference, Sortedwalls[Point], WallPoly, FillRule.NonZero);
+                    SortedWalls[Point] = Clipper.BooleanOp(ClipType.Difference, SortedWalls[Point], WallPoly, FillRule.NonZero);
                 }
             }
 
@@ -366,13 +371,12 @@ public class Map
 
     private void RefreshSortedBricks()
     {
-        CanRefresh = false;
-        Sortedbricks.Clear();
+        SortedBricks.Clear();
         foreach (Lclass.Brick item in bricks)
         {
             AddBrick(item, Diameter);
         }
-        List<PointF> items = Sortedbricks.Keys.ToList();
+        List<PointF> items = SortedBricks.Keys.ToList();
         Refresh(items);
         ForceRefresh = true;
         CanRefresh = true;
@@ -477,9 +481,10 @@ public class Map
         if (CanClear)
         {
             bricks.Clear();
-            Sortedbricks.Clear();
-            Sortedwalls.Clear();
-            Sortedchunks.Clear();
+            SortedBricks.Clear();
+            SortedWalls.Clear();
+            SortedChunks.Clear();
+            SortedNet.Clear();
         }
         else
             Clear = true;
@@ -490,23 +495,10 @@ public class Map
     {
         if (CanClear)
         {
-            bricks.Clear();
-            foreach (List<Lclass.Brick> item in Sortedbricks.Values)
-            {
-                foreach (Lclass.Brick Wall in item)
-                {
-                    if (!bricks.Contains(Wall))
-                    {
-                        Wall.Width = brickWidth;
-                        Wall.Regions.Clear();
-                        bricks.Add(Wall);
-                    }
-                }
-            }
-            Sortedbricks.Clear();
-            Sortedwalls.Clear();
-            Sortedchunks.Clear();
-            RefreshSortedBricks();
+            SortedBricks.Clear();
+            SortedWalls.Clear();
+            SortedChunks.Clear();
+            SortedNet.Clear();
         }
         else
             ClearChunks = true;
@@ -608,9 +600,9 @@ public class Map
             List<PointF> Regions = LineCoords(item, location);
             foreach (PointF Region in Regions)
             {
-                if (Sortedbricks.ContainsKey(Region))
+                if (SortedBricks.ContainsKey(Region))
                 {
-                    foreach (Brick Barrier in Sortedbricks[Region])
+                    foreach (Brick Barrier in SortedBricks[Region])
                     {
                         PointF Ray = new PointF(item.X - location.X, item.Y - location.Y);
                         PointF WallLine = new PointF(Barrier.P2.X - Barrier.P1.X, Barrier.P2.Y - Barrier.P1.Y);
@@ -692,7 +684,7 @@ public class Map
             RemoveBuffers(ref DeleteBricks);
             if (NewData.Count > 0 || ForceRefresh)
             {
-                Refresh(Changed ? Sortedbricks.Keys.ToList() : NewData);
+                Refresh(Changed ? SortedBricks.Keys.ToList() : NewData);
                 Changed |= true;
             }
 
@@ -715,8 +707,8 @@ public class Map
         ForceRefresh = false;
         return Changed;
     }
-
-    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius)
+    // DISPLAY STUFF!!!
+    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius, float Diameter)
     {
         if (Clear)
         {
@@ -734,6 +726,14 @@ public class Map
         if (RefreshSort)
         {
             RefreshSort = false;
+            if (ClearChunks)
+            {
+                SortedBricks.Clear();
+                SortedWalls.Clear();
+                SortedChunks.Clear();
+                SortedNet.Clear();
+            }
+            ClearChunks = false;
             RefreshSortedBricks();
         }
 
@@ -742,35 +742,42 @@ public class Map
         PointF NewF = Snap(Focus);
         bool Covered = false;
         float I = 0;
-        PointF[] Keys = Sortedchunks.Keys.ToArray();
+        PointF[] Keys = SortedNet.Keys.ToArray();
         foreach (PointF item in Keys)
         {
             if (DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
-                foreach (PathD sections in Sortedchunks[item])
+                for (int i = 0; i < SortedNet[item].Count; i += 3)
                 {
-                    for (int i = 1; i < sections.Count + 1; i++)
+                    for (int j = 1; j < 4; j++)
                     {
-                        int CurrentIndex = i % sections.Count;
-                        int LastIndex = i - 1;
-                        PointF Current = new PointF((float)sections[CurrentIndex].x, (float)sections[CurrentIndex].y);
-                        PointF Last = new PointF((float)sections[LastIndex].x, (float)sections[LastIndex].y);
+                        int currentIndex = j % 3;
+                        int lastIndex = (j - 1) % 3;
+                        Vector3m Current = SortedNet[item][i + currentIndex];
+                        Vector3m Last = SortedNet[item][i + lastIndex];
+                        
                         bool Boarder = (Current.X == item.X + GridSize || Current.X == item.X - GridSize) || (Current.Y == item.Y + GridSize || Current.Y == item.Y - GridSize);
                         Boarder = Boarder && ((Last.X == item.X + GridSize || Last.X == item.X - GridSize) || (Last.Y == item.Y + GridSize || Last.Y == item.Y - GridSize));
-                        PointF MidPoint = midpoint(Current, Last);
+                        Vector3m MidPoint = midpoint(Current, Last);
                         Boarder = Boarder && ((MidPoint.X == item.X + GridSize || MidPoint.X == item.X - GridSize) || (MidPoint.Y == item.Y + GridSize || MidPoint.Y == item.Y - GridSize));
+
                         Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                         {
                             color = Boarder ? Knossos.KnossosUI.Settings.Chunk_Color : Knossos.KnossosUI.Settings.Object_Color,
-                            Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
+                            Line = new Line()
+                            {
+                                P1 = new PointF((float)Current.X.ToDouble(), (float)Current.Y.ToDouble()),
+                                P2 = new PointF((float)Last.X.ToDouble(), (float)Last.Y.ToDouble()),
+                                Width = 1
+                            },
                             Type = Knossos.TargetLine.DrawType.Solid
                         });
                     }
                 }
 
-                if (Knossos.KnossosUI.Settings.Walls_Show && Sortedbricks.ContainsKey(item))
+                if (Knossos.KnossosUI.Settings.Walls_Show && SortedBricks.ContainsKey(item))
                 {
-                    foreach (Lclass.Brick Wall in Sortedbricks[item])
+                    foreach (Lclass.Brick Wall in SortedBricks[item])
                     {
                         Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                         {
@@ -806,7 +813,7 @@ public class Map
                 Point = NewF,
                 color = Knossos.KnossosUI.Settings.Mino_Color,
                 Type = Knossos.TargetPoint.DrawType.Square,
-                Diameter = GridSize - (Sortedchunks.Count > 0 ? 10 : 0),
+                Diameter = GridSize - (SortedChunks.Count > 0 ? 10 : 0),
                 Scale = true
             });
         }
@@ -1005,24 +1012,74 @@ public class Map
     {
         foreach (PointF item in RegionsChanged)
         {
-            if (Sortedwalls.ContainsKey(item))
+            if (SortedWalls.ContainsKey(item))
             {   // Create chunk to cut bricks out of
-                PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), Sortedwalls[item], FillRule.NonZero);
-                if (!Sortedchunks.ContainsKey(item))
+                PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), SortedWalls[item], FillRule.NonZero);
+                if (!SortedChunks.ContainsKey(item))
                 {
-                    Sortedchunks.Add(item, chunk);
+                    SortedChunks.Add(item, chunk);
                 }
                 else
                 {
-                    Sortedchunks[item] = chunk;
+                    SortedChunks[item] = chunk;
                 }
             }
             else
             {
-                Sortedwalls.Add(item, new PathsD());
-                if (!Sortedchunks.ContainsKey(item))
+                SortedWalls.Add(item, new PathsD());
+                if (!SortedChunks.ContainsKey(item))
                 {
-                    Sortedchunks.Add(item, ChunkShape(item));
+                    SortedChunks.Add(item, ChunkShape(item));
+                }
+            }
+        }
+        foreach (PointF item in RegionsChanged)
+        {            
+            List<List<Vector3m>> polygons = new List<List<Vector3m>>();
+            List<List<Vector3m>> holes = new List<List<Vector3m>>();
+            foreach (PathD rings in SortedChunks[item])
+            {   
+                // Adds solid polygons to solid polygons list
+                if (Clipper.IsPositive(rings))
+                {
+                    List<Vector3m> coordinates = new List<Vector3m>();
+                    foreach (PointD vertex in rings)
+                    {
+                        coordinates.Add(new Vector3m(vertex.x, vertex.y, 0));
+                    }
+                    // Add to list of solid polygons
+                    polygons.Add(coordinates);
+                }
+                // Adds holes to nemosis (holes list)
+                else
+                {
+                    List<Vector3m> nemo = new List<Vector3m>();
+                    foreach (PointD vertex in rings)
+                    {
+                        nemo.Add(new Vector3m(vertex.x, vertex.y, 0));
+                    }
+                    // Add to list of holes
+                    holes.Add(nemo);
+                }
+            }
+            // EARCLIPPING!!!!
+            EarClipping earClipper;   //hiheywydnmcool;):)//
+            List<Vector3m> result;
+            foreach (List<Vector3m> dori_the_polygon in polygons)
+            {
+                earClipper = new EarClipping();
+                earClipper.SetPoints(dori_the_polygon, holes);
+                earClipper.Triangulate();
+                result = earClipper.Result;
+                // Adding new chunk to the sorted net
+                if (!SortedNet.ContainsKey(item))
+                {
+                    SortedNet.Add(item, result);
+                }
+                // Already prcoessed this chunk
+                else
+                {
+                    SortedNet[item] = result;
                 }
             }
         }
@@ -1085,6 +1142,11 @@ public class Map
         PointF ret = new PointF();
         ret.X = (A.X + B.X) / 2;
         ret.Y = (A.Y + B.Y) / 2;
+        return ret;
+    }
+    private Vector3m midpoint(Vector3m A, Vector3m B)
+    {
+        Vector3m ret = new Vector3m((A.X + B.Y) / 2, (A.Y + B.Y) / 2, 0);
         return ret;
     }
 
