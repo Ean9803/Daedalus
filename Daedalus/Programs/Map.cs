@@ -18,6 +18,8 @@ using System.Security.Cryptography;
 using System.Numerics;
 using System.Drawing.Design;
 using System.Threading;
+using System.Security.Cryptography.Xml;
+using System.Linq.Expressions;
 
 public class Map
 {
@@ -386,8 +388,8 @@ public class Map
     private PointF Snap(PointF Point)
     {
         return new PointF(
-            ((MathF.Floor((Point.X + (GridSize)) / (GridSize * 2))) * (GridSize * 2)),
-            ((MathF.Floor((Point.Y + (GridSize)) / (GridSize * 2))) * (GridSize * 2))
+            MathF.Floor((Point.X + GridSize) / (GridSize * 2)) * (GridSize * 2),
+            MathF.Floor((Point.Y + GridSize) / (GridSize * 2)) * (GridSize * 2)
             );
     }
 
@@ -396,12 +398,14 @@ public class Map
         List<PointF> Coords = new List<PointF>();
 
         PointF Center = Snap(Point);
-
+        Coords.Add(Center);
         for (int i = -Radius; i <= Radius; i++)
         {
             for (int j = -Radius; j <= Radius; j++)
             {
-                Coords.Add(Snap(new PointF(Center.X - (GridSize * 2 * i), Center.Y - (GridSize * 2 * j))));
+                PointF Chunk = Snap(new PointF(Center.X - (GridSize * 2 * i), Center.Y - (GridSize * 2 * j)));
+                if (!Coords.Contains(Chunk))
+                    Coords.Add(Chunk);
             }
         }
 
@@ -1140,6 +1144,97 @@ public class Map
                 }
             }
         }
+    }
+
+    private PointF GetClosestPoint(PointF Location)
+    {
+        int Range = 0;
+        List<PointF> Chunks;
+        Chunks = SnapCoords(Location, Range);
+        bool Check = true;
+        List<PointF> Can = new List<PointF>();
+        while (Check)
+        {
+            foreach (PointF item in Chunks)
+            {
+                if (SortedNet.ContainsKey(item))
+                {
+                    if (SortedNet[item].Keys.Count > 0)
+                    {
+                        Check = false;
+                        Can.Add(item);
+                    }
+                }
+            }
+            Range++;
+        }
+        double Dist = double.MaxValue;
+        double D = 0;
+        PointF Chunk = Snap(Location);
+        foreach (PointF item in Can)
+        {
+            D = DistSqr(item, Location);
+            if (D < Dist)
+            {
+                Dist = D;
+                Chunk = item;
+            }
+        }
+        Dist = double.MaxValue;
+        PointF Vertex = Chunk;
+        foreach (PointF item in SortedNet[Chunk].Keys)
+        {
+            D = DistSqr(item, Location);
+            if (D < Dist)
+            {
+                Dist = D;
+                Vertex = item;
+            }
+        }
+        return Vertex;
+    }
+
+    private List<PointF> GetConnections(PointF Point, float Thres = 0.1f)
+    {
+        List<PointF> Avalable = new List<PointF>();
+
+        List<PointF> Chunks = SnapCoords(Point, 1);
+        foreach (PointF item in Chunks)
+        {
+            if (SortedNet.ContainsKey(item))
+            {
+                if (SortedNet[item].ContainsKey(Point))
+                {
+                    Avalable.AddRange(SortedNet[item][Point]);
+                }
+            }
+        }
+
+        PointF Current = Snap(Point);
+        bool BoarderPX = InRange(Point.X, Current.X + GridSize, Thres);
+        bool BoarderNX = InRange(Point.X, Current.X - GridSize, Thres);
+        bool BoarderPY = InRange(Point.Y, Current.Y + GridSize, Thres);
+        bool BoarderNY = InRange(Point.Y, Current.Y - GridSize, Thres);
+
+        if (BoarderPX)
+        {
+            Avalable.Add(new PointF(Current.X + GridSize * 2, Current.Y));
+        }
+        if (BoarderNX)
+        {
+            Avalable.Add(new PointF(Current.X - GridSize * 2, Current.Y));
+        }
+
+        if (BoarderPY)
+        {
+            Avalable.Add(new PointF(Current.X, Current.Y + GridSize * 2));
+        }
+        if (BoarderNY)
+        {
+            Avalable.Add(new PointF(Current.X, Current.Y - GridSize * 2));
+        }
+
+        return Avalable;
     }
 
 
