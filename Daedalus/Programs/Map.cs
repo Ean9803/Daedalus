@@ -500,10 +500,24 @@ public class Map
     {
         if (CanClear)
         {
+            bricks.Clear();
+            foreach (List<Lclass.Brick> item in SortedBricks.Values)
+            {
+                foreach (Lclass.Brick Wall in item)
+                {
+                    if (!bricks.Contains(Wall))
+                    {
+                        Wall.Width = brickWidth;
+                        Wall.Regions.Clear();
+                        bricks.Add(Wall);
+                    }
+                }
+            }
             SortedBricks.Clear();
             SortedWalls.Clear();
             SortedChunks.Clear();
             SortedNet.Clear();
+            RefreshSortedBricks();
         }
         else
             ClearChunks = true;
