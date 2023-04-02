@@ -38,3 +38,5 @@ C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.pdb
 C:\Users\Hani\Documents\SWE Navmesh\obj\Release\netcoreapp3.1\Daedalus.genruntimeconfig.cache
 C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.Knossos.resources
 C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.Properties.Resources.resources
+C:\Users\irobo\source\repos\Daedalus\Daedalus\Application\netcoreapp3.1\Microsoft.Solver.Foundation.dll
+C:\Users\irobo\source\repos\Daedalus\obj\Release\netcoreapp3.1\Daedalus.csproj.CopyComplete

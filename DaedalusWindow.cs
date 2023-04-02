@@ -258,6 +258,7 @@ namespace Daedalus
         public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
         public List<KeyValuePair<PointF, TargetPoint>> MapPoints = new List<KeyValuePair<PointF, TargetPoint>>();
         public List<TargetLine> MapLines = new List<TargetLine>();
+        public List<TargetShape> MapShapes = new List<TargetShape>();
 
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
@@ -917,9 +918,11 @@ namespace Daedalus
 
         KeyValuePair<PointF, TargetPoint>[] CopyMapPoints;
         TargetLine[] CopyMapLines = new TargetLine[0];
+        TargetShape[] CopyMapShapes = new TargetShape[0];
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Color.White, 2);
+            SolidBrush FillBrush = new SolidBrush(Color.White);
             Graphics window = e.Graphics;
 
             int Count = MapPoints.Count;
@@ -949,11 +952,35 @@ namespace Daedalus
                         };
                     }
                 }
+
+                Count = MapShapes.Count;
+                CopyMapShapes = new TargetShape[Count];
+                for (int i = 0; i < Count; i++)
+                {
+                    if (i < MapShapes.Count && MapShapes[i].Points != null)
+                    {
+                        int L = MapShapes[i].Points.Length;
+                        CopyMapShapes[i] = new TargetShape()
+                        {
+                            Points = new PointF[L],
+                            color = MapShapes[i].color
+                        };
+                        Array.Copy(MapShapes[i].Points, CopyMapShapes[i].Points, L);
+                    }
+                }
             }
 
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
+            foreach (TargetShape item in CopyMapShapes)
+            {
+                if (item.Points != null)
+                {
+                    DrawPen.Color = item.color;
+                    window.DrawPolygon(DrawPen, item.Points);
+                }
+            }
 
             float Prev = DrawPen.Width;
             foreach (TargetLine item in CopyMapLines)
@@ -1225,6 +1252,18 @@ namespace Daedalus
         {
             if (!MapLines.Contains(Line))
                 MapLines.Add(Line);
+        }
+
+        public struct TargetShape
+        {
+            public PointF[] Points;
+            public Color color;
+        }
+
+        public void AddShape(TargetShape Shape)
+        {
+            if (!MapShapes.Contains(Shape))
+                MapShapes.Add(Shape);
         }
 
 

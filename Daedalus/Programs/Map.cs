@@ -17,6 +17,7 @@ using Microsoft.SolverFoundation.Common;
 using System.Security.Cryptography;
 using System.Numerics;
 using System.Drawing.Design;
+using System.Threading;
 
 public class Map
 {
@@ -25,7 +26,7 @@ public class Map
     private Dictionary<PointF, List<Lclass.Brick>> SortedBricks = new Dictionary<PointF, List<Lclass.Brick>>();
     private Dictionary<PointF, PathsD> SortedChunks = new Dictionary<PointF, PathsD>();
     private Dictionary<PointF, PathsD> SortedWalls = new Dictionary<PointF, PathsD>();
-    private Dictionary<PointF, List<Vector3m>> SortedNet = new Dictionary<PointF, List<Vector3m>>();
+    private Dictionary<PointF, Dictionary<PointF, List<PointF>>> SortedNet = new Dictionary<PointF, Dictionary<PointF, List<PointF>>>();
     private bool CanClear = false;
     private bool Clear = false;
     private bool ClearChunks = false;
@@ -708,7 +709,7 @@ public class Map
         return Changed;
     }
     // DISPLAY STUFF!!!
-    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius, float Diameter)
+    public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius)
     {
         if (Clear)
         {
@@ -743,35 +744,61 @@ public class Map
         bool Covered = false;
         float I = 0;
         PointF[] Keys = SortedNet.Keys.ToArray();
+        List<PointF> Drawn = new List<PointF>();
         foreach (PointF item in Keys)
         {
+            Drawn.Clear();
             if (DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
-                for (int i = 0; i < SortedNet[item].Count; i += 3)
+                foreach (KeyValuePair<PointF, List<PointF>> Connection in SortedNet[item])
                 {
-                    for (int j = 1; j < 4; j++)
+                    foreach (PointF EndPoint in Connection.Value)
                     {
-                        int currentIndex = j % 3;
-                        int lastIndex = (j - 1) % 3;
-                        Vector3m Current = SortedNet[item][i + currentIndex];
-                        Vector3m Last = SortedNet[item][i + lastIndex];
-                        
-                        bool Boarder = (Current.X == item.X + GridSize || Current.X == item.X - GridSize) || (Current.Y == item.Y + GridSize || Current.Y == item.Y - GridSize);
-                        Boarder = Boarder && ((Last.X == item.X + GridSize || Last.X == item.X - GridSize) || (Last.Y == item.Y + GridSize || Last.Y == item.Y - GridSize));
-                        Vector3m MidPoint = midpoint(Current, Last);
-                        Boarder = Boarder && ((MidPoint.X == item.X + GridSize || MidPoint.X == item.X - GridSize) || (MidPoint.Y == item.Y + GridSize || MidPoint.Y == item.Y - GridSize));
-
-                        Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                        if (!Drawn.Contains(EndPoint))
                         {
-                            color = Boarder ? Knossos.KnossosUI.Settings.Chunk_Color : Knossos.KnossosUI.Settings.Object_Color,
-                            Line = new Line()
+                            Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                             {
-                                P1 = new PointF((float)Current.X.ToDouble(), (float)Current.Y.ToDouble()),
-                                P2 = new PointF((float)Last.X.ToDouble(), (float)Last.Y.ToDouble()),
-                                Width = 1
-                            },
-                            Type = Knossos.TargetLine.DrawType.Solid
-                        });
+                                color = Knossos.KnossosUI.Settings.Chunk_Color,
+                                Line = new Line()
+                                {
+                                    P1 = Connection.Key,
+                                    P2 = EndPoint,
+                                    Width = 1
+                                },
+                                Type = Knossos.TargetLine.DrawType.Solid
+                            });
+                        }
+                    }
+                    Drawn.Add(Connection.Key);
+                }
+
+                if (SortedChunks.ContainsKey(item))
+                {
+                    foreach (PathD sections in SortedChunks[item])
+                    {
+                        for (int i = 1; i < sections.Count + 1; i++)
+                        {
+                            int CurrentIndex = i % sections.Count;
+                            int LastIndex = i - 1;
+                            PointF Current = new PointF((float)sections[CurrentIndex].x, (float)sections[CurrentIndex].y);
+                            PointF Last = new PointF((float)sections[LastIndex].x, (float)sections[LastIndex].y);
+                            bool Boarder = (Current.X == item.X + GridSize || Current.X == item.X - GridSize) || (Current.Y == item.Y + GridSize || Current.Y == item.Y - GridSize);
+                            Boarder = Boarder && ((Last.X == item.X + GridSize || Last.X == item.X - GridSize) || (Last.Y == item.Y + GridSize || Last.Y == item.Y - GridSize));
+                            if (!Boarder)
+                            {
+                                PointF MidPoint = midpoint(Current, Last);
+                                Boarder = Boarder && ((MidPoint.X == item.X + GridSize || MidPoint.X == item.X - GridSize) || (MidPoint.Y == item.Y + GridSize || MidPoint.Y == item.Y - GridSize));
+                                if (!Boarder)
+                                {
+                                    Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                                    {
+                                        color = Knossos.KnossosUI.Settings.Object_Color,
+                                        Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
+                                        Type = Knossos.TargetLine.DrawType.Solid
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -1065,21 +1092,51 @@ public class Map
             // EARCLIPPING!!!!
             EarClipping earClipper;   //hiheywydnmcool;):)//
             List<Vector3m> result;
+            PointF[] KeyPoints = new PointF[3];
+            PointF KeyPoint;
+            PointF ConnectionPoint;
+            PointF LastConnectionPoint;
             foreach (List<Vector3m> dori_the_polygon in polygons)
             {
                 earClipper = new EarClipping();
                 earClipper.SetPoints(dori_the_polygon, holes);
                 earClipper.Triangulate();
                 result = earClipper.Result;
+                Dictionary<PointF, List<PointF>> Connections = new Dictionary<PointF, List<PointF>>();
+                for (int Group = 0; Group < result.Count; Group += 3)
+                {
+                    KeyPoints[0] = new PointF((float)result[Group].X.ToDouble(), (float)result[Group].Y.ToDouble());
+                    KeyPoints[1] = new PointF((float)result[Group + 1].X.ToDouble(), (float)result[Group + 1].Y.ToDouble());
+                    KeyPoints[2] = new PointF((float)result[Group + 2].X.ToDouble(), (float)result[Group + 2].Y.ToDouble());
+                    for (int i = 0; i < 3; i++)
+                    {
+                        KeyPoint = KeyPoints[i];
+                        ConnectionPoint = KeyPoints[(i + 1) % 3];
+                        LastConnectionPoint = KeyPoints[(i + 2) % 3];
+
+                        if (Connections.ContainsKey(KeyPoint))
+                        {
+                            if (!Connections[KeyPoint].Contains(ConnectionPoint))
+                                Connections[KeyPoint].Add(ConnectionPoint);
+                            if (!Connections[KeyPoint].Contains(LastConnectionPoint))
+                                Connections[KeyPoint].Add(LastConnectionPoint);
+                        }
+                        else
+                        {
+                            Connections.Add(KeyPoint, new List<PointF>() { ConnectionPoint, LastConnectionPoint });
+                        }
+                    }
+                }
+
                 // Adding new chunk to the sorted net
                 if (!SortedNet.ContainsKey(item))
                 {
-                    SortedNet.Add(item, result);
+                    SortedNet.Add(item, Connections);
                 }
                 // Already prcoessed this chunk
                 else
                 {
-                    SortedNet[item] = result;
+                    SortedNet[item] = Connections;
                 }
             }
         }
