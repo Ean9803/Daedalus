@@ -1211,30 +1211,82 @@ public class Map
         }
 
         PointF Current = Snap(Point);
-        bool BoarderPX = InRange(Point.X, Current.X + GridSize, Thres);
-        bool BoarderNX = InRange(Point.X, Current.X - GridSize, Thres);
-        bool BoarderPY = InRange(Point.Y, Current.Y + GridSize, Thres);
-        bool BoarderNY = InRange(Point.Y, Current.Y - GridSize, Thres);
+        bool[] Edges = new bool[4];
+        PointF[] EdgeChunks = new PointF[4];
+        Edges[0] = InRange(Point.X, Current.X + GridSize, Thres);
+        Edges[1] = InRange(Point.X, Current.X - GridSize, Thres);
+        Edges[2] = InRange(Point.Y, Current.Y + GridSize, Thres);
+        Edges[3] = InRange(Point.Y, Current.Y - GridSize, Thres);
 
-        if (BoarderPX)
-        {
-            Avalable.Add(new PointF(Current.X + GridSize * 2, Current.Y));
-        }
-        if (BoarderNX)
-        {
-            Avalable.Add(new PointF(Current.X - GridSize * 2, Current.Y));
-        }
+        EdgeChunks[0] = Snap(new PointF(Current.X + GridSize * 2, Current.Y));
+        EdgeChunks[1] = Snap(new PointF(Current.X - GridSize * 2, Current.Y));
+        EdgeChunks[2] = Snap(new PointF(Current.X, Current.Y + GridSize * 2));
+        EdgeChunks[3] = Snap(new PointF(Current.X, Current.Y - GridSize * 2));
 
-        if (BoarderPY)
+        bool Possible = true;
+        PathsD Line = new PathsD();
+        PathsD Intersection;
+        Lclass.Line RaySegment;
+        Lclass.Line[] PossibleSegment = new Lclass.Line[4];
+        for (int i = 0; i < 4; i++)
         {
-            Avalable.Add(new PointF(Current.X, Current.Y + GridSize * 2));
-        }
-        if (BoarderNY)
-        {
-            Avalable.Add(new PointF(Current.X, Current.Y - GridSize * 2));
+            if (Edges[i])
+            {
+                if (SortedWalls.ContainsKey(EdgeChunks[i]))
+                {
+                    Line.Clear();
+                    RaySegment = new Line()
+                    {
+                        P1 = EdgeChunks[i],
+                        P2 = Point,
+                        Width = 1
+                    };
+                    PossibleSegment = RaySegment.GenerateRec();
+                    Line.Add(Clipper.MakePath(new double[] {PossibleSegment[0].P1.X, PossibleSegment[0].P1.Y,
+                                                                PossibleSegment[0].P2.X, PossibleSegment[0].P2.Y,
+                                                                PossibleSegment[1].P2.X, PossibleSegment[1].P2.Y,
+                                                                PossibleSegment[1].P1.X, PossibleSegment[1].P1.Y}));
+                    int Prev = SortedWalls[EdgeChunks[i]].Count;
+                    Intersection = Clipper.BooleanOp(ClipType.Union, SortedWalls[EdgeChunks[i]], Line, FillRule.NonZero);
+
+                    if (Intersection.Count == Prev)
+                    {
+                        Possible = false;
+                    }
+                }
+                if (Possible)
+                    Avalable.Add(EdgeChunks[i]);
+            }
         }
 
         return Avalable;
+    }
+
+    bool InPolygon(PointF point, PathD polygon)
+    {
+        int n = polygon.Count;
+        bool isIn = false;
+        double x = point.X;
+        double y = point.Y;
+        double x1, x2, y1, y2;
+
+        x1 = polygon[n - 1].x;
+        y1 = polygon[n - 1].y;
+
+        for (int i = 0; i < n; ++i)
+        {
+            x2 = polygon[i].x;
+            y2 = polygon[i].y;
+
+            if (y < y1 != y < y2 && x < (x2 - x1) * (y - y1) / (y2 - y1) + x1)
+            {
+                isIn = !isIn;
+            }
+            x1 = x2;
+            y1 = y2;
+        }
+
+        return isIn;
     }
 
 
