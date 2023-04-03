@@ -393,7 +393,7 @@ public class Map
             );
     }
 
-    private List<PointF> SnapCoords(PointF Point, int Radius)
+    private List<PointF> SnapCoords(PointF Point, int Radius, bool Hollow = false)
     {
         List<PointF> Coords = new List<PointF>();
 
@@ -403,9 +403,12 @@ public class Map
         {
             for (int j = -Radius; j <= Radius; j++)
             {
-                PointF Chunk = Snap(new PointF(Center.X - (GridSize * 2 * i), Center.Y - (GridSize * 2 * j)));
-                if (!Coords.Contains(Chunk))
-                    Coords.Add(Chunk);
+                if (!Hollow || ((i == -Radius || i == Radius) || (j == -Radius || j == Radius)))
+                {
+                    PointF Chunk = Snap(new PointF(Center.X - (GridSize * 2 * i), Center.Y - (GridSize * 2 * j)));
+                    if (!Coords.Contains(Chunk))
+                        Coords.Add(Chunk);
+                }
             }
         }
 
@@ -1164,11 +1167,11 @@ public class Map
     {
         int Range = 0;
         List<PointF> Chunks;
-        Chunks = SnapCoords(Location, Range);
         bool Check = true;
         List<PointF> Can = new List<PointF>();
         while (Check)
         {
+            Chunks = SnapCoords(Location, Range, true);
             foreach (PointF item in Chunks)
             {
                 if (SortedNet.ContainsKey(item))
