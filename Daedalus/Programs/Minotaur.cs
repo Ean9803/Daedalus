@@ -85,5 +85,20 @@ namespace Daedalus.Daedalus.Programs
                 Angles[i] = ((float)i / (int)Knossos.KnossosUI.Settings.RayCount) * 360;
             }
         }
+
+        public bool setMasterTarget(PointF masterTarget, float threshold)
+        {
+            if (InRange(masterTarget.X, Pos.X, threshold) && InRange(masterTarget.Y, Pos.Y, threshold))
+            {
+                Pos.X += (Pos.X - masterTarget.X) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime.
+                return true;
+            }
+            return false;
+        }
+
+        private bool InRange(float Val1, float Val2, float Thres)
+        {
+            return MathF.Abs(Val1 - Val2) <= Thres;
+        }
     }
 }
