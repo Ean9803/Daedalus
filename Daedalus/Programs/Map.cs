@@ -134,11 +134,11 @@ public class Map
         ClearMem = true;
     }
 
-    private PointF GetClosestPoint(PointF Location)
+    public PointF GetClosestPoint(PointF Location, int StartRange = 0)
     {
         if (SortedNet.Count == 0)
             return Snap(Location);
-        int Range = 0;
+        int Range = StartRange;
         List<PointF> Chunks;
         bool Check = true;
         List<PointF> Can = new List<PointF>();
@@ -151,8 +151,16 @@ public class Map
                 {
                     if (SortedNet[item].Keys.Count > 0)
                     {
-                        Check = false;
-                        Can.Add(item);
+                        foreach (PointF PointCon in SortedNet[item].Keys)
+                        {
+                            GetConnections(PointCon, out bool Contains);
+                            if (Contains)
+                            {
+                                Check = false;
+                                Can.Add(item);
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -186,12 +194,18 @@ public class Map
         return Vertex;
     }
 
-    private List<PointF> GetConnections(PointF Point, float Thres = 0.1f)
+    private List<PointF> GetConnections(PointF Point, out bool ContainsChunks, float Thres = 0.1f, int Radius = 1)
     {
         List<PointF> Avalable = new List<PointF>();
-
-        List<PointF> Chunks = SnapCoords(Point, 1);
+        List<PointF> Chunks = SnapCoords(Point, Radius, true);
         bool InChunk = false;
+
+        bool Possible = true;
+        PathsD Line = new PathsD();
+        PathsD Intersection;
+        Lclass.Line RaySegment;
+        Lclass.Line[] PossibleSegment = new Lclass.Line[4];
+
         foreach (PointF item in Chunks)
         {
             if (SortedNet.ContainsKey(item))
@@ -216,12 +230,7 @@ public class Map
         EdgeChunks[1] = Snap(new PointF(Current.X - GridSize * 2, Current.Y));
         EdgeChunks[2] = Snap(new PointF(Current.X, Current.Y + GridSize * 2));
         EdgeChunks[3] = Snap(new PointF(Current.X, Current.Y - GridSize * 2));
-
-        bool Possible = true;
-        PathsD Line = new PathsD();
-        PathsD Intersection;
-        Lclass.Line RaySegment;
-        Lclass.Line[] PossibleSegment = new Lclass.Line[4];
+        ContainsChunks = false;
         for (int i = 0; i < 4; i++)
         {
             if (Edges[i] || !InChunk)
@@ -250,7 +259,10 @@ public class Map
                     }
                 }
                 if (Possible)
+                {
                     Avalable.Add(EdgeChunks[i]);
+                    ContainsChunks = true;
+                }
             }
         }
         
@@ -273,7 +285,7 @@ public class Map
         }
     }
 
-    public List<AStarNode> Astar(PointF Location, PointF Target)
+    public List<AStarNode> Astar(PointF Location, PointF Target, int Iterations = 100)
     {
         AStarNode Ret = null;
         double Dist = DistSqr(Location, Target);
@@ -284,8 +296,7 @@ public class Map
         List<AStarNode> closeSet = new List<AStarNode>();
         openSet.Add(startNode);
         int Iteration = 0;
-        int Max = 100;
-        while (openSet.Count > 0 && Iteration++ < Max)
+        while (openSet.Count > 0 && Iteration++ < Iterations)
         {
             AStarNode node = openSet[0];
             for (int i = 1; i < openSet.Count; i++)
@@ -306,7 +317,7 @@ public class Map
                 return new List<AStarNode>() { Ret };
             }
 
-            foreach (PointF Con in GetConnections(node.Point))
+            foreach (PointF Con in GetConnections(node.Point, out bool Chunks))
             {
                 AStarNode neighbour = new AStarNode() { Point = Con, gCost = DistSqr(Con, Location), hCost = DistSqr(Con, Target) };
                 if (!closeSet.Contains(neighbour))

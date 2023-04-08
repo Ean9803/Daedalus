@@ -70,26 +70,15 @@ namespace Daedalus.Daedalus.Programs
             }
 
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            bool UpdatePath = true;
             if (minotaurMap.CreateBuffer(Hits, getPosition()))
             {
-                UpdatePath = true;
-            }
-            else if (AStarPath != null)
-            {
-                if (InRange(Pos.X, AStarPath.Point.X, getRadius() / 2) && InRange(Pos.Y, AStarPath.Point.Y, getRadius() / 2))
-                {
-                    UpdatePath = true;
-                }
+
             }
 
-            if (UpdatePath)
+            if (Mode == Knossos.mapPenMode.Target)
             {
-                if (Mode == Knossos.mapPenMode.Target)
-                {
-                    AStarPaths = minotaurMap.Astar(Pos, Target);
-                    AStarPath = minotaurMap.AstarPath(AStarPaths, Target);
-                }
+                AStarPaths = minotaurMap.Astar(Pos, Target);
+                AStarPath = minotaurMap.AstarPath(AStarPaths, Target);
             }
 
             if (AStarPaths != null)
@@ -162,6 +151,16 @@ namespace Daedalus.Daedalus.Programs
                     LastPoint = node.Point;
                     node = node.parent;
                 }
+
+
+                KnossosForm.AddPoint(new Knossos.TargetPoint()
+                {
+                    Point = minotaurMap.GetClosestPoint(Target),
+                    color = col,
+                    Diameter = KnossosForm.Settings.Mino_Radius,
+                    Scale = false,
+                    Type = Knossos.TargetPoint.DrawType.Cross
+                });
             }
         }
 
