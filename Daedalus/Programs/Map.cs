@@ -21,6 +21,7 @@ using System.Threading;
 using System.Security.Cryptography.Xml;
 using System.Linq.Expressions;
 using System.Xml.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 public class Map
 {
@@ -135,6 +136,8 @@ public class Map
 
     private PointF GetClosestPoint(PointF Location)
     {
+        if (SortedNet.Count == 0)
+            return Snap(Location);
         int Range = 0;
         List<PointF> Chunks;
         bool Check = true;
@@ -155,6 +158,7 @@ public class Map
             }
             Range++;
         }
+
         double Dist = double.MaxValue;
         double D = 0;
         PointF Chunk = Snap(Location);
@@ -167,6 +171,7 @@ public class Map
                 Chunk = item;
             }
         }
+
         Dist = double.MaxValue;
         PointF Vertex = Chunk;
         foreach (PointF item in SortedNet[Chunk].Keys)
@@ -186,17 +191,19 @@ public class Map
         List<PointF> Avalable = new List<PointF>();
 
         List<PointF> Chunks = SnapCoords(Point, 1);
+        bool InChunk = false;
         foreach (PointF item in Chunks)
         {
             if (SortedNet.ContainsKey(item))
             {
                 if (SortedNet[item].ContainsKey(Point))
                 {
+                    InChunk = true;
                     Avalable.AddRange(SortedNet[item][Point]);
                 }
             }
         }
-
+        
         PointF Current = Snap(Point);
         bool[] Edges = new bool[4];
         PointF[] EdgeChunks = new PointF[4];
@@ -217,8 +224,9 @@ public class Map
         Lclass.Line[] PossibleSegment = new Lclass.Line[4];
         for (int i = 0; i < 4; i++)
         {
-            if (Edges[i])
+            if (Edges[i] || !InChunk)
             {
+                Possible = true;
                 if (SortedWalls.ContainsKey(EdgeChunks[i]))
                 {
                     Line.Clear();
@@ -245,29 +253,38 @@ public class Map
                     Avalable.Add(EdgeChunks[i]);
             }
         }
-
+        
         return Avalable;
     }
 
-    public class AStarNode
+    public class AStarNode : IEquatable<AStarNode>
     {
         public PointF Point;
         public double fCost { get { return gCost + hCost; } }
         public double gCost;
         public double hCost;
         public AStarNode parent;
+
+        public bool Equals([AllowNull] AStarNode other)
+        {
+            if (other != null)
+                return this.Point.Equals(other.Point);
+            return false;
+        }
     }
 
-    public AStarNode Astar(PointF Location, PointF Target)
+    public List<AStarNode> Astar(PointF Location, PointF Target)
     {
+        AStarNode Ret = null;
         double Dist = DistSqr(Location, Target);
         AStarNode startNode = new AStarNode() { Point = GetClosestPoint(Location), gCost = 0, hCost = Dist };
         AStarNode targetNode = new AStarNode() { Point = GetClosestPoint(Target), hCost = 0, gCost = Dist };
 
         List<AStarNode> openSet = new List<AStarNode>();
+        List<AStarNode> closeSet = new List<AStarNode>();
         openSet.Add(startNode);
         int Iteration = 0;
-        int Max = 10;
+        int Max = 100;
         while (openSet.Count > 0 && Iteration++ < Max)
         {
             AStarNode node = openSet[0];
@@ -281,30 +298,50 @@ public class Map
             }
 
             openSet.Remove(node);
+            closeSet.Add(node);
 
             if (node.Point == targetNode.Point)
             {
-                return node;
+                Ret = new AStarNode() { Point = Target, parent = node };
+                return new List<AStarNode>() { Ret };
             }
 
             foreach (PointF Con in GetConnections(node.Point))
             {
                 AStarNode neighbour = new AStarNode() { Point = Con, gCost = DistSqr(Con, Location), hCost = DistSqr(Con, Target) };
-                double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
-                if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                if (!closeSet.Contains(neighbour))
                 {
-                    neighbour.gCost = newCostToNeighbour;
-                    neighbour.hCost = DistSqr(neighbour.Point, targetNode.Point);
-                    neighbour.parent = node;
+                    double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
+                    if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                    {
+                        neighbour.gCost = newCostToNeighbour;
+                        neighbour.hCost = DistSqr(neighbour.Point, targetNode.Point);
+                        neighbour.parent = node;
 
-                    if (!openSet.Contains(neighbour))
-                        openSet.Add(neighbour);
+                        if (!openSet.Contains(neighbour))
+                            openSet.Add(neighbour);
+                    }
                 }
             }
         }
-        if (openSet.Count > 0)
-            return openSet[0];
-        return null;
+        return openSet;
+    }
+
+    public AStarNode AstarPath(List<AStarNode> Options, PointF Target)
+    {
+        AStarNode ret = null;
+        double COST = double.MaxValue;
+        double cost = 0;
+        foreach (AStarNode item in Options)
+        {
+            cost = item.hCost;
+            if (cost < COST)
+            {
+                ret = item;
+                COST = cost;
+            }
+        }
+        return ret;
     }
 
     private List<Lclass.Brick> GetBricksAt(List<PointF> GridCoords)
@@ -885,7 +922,7 @@ public class Map
                 Changed |= true;
             }
 
-            Refresh(new List<PointF>() { Snap(location) });
+            Changed |= Refresh(new List<PointF>() { Snap(location) });
         }
         CanClear = true;
 
@@ -1231,8 +1268,9 @@ public class Map
         return chunk;
     }
 
-    private void Refresh(List<PointF> RegionsChanged)
+    private bool Refresh(List<PointF> RegionsChanged)
     {
+        bool Ret = false;
         foreach (PointF item in RegionsChanged)
         {
             if (SortedWalls.ContainsKey(item))
@@ -1253,6 +1291,7 @@ public class Map
                 if (!SortedChunks.ContainsKey(item))
                 {
                     SortedChunks.Add(item, ChunkShape(item));
+                    Ret = true;
                 }
             }
         }
@@ -1336,6 +1375,7 @@ public class Map
                 }
             }
         }
+        return Ret;
     }
 
     bool InPolygon(PointF point, PathD polygon)

@@ -68,3 +68,5 @@ C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\n
 C:\Users\irobo\source\repos\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.Knossos.resources
 C:\Programming Projects\School\Software Engineering Project\Daedalus\bin\Debug\netcoreapp3.1\Microsoft.Solver.Foundation.dll
 C:\Programming Projects\School\Software Engineering Project\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.CopyComplete
+C:\Users\irobo\source\repos\Daedalus\bin\Debug\netcoreapp3.1\Microsoft.Solver.Foundation.dll
+C:\Users\irobo\source\repos\Daedalus\obj\Debug\netcoreapp3.1\Daedalus.csproj.CopyComplete

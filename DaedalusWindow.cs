@@ -272,7 +272,7 @@ namespace Daedalus
             //AssignCallBacks();
 
             SetLabPenMode(labPenMode.Draw);
-            SetMapMode(mapPenMode.Roam);
+            SetMapMode(mapPenMode.Target);
             SetMinoState(MinoMode.Off);
             MinoDisplay = MinoMode.On;
             StartWorkers();
@@ -833,15 +833,7 @@ namespace Daedalus
             float DT = (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - milliseconds) / 100.0f;
             if (DT != 0)
                 Form.DeltaTime = DT;
-            HelpData.Update(Form.DeltaTime);
-            Form.AddPoint(new TargetPoint()
-            {
-                Point = Form.UserTarget,
-                color = Form.Settings.Mino_Color,
-                Scale = false,
-                Diameter = Form.Settings.Mino_Radius,
-                Type = TargetPoint.DrawType.Diamond
-            });                
+            HelpData.Update(Form.DeltaTime);            
         }
 
         public void PaintWindows()
@@ -1146,7 +1138,7 @@ namespace Daedalus
                 if (MinoState == MinoMode.On)
                 {
                     DebugLog("Mino Status", "Mino Active", false);
-                    Mino.Update();
+                    Mino.Update(mapPen, UserTarget);
                 }
                 else
                 {
@@ -1154,6 +1146,16 @@ namespace Daedalus
                 }
                 if (MinoDisplay == MinoMode.On)
                     Mino.ConstantUpdate();
+
+
+                AddPoint(new TargetPoint()
+                {
+                    Point = UserTarget,
+                    color = Settings.Mino_Color,
+                    Scale = false,
+                    Diameter = Settings.Mino_Radius,
+                    Type = TargetPoint.DrawType.Diamond
+                });
             }
         }
 
