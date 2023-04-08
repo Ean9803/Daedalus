@@ -20,6 +20,7 @@ using System.Drawing.Design;
 using System.Threading;
 using System.Security.Cryptography.Xml;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 
 public class Map
 {
@@ -131,7 +132,181 @@ public class Map
         ForceRefresh = true;
         ClearMem = true;
     }
-    
+
+    private PointF GetClosestPoint(PointF Location)
+    {
+        int Range = 0;
+        List<PointF> Chunks;
+        bool Check = true;
+        List<PointF> Can = new List<PointF>();
+        while (Check)
+        {
+            Chunks = SnapCoords(Location, Range, true);
+            foreach (PointF item in Chunks)
+            {
+                if (SortedNet.ContainsKey(item))
+                {
+                    if (SortedNet[item].Keys.Count > 0)
+                    {
+                        Check = false;
+                        Can.Add(item);
+                    }
+                }
+            }
+            Range++;
+        }
+        double Dist = double.MaxValue;
+        double D = 0;
+        PointF Chunk = Snap(Location);
+        foreach (PointF item in Can)
+        {
+            D = DistSqr(item, Location);
+            if (D < Dist)
+            {
+                Dist = D;
+                Chunk = item;
+            }
+        }
+        Dist = double.MaxValue;
+        PointF Vertex = Chunk;
+        foreach (PointF item in SortedNet[Chunk].Keys)
+        {
+            D = DistSqr(item, Location);
+            if (D < Dist)
+            {
+                Dist = D;
+                Vertex = item;
+            }
+        }
+        return Vertex;
+    }
+
+    private List<PointF> GetConnections(PointF Point, float Thres = 0.1f)
+    {
+        List<PointF> Avalable = new List<PointF>();
+
+        List<PointF> Chunks = SnapCoords(Point, 1);
+        foreach (PointF item in Chunks)
+        {
+            if (SortedNet.ContainsKey(item))
+            {
+                if (SortedNet[item].ContainsKey(Point))
+                {
+                    Avalable.AddRange(SortedNet[item][Point]);
+                }
+            }
+        }
+
+        PointF Current = Snap(Point);
+        bool[] Edges = new bool[4];
+        PointF[] EdgeChunks = new PointF[4];
+        Edges[0] = InRange(Point.X, Current.X + GridSize, Thres);
+        Edges[1] = InRange(Point.X, Current.X - GridSize, Thres);
+        Edges[2] = InRange(Point.Y, Current.Y + GridSize, Thres);
+        Edges[3] = InRange(Point.Y, Current.Y - GridSize, Thres);
+
+        EdgeChunks[0] = Snap(new PointF(Current.X + GridSize * 2, Current.Y));
+        EdgeChunks[1] = Snap(new PointF(Current.X - GridSize * 2, Current.Y));
+        EdgeChunks[2] = Snap(new PointF(Current.X, Current.Y + GridSize * 2));
+        EdgeChunks[3] = Snap(new PointF(Current.X, Current.Y - GridSize * 2));
+
+        bool Possible = true;
+        PathsD Line = new PathsD();
+        PathsD Intersection;
+        Lclass.Line RaySegment;
+        Lclass.Line[] PossibleSegment = new Lclass.Line[4];
+        for (int i = 0; i < 4; i++)
+        {
+            if (Edges[i])
+            {
+                if (SortedWalls.ContainsKey(EdgeChunks[i]))
+                {
+                    Line.Clear();
+                    RaySegment = new Line()
+                    {
+                        P1 = EdgeChunks[i],
+                        P2 = Point,
+                        Width = 1
+                    };
+                    PossibleSegment = RaySegment.GenerateRec();
+                    Line.Add(Clipper.MakePath(new double[] {PossibleSegment[0].P1.X, PossibleSegment[0].P1.Y,
+                                                                PossibleSegment[0].P2.X, PossibleSegment[0].P2.Y,
+                                                                PossibleSegment[1].P2.X, PossibleSegment[1].P2.Y,
+                                                                PossibleSegment[1].P1.X, PossibleSegment[1].P1.Y}));
+                    int Prev = SortedWalls[EdgeChunks[i]].Count;
+                    Intersection = Clipper.BooleanOp(ClipType.Union, SortedWalls[EdgeChunks[i]], Line, FillRule.NonZero);
+
+                    if (Intersection.Count == Prev)
+                    {
+                        Possible = false;
+                    }
+                }
+                if (Possible)
+                    Avalable.Add(EdgeChunks[i]);
+            }
+        }
+
+        return Avalable;
+    }
+
+    public class AStarNode
+    {
+        public PointF Point;
+        public double fCost { get { return gCost + hCost; } }
+        public double gCost;
+        public double hCost;
+        public AStarNode parent;
+    }
+
+    public AStarNode Astar(PointF Location, PointF Target)
+    {
+        double Dist = DistSqr(Location, Target);
+        AStarNode startNode = new AStarNode() { Point = GetClosestPoint(Location), gCost = 0, hCost = Dist };
+        AStarNode targetNode = new AStarNode() { Point = GetClosestPoint(Target), hCost = 0, gCost = Dist };
+
+        List<AStarNode> openSet = new List<AStarNode>();
+        openSet.Add(startNode);
+        int Iteration = 0;
+        int Max = 10;
+        while (openSet.Count > 0 && Iteration++ < Max)
+        {
+            AStarNode node = openSet[0];
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
+                {
+                    if (openSet[i].hCost < node.hCost)
+                        node = openSet[i];
+                }
+            }
+
+            openSet.Remove(node);
+
+            if (node.Point == targetNode.Point)
+            {
+                return node;
+            }
+
+            foreach (PointF Con in GetConnections(node.Point))
+            {
+                AStarNode neighbour = new AStarNode() { Point = Con, gCost = DistSqr(Con, Location), hCost = DistSqr(Con, Target) };
+                double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
+                if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.gCost = newCostToNeighbour;
+                    neighbour.hCost = DistSqr(neighbour.Point, targetNode.Point);
+                    neighbour.parent = node;
+
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                }
+            }
+        }
+        if (openSet.Count > 0)
+            return openSet[0];
+        return null;
+    }
+
     private List<Lclass.Brick> GetBricksAt(List<PointF> GridCoords)
     {
         List<Lclass.Brick> Overlap = new List<Lclass.Brick>();
@@ -1161,122 +1336,6 @@ public class Map
                 }
             }
         }
-    }
-
-    private PointF GetClosestPoint(PointF Location)
-    {
-        int Range = 0;
-        List<PointF> Chunks;
-        bool Check = true;
-        List<PointF> Can = new List<PointF>();
-        while (Check)
-        {
-            Chunks = SnapCoords(Location, Range, true);
-            foreach (PointF item in Chunks)
-            {
-                if (SortedNet.ContainsKey(item))
-                {
-                    if (SortedNet[item].Keys.Count > 0)
-                    {
-                        Check = false;
-                        Can.Add(item);
-                    }
-                }
-            }
-            Range++;
-        }
-        double Dist = double.MaxValue;
-        double D = 0;
-        PointF Chunk = Snap(Location);
-        foreach (PointF item in Can)
-        {
-            D = DistSqr(item, Location);
-            if (D < Dist)
-            {
-                Dist = D;
-                Chunk = item;
-            }
-        }
-        Dist = double.MaxValue;
-        PointF Vertex = Chunk;
-        foreach (PointF item in SortedNet[Chunk].Keys)
-        {
-            D = DistSqr(item, Location);
-            if (D < Dist)
-            {
-                Dist = D;
-                Vertex = item;
-            }
-        }
-        return Vertex;
-    }
-
-    private List<PointF> GetConnections(PointF Point, float Thres = 0.1f)
-    {
-        List<PointF> Avalable = new List<PointF>();
-
-        List<PointF> Chunks = SnapCoords(Point, 1);
-        foreach (PointF item in Chunks)
-        {
-            if (SortedNet.ContainsKey(item))
-            {
-                if (SortedNet[item].ContainsKey(Point))
-                {
-                    Avalable.AddRange(SortedNet[item][Point]);
-                }
-            }
-        }
-
-        PointF Current = Snap(Point);
-        bool[] Edges = new bool[4];
-        PointF[] EdgeChunks = new PointF[4];
-        Edges[0] = InRange(Point.X, Current.X + GridSize, Thres);
-        Edges[1] = InRange(Point.X, Current.X - GridSize, Thres);
-        Edges[2] = InRange(Point.Y, Current.Y + GridSize, Thres);
-        Edges[3] = InRange(Point.Y, Current.Y - GridSize, Thres);
-
-        EdgeChunks[0] = Snap(new PointF(Current.X + GridSize * 2, Current.Y));
-        EdgeChunks[1] = Snap(new PointF(Current.X - GridSize * 2, Current.Y));
-        EdgeChunks[2] = Snap(new PointF(Current.X, Current.Y + GridSize * 2));
-        EdgeChunks[3] = Snap(new PointF(Current.X, Current.Y - GridSize * 2));
-
-        bool Possible = true;
-        PathsD Line = new PathsD();
-        PathsD Intersection;
-        Lclass.Line RaySegment;
-        Lclass.Line[] PossibleSegment = new Lclass.Line[4];
-        for (int i = 0; i < 4; i++)
-        {
-            if (Edges[i])
-            {
-                if (SortedWalls.ContainsKey(EdgeChunks[i]))
-                {
-                    Line.Clear();
-                    RaySegment = new Line()
-                    {
-                        P1 = EdgeChunks[i],
-                        P2 = Point,
-                        Width = 1
-                    };
-                    PossibleSegment = RaySegment.GenerateRec();
-                    Line.Add(Clipper.MakePath(new double[] {PossibleSegment[0].P1.X, PossibleSegment[0].P1.Y,
-                                                                PossibleSegment[0].P2.X, PossibleSegment[0].P2.Y,
-                                                                PossibleSegment[1].P2.X, PossibleSegment[1].P2.Y,
-                                                                PossibleSegment[1].P1.X, PossibleSegment[1].P1.Y}));
-                    int Prev = SortedWalls[EdgeChunks[i]].Count;
-                    Intersection = Clipper.BooleanOp(ClipType.Union, SortedWalls[EdgeChunks[i]], Line, FillRule.NonZero);
-
-                    if (Intersection.Count == Prev)
-                    {
-                        Possible = false;
-                    }
-                }
-                if (Possible)
-                    Avalable.Add(EdgeChunks[i]);
-            }
-        }
-
-        return Avalable;
     }
 
     bool InPolygon(PointF point, PathD polygon)

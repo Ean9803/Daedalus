@@ -13,6 +13,7 @@ using static Daedalus.Knossos;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing.Printing;
 using Daedalus.Daedalus.Programs;
+using Microsoft.Win32;
 
 namespace Daedalus
 {
@@ -229,6 +230,7 @@ namespace Daedalus
         public static Knossos KnossosUI;
         public DaedalusFormSettings Settings;
         public float DeltaTime = 0;
+        public PointF UserTarget;
 
         public Knossos()
         {
@@ -677,6 +679,10 @@ namespace Daedalus
             {
                 Pan = true;
             }
+            else if (e.Button == MouseButtons.Left)
+            {
+                UserTarget = MouseLocationMap;
+            }
         }
 
         private void labyrinthScene_MouseDown(object sender, MouseEventArgs e)
@@ -828,6 +834,14 @@ namespace Daedalus
             if (DT != 0)
                 Form.DeltaTime = DT;
             HelpData.Update(Form.DeltaTime);
+            Form.AddPoint(new TargetPoint()
+            {
+                Point = Form.UserTarget,
+                color = Form.Settings.Mino_Color,
+                Scale = false,
+                Diameter = Form.Settings.Mino_Radius,
+                Type = TargetPoint.DrawType.Diamond
+            });                
         }
 
         public void PaintWindows()
