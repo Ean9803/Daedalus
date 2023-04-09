@@ -229,7 +229,8 @@ namespace Daedalus
         Minotaur Mino;
         public static Knossos KnossosUI;
         public DaedalusFormSettings Settings;
-        public float DeltaTime = 0;
+        private float DT = 0;
+        public float DeltaTime { set { if (value != 0) { DT = value; } } get { return MathF.Max(0.01f, DT); } }
         public PointF UserTarget;
 
         public Knossos()
@@ -1138,7 +1139,7 @@ namespace Daedalus
                 if (MinoState == MinoMode.On)
                 {
                     DebugLog("Mino Status", "Mino Active", false);
-                    Mino.Update(mapPen, UserTarget);
+                    Mino.Update(mapPen);
                 }
                 else
                 {
@@ -1146,16 +1147,7 @@ namespace Daedalus
                 }
                 if (MinoDisplay == MinoMode.On)
                     Mino.ConstantUpdate();
-
-
-                AddPoint(new TargetPoint()
-                {
-                    Point = UserTarget,
-                    color = Settings.Mino_Color,
-                    Scale = false,
-                    Diameter = Settings.Mino_Radius,
-                    Type = TargetPoint.DrawType.Diamond
-                });
+                Mino.setUserTarget(UserTarget);
             }
         }
 

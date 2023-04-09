@@ -338,7 +338,7 @@ public class Map
         return openSet;
     }
 
-    public AStarNode AstarPath(List<AStarNode> Options, PointF Target)
+    public AStarNode AstarPath(List<AStarNode> Options)
     {
         AStarNode ret = null;
         double COST = double.MaxValue;
@@ -353,6 +353,36 @@ public class Map
             }
         }
         return ret;
+    }
+
+    public List<PointF> RoamTargets(PointF Location)
+    {
+        if (SortedNet.Count == 0)
+            return new List<PointF> { Snap(Location) };
+        int Range = 1;
+        List<PointF> Chunks;
+        bool Check = true;
+        List<PointF> Can = new List<PointF>();
+        while (Check && Range < 20)
+        {
+            Chunks = SnapCoords(Location, Range, true);
+            Check = false;
+            foreach (PointF item in Chunks)
+            {
+                if (!SortedNet.ContainsKey(item))
+                {
+                    Can.Add(item);
+                    Check = false;
+                }
+                else
+                {
+                    //Check = true;
+                }
+            }
+            Range++;
+        }
+
+        return Can;
     }
 
     private List<Lclass.Brick> GetBricksAt(List<PointF> GridCoords)
