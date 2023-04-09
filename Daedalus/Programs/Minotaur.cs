@@ -225,6 +225,13 @@ namespace Daedalus.Daedalus.Programs
                     });
                 }
             }
+
+            MovePath();
+        }
+
+        private void MovePath()
+        {
+
         }
 
         public void ConstantUpdate()
