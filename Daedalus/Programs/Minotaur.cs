@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Daedalus.Daedalus.Programs
 {
@@ -21,6 +22,8 @@ namespace Daedalus.Daedalus.Programs
         private List<PointF> Queue = new List<PointF>();
         private PointF Master_Bait;
         private PointF UserTarget;
+        private PointF[] PathPortion = new PointF[4];
+        private int LastPointIndex;
 
         public Minotaur(Knossos KnossosForm)
         {
@@ -150,8 +153,11 @@ namespace Daedalus.Daedalus.Programs
                         i++;
                     }
                 }
+            }
 
-                if (AStarPath != null)
+            if (AStarPath != null)
+            {
+                if (Knossos.KnossosUI.Settings.Path_Show)
                 {
                     Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                     {
@@ -161,9 +167,13 @@ namespace Daedalus.Daedalus.Programs
                         Scale = false,
                         Type = Knossos.TargetPoint.DrawType.Square
                     });
-                    Map.AStarNode node = AStarPath.parent;
-                    PointF LastPoint = AStarPath.Point;
-                    while (node != null)
+                }
+                Map.AStarNode node = AStarPath.parent;
+                PointF LastPoint = AStarPath.Point;
+                LastPointIndex = 0;
+                while (node != null)
+                {
+                    if (Knossos.KnossosUI.Settings.Path_Show)
                     {
                         Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
                         {
@@ -176,9 +186,25 @@ namespace Daedalus.Daedalus.Programs
                             Type = Knossos.TargetLine.DrawType.Solid,
                             ViewWidth = 2
                         });
-                        LastPoint = node.Point;
-                        node = node.parent;
                     }
+                    LastPoint = node.Point;
+                    Map.AStarNode ParentNode = node;
+                    int ParentCount = 0;
+                    while (ParentNode != null && ParentCount < PathPortion.Length)
+                    {
+                        ParentCount++;
+                        ParentNode = ParentNode.parent;
+                    }
+                    if (ParentCount > LastPointIndex)
+                    {
+                        LastPointIndex = ParentCount;
+                    }
+                    for (int i = 0; i < ParentCount; i++)
+                    {
+                        PathPortion[i] = node.Point;
+                    }
+
+                    node = node.parent;
                 }
             }
 
@@ -231,7 +257,36 @@ namespace Daedalus.Daedalus.Programs
 
         private void MovePath()
         {
+            int Length = LastPointIndex + 1;
+            double[] xs1 = new double[Length];
+            double[] ys1 = new double[Length];
+            for (int i = 1; i < Length; i++)
+            {
+                PointF Point = PathPortion[i - 1];
+                xs1[i] = Point.X;
+                ys1[i] = Point.Y;
+            }
+            PointF Position = getPosition();
+            xs1[0] = Position.X;
+            ys1[0] = Position.Y;
 
+            // Use cubic interpolation to smooth the original data
+            (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex * 3);
+
+            if (Knossos.KnossosUI.Settings.Path_Show)
+            {
+                for (int i = 0; i < xs2.Length; i++)
+                {
+                    KnossosForm.AddPoint(new Knossos.TargetPoint()
+                    {
+                        Point = new PointF((float)xs2[i], (float)ys2[i]),
+                        color = Color.GreenYellow,
+                        Diameter = KnossosForm.Settings.Mino_Radius / 2,
+                        Scale = true,
+                        Type = Knossos.TargetPoint.DrawType.Diamond
+                    });
+                }
+            }
         }
 
         public void ConstantUpdate()

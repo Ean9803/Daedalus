@@ -1017,6 +1017,8 @@ namespace Daedalus
 
             for (int i = 0; i < CopyMapPoints.Length; i++)
             {
+                if (CopyMapPoints[i].Key == null || CopyMapPoints[i].Value.color == null)
+                    continue;
                 DrawPen.Color = CopyMapPoints[i].Value.color;
                 float Diameter = CopyMapPoints[i].Value.Diameter / (CopyMapPoints[i].Value.Scale ? ZoomAmount : 1);
                 Diameter = Math.Max(Diameter, 0.01f);

@@ -328,7 +328,6 @@ public class Map
                         neighbour.gCost = newCostToNeighbour;
                         neighbour.hCost = DistSqr(neighbour.Point, targetNode.Point);
                         neighbour.parent = node;
-
                         if (!openSet.Contains(neighbour))
                             openSet.Add(neighbour);
                     }
