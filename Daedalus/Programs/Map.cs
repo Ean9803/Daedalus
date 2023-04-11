@@ -358,7 +358,7 @@ public class Map
     public List<PointF> RoamTargets(PointF Location)
     {
         if (SortedNet.Count == 0)
-            return new List<PointF> { Snap(Location) };
+            return new List<PointF>();
         int Range = 2;
         List<PointF> Chunks;
         bool Check = true;

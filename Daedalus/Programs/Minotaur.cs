@@ -29,11 +29,14 @@ namespace Daedalus.Daedalus.Programs
         private int CurrentPositionIndex = 0;
         private bool RefreshLocation = false;
         private Random Random = new Random();
+        private int FrameGap = 10;
+        private int Frame;
 
         public Minotaur(Knossos KnossosForm)
         {
             this.KnossosForm = KnossosForm;
             CalculateRes();
+            Frame = FrameGap;
             minotaurMap = new Map(25);
         }
 
@@ -84,43 +87,119 @@ namespace Daedalus.Daedalus.Programs
                 CalculateRes();
                 LastRes = (int)Knossos.KnossosUI.Settings.RayCount;
             }
-
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
             if (minotaurMap.CreateBuffer(Hits, getPosition()))
             {
                 Queue = minotaurMap.RoamTargets(getPosition());
+                if (Frame > 1)
+                    Frame = 1;
             }
-
-            if (Queue.Count > 0)
-            {
-                if (InRange(getPosition(), Queue[0], getRadius() / 2))
-                {
-                    Queue.RemoveAt(0);
-                }
-            }
-            if (Queue.Count == 0)
-            {
-                Queue = minotaurMap.RoamTargets(getPosition());
-            }
-
-            if (Mode == Knossos.mapPenMode.Target)
-            {
-                Master_Bait = UserTarget;
-            }
-            else if (Queue.Count > 0)
-            {
-                Master_Bait = Queue[0];
-            }
-            else
-            {
-                if (Random.NextDouble() > 0.8)
-                    Master_Bait = new PointF(getPosition().X + (float)((Random.NextDouble() - 0.5) * 2), getPosition().Y + (float)((Random.NextDouble() - 0.5) * 2));
-            }
-
-            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait);
-            AStarPath = minotaurMap.AstarPath(AStarPaths);
 
             Color col = Map.HSL2RGB(Clock, 0.5, 0.5);
+
+            if (Frame-- <= 0)
+            {
+                Frame = FrameGap;
+
+                AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait);
+                AStarPath = minotaurMap.AstarPath(AStarPaths);
+
+                if (Queue.Count > 0)
+                {
+                    if (InRange(getPosition(), Queue[0], getRadius() / 2))
+                    {
+                        Queue.RemoveAt(0);
+                    }
+                }
+                if (Queue.Count == 0)
+                {
+                    Queue = minotaurMap.RoamTargets(getPosition());
+                }
+
+                if (Mode == Knossos.mapPenMode.Target)
+                {
+                    Master_Bait = UserTarget;
+                }
+                else if (Queue.Count > 0)
+                {
+                    Master_Bait = Queue[0];
+                }
+                else
+                {
+                    if (Random.NextDouble() > 0.1)
+                        Master_Bait = new PointF(getPosition().X + (float)((Random.NextDouble() - 0.5) * 2), getPosition().Y + (float)((Random.NextDouble() - 0.5) * 2));
+                }
+
+                if (AStarPath != null)
+                {
+                    Map.AStarNode node = AStarPath;
+                    LastPointIndex = 0;
+                    while (node != null)
+                    {
+                        Map.AStarNode ParentNode = node;
+                        int ParentCount = 0;
+                        while (ParentNode != null && ParentCount < PathPortion.Length)
+                        {
+                            ParentCount++;
+                            ParentNode = ParentNode.parent;
+                        }
+                        if (ParentCount > LastPointIndex)
+                        {
+                            LastPointIndex = ParentCount;
+                        }
+                        for (int i = 0; i < ParentCount; i++)
+                        {
+                            PathPortion[i] = node.Point;
+                        }
+
+                        node = node.parent;
+                    }
+                }
+
+                for (int i = 0; i < PathPortion.Length; i++)
+                {
+                    if (!InRange(PathPortion[i], PastPathPortion[i], getRadius()))
+                    {
+                        PastPathPortion[i] = PathPortion[i];
+                        RefreshLocation = true;
+                    }
+                }
+            }
+
+            if (AStarPath != null)
+            {
+                if (Knossos.KnossosUI.Settings.Path_Show)
+                {
+                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                    {
+                        Point = AStarPath.Point,
+                        color = col,
+                        Diameter = KnossosForm.Settings.Mino_Radius,
+                        Scale = false,
+                        Type = Knossos.TargetPoint.DrawType.Square
+                    });
+
+                    Map.AStarNode node = AStarPath.parent;
+                    PointF LastPoint = AStarPath.Point;
+
+                    while (node != null)
+                    {
+                        Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                        {
+                            color = col,
+                            Line = new Lclass.Line()
+                            {
+                                P1 = node.Point,
+                                P2 = LastPoint
+                            },
+                            Type = Knossos.TargetLine.DrawType.Solid,
+                            ViewWidth = 2
+                        });
+                        LastPoint = node.Point;
+                        node = node.parent;
+                    }
+                }
+            }
 
             if (Knossos.KnossosUI.Settings.Path_Show)
             {
@@ -158,68 +237,6 @@ namespace Daedalus.Daedalus.Programs
                         }
                         i++;
                     }
-                }
-            }
-
-            if (AStarPath != null)
-            {
-                if (Knossos.KnossosUI.Settings.Path_Show)
-                {
-                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
-                    {
-                        Point = AStarPath.Point,
-                        color = col,
-                        Diameter = KnossosForm.Settings.Mino_Radius,
-                        Scale = false,
-                        Type = Knossos.TargetPoint.DrawType.Square
-                    });
-                }
-                Map.AStarNode node = AStarPath;
-                PointF LastPoint = AStarPath.Point;
-                LastPointIndex = 0;
-                while (node != null)
-                {
-                    if (Knossos.KnossosUI.Settings.Path_Show)
-                    {
-                        Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
-                        {
-                            color = col,
-                            Line = new Lclass.Line()
-                            {
-                                P1 = node.Point,
-                                P2 = LastPoint
-                            },
-                            Type = Knossos.TargetLine.DrawType.Solid,
-                            ViewWidth = 2
-                        });
-                    }
-                    LastPoint = node.Point;
-                    Map.AStarNode ParentNode = node;
-                    int ParentCount = 0;
-                    while (ParentNode != null && ParentCount < PathPortion.Length)
-                    {
-                        ParentCount++;
-                        ParentNode = ParentNode.parent;
-                    }
-                    if (ParentCount > LastPointIndex)
-                    {
-                        LastPointIndex = ParentCount;
-                    }
-                    for (int i = 0; i < ParentCount; i++)
-                    {
-                        PathPortion[i] = node.Point;
-                    }
-
-                    node = node.parent;
-                }
-            }
-
-            for (int i = 0; i < PathPortion.Length; i++)
-            {
-                if (!InRange(PathPortion[i], PastPathPortion[i], getRadius()))
-                {
-                    PastPathPortion[i] = PathPortion[i];
-                    RefreshLocation = true;
                 }
             }
 
@@ -266,8 +283,8 @@ namespace Daedalus.Daedalus.Programs
                     });
                 }
             }
-
-            MovePath();
+            if (AStarPath != null)
+                MovePath();
         }
 
         private void MovePath()
@@ -277,15 +294,17 @@ namespace Daedalus.Daedalus.Programs
                 RefreshLocation = false;
                 RemakePath();
             }
-            if (setMasterTarget(FollowPath[CurrentPositionIndex], getRadius() / 3))
+            if (FollowPath != null)
             {
-                if (++CurrentPositionIndex >= FollowPath.Length)
+                if (setMasterTarget(FollowPath[CurrentPositionIndex], getRadius() / 3))
                 {
-                    CurrentPositionIndex = FollowPath.Length - 1;
-                    RemakePath();
+                    if (++CurrentPositionIndex >= FollowPath.Length)
+                    {
+                        CurrentPositionIndex = FollowPath.Length - 1;
+                        RemakePath();
+                    }
                 }
             }
-
             if (Knossos.KnossosUI.Settings.Path_Show)
             {
                 for (int i = 0; i < FollowPath.Length; i++)
@@ -317,7 +336,7 @@ namespace Daedalus.Daedalus.Programs
             if (xs1.Length >= 2)
             {
                 // Use cubic interpolation to smooth the original data
-                (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex * 3);
+                (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex + (int)Knossos.KnossosUI.Settings.PathSmoothing);
                 if (FollowPath == null)
                     FollowPath = new PointF[xs2.Length];
                 if (FollowPath.Length != xs2.Length)

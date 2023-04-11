@@ -54,6 +54,7 @@ namespace Daedalus
             public float GridRadius;
 
             public float WallWidth;
+            public float PathSmoothing;
 
             private Color GenerateColor(string Data)
             {
@@ -103,6 +104,8 @@ namespace Daedalus
 
                     RayHit_Show = DataChuncks[24].Equals("1");
                     NonRayHit_Show = DataChuncks[25].Equals("1");
+
+                    PathSmoothing = float.Parse(DataChuncks[26]);
                 }
             }
 
@@ -144,6 +147,7 @@ namespace Daedalus
 
                 NonPointColor = Color.ForestGreen;
                 RayColor = Color.LightSeaGreen;
+                PathSmoothing = 3;
             }
 
             public string Export()
@@ -180,6 +184,7 @@ namespace Daedalus
 
                 Out += (RayHit_Show ? "1" : "0") + "/";
                 Out += (NonRayHit_Show ? "1" : "0") + "/";
+                Out += PathSmoothing.ToString() + "/";
 
                 return Out;
             }
@@ -237,6 +242,7 @@ namespace Daedalus
         {
             InitializeComponent();
             LoadSettings();
+            AssignCallBacks();
             KnossosUI = this;
         }
 
@@ -270,7 +276,6 @@ namespace Daedalus
             AssignSettings();
             HelpData.PopulateManual(treeHelp, richTextHelp);
             tabMenu.SelectedIndexChanged += TabMenu_SelectedIndexChanged;
-            //AssignCallBacks();
 
             SetLabPenMode(labPenMode.Draw);
             SetMapMode(mapPenMode.Target);
@@ -313,7 +318,6 @@ namespace Daedalus
 
         private void AssignCallBacks()
         {
-            //Serves as a backup in case the designer messes up
             this.labyrinthScene.Paint += labyrinthScene_Paint;
             this.labyrinthScene.MouseDown += labyrinthScene_MouseDown;
             this.labyrinthScene.MouseLeave += labyrinthScene_MouseLeave;
@@ -1400,6 +1404,7 @@ namespace Daedalus
             MinoSpeed.Text = Settings.Mino_Speed.ToString();
             MinoViewDistance.Text = Settings.Mino_ViewDist.ToString();
             GridRadius.Text = Settings.GridRadius.ToString();
+            textBoxs.Text = ((int)(Settings.PathSmoothing)).ToString();
 
             MinoRadiusSlider.Value = (int)Math.Clamp(Settings.Mino_Radius, MinoRadiusSlider.Minimum, MinoRadiusSlider.Maximum);
             ExpansionBiasSlider.Value = (int)Math.Clamp(Settings.ExpansionBias, ExpansionBiasSlider.Minimum, ExpansionBiasSlider.Maximum);
@@ -1407,6 +1412,7 @@ namespace Daedalus
             MinoSpeedSlider.Value = (int)Math.Clamp(Settings.Mino_Speed, MinoSpeedSlider.Minimum, MinoSpeedSlider.Maximum);
             MinoViewDistanceSlider.Value = (int)Math.Clamp(Settings.Mino_ViewDist, MinoViewDistanceSlider.Minimum, MinoViewDistanceSlider.Maximum);
             GridRadiusSlider.Value = (int)Math.Clamp(Settings.GridRadius, GridRadiusSlider.Minimum, GridRadiusSlider.Maximum);
+            trackBars.Value = (int)Math.Clamp(Settings.PathSmoothing, trackBars.Minimum, trackBars.Maximum);
         }
 
         private void AssignEnvironmentSettings()
@@ -1621,6 +1627,16 @@ namespace Daedalus
         private void WallWidthSlider_Scroll(object sender, EventArgs e)
         {
             SetFloatSetting(WallWidthSlider.Value, WallWidth, ref Settings.WallWidth);
+        }
+
+        private void textBoxs_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(textBoxs.Text, trackBars, ref Settings.PathSmoothing);
+        }
+
+        private void trackBars_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(trackBars.Value, textBoxs, ref Settings.PathSmoothing);
         }
 
         #endregion
