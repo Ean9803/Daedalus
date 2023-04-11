@@ -294,21 +294,6 @@ namespace Daedalus
         }
 
         int WorkersOpen = 0;
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            SaveSettings();
-            if (MinotaurWorker.IsBusy || LabyrinthUpdate.IsBusy)
-            {
-                UpdateFrames = false;
-                SetMinoState(MinoMode.Off);
-                MinotaurWorker.CancelAsync();
-                LabyrinthUpdate.CancelAsync();
-                e.Cancel = true;
-                this.Enabled = false;
-                return;
-            }
-            base.OnFormClosing(e);
-        }
 
         private void DaedalusForm_Close(object sender, FormClosingEventArgs e)
         {
@@ -405,7 +390,22 @@ namespace Daedalus
             this.CancelSet.Click += new System.EventHandler(this.CancelSet_Click);
             this.FormClosing += DaedalusForm_Close;
             this.Load += DaedalusForm_Load;
+            this.FormClosing += Knossos_FormClosing;
+        }
 
+        private void Knossos_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
+            if (MinotaurWorker.IsBusy || LabyrinthUpdate.IsBusy)
+            {
+                UpdateFrames = false;
+                SetMinoState(MinoMode.Off);
+                MinotaurWorker.CancelAsync();
+                LabyrinthUpdate.CancelAsync();
+                e.Cancel = true;
+                this.Enabled = false;
+                return;
+            }
         }
 
         private void StartWorkers()

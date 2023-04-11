@@ -19,6 +19,8 @@ namespace Daedalus.Daedalus.Programs
         private List<Map.AStarNode> AStarPaths;
         private Map.AStarNode AStarPath;
         private float Clock = 0;
+        private float TimeLimit = 5;
+        private float TimeAttempt = 0;
         private List<PointF> Queue = new List<PointF>();
         private PointF Master_Bait;
         private PointF UserTarget;
@@ -91,8 +93,8 @@ namespace Daedalus.Daedalus.Programs
             if (minotaurMap.CreateBuffer(Hits, getPosition()))
             {
                 Queue = minotaurMap.RoamTargets(getPosition());
-                if (Frame > 1)
-                    Frame = 1;
+                if (Frame > 5)
+                    Frame = 5;
             }
 
             Color col = Map.HSL2RGB(Clock, 0.5, 0.5);
@@ -106,8 +108,9 @@ namespace Daedalus.Daedalus.Programs
 
                 if (Queue.Count > 0)
                 {
-                    if (InRange(getPosition(), Queue[0], getRadius() / 2))
+                    if (InRange(getPosition(), Queue[0], getRadius() / 2) || TimeAttempt >= TimeLimit)
                     {
+                        TimeAttempt = 0;
                         Queue.RemoveAt(0);
                     }
                 }
@@ -376,6 +379,7 @@ namespace Daedalus.Daedalus.Programs
             KnossosForm.MinoEndUpdate();
 
             Clock += Knossos.KnossosUI.DeltaTime * 0.05f;
+            TimeAttempt += Knossos.KnossosUI.DeltaTime;
             if (Clock >= 1)
             {
                 Clock = 0;
