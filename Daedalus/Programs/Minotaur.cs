@@ -114,10 +114,6 @@ namespace Daedalus.Daedalus.Programs
                         Queue.RemoveAt(0);
                     }
                 }
-                if (Queue.Count == 0)
-                {
-                    Queue = minotaurMap.RoamTargets(getPosition());
-                }
 
                 if (Mode == Knossos.mapPenMode.Target)
                 {
@@ -243,7 +239,7 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (Knossos.KnossosUI.Settings.UserTarget_Show)
+            if (Knossos.KnossosUI.Settings.UserTarget_Show && Mode == Knossos.mapPenMode.Target)
             {
                 KnossosForm.AddPoint(new Knossos.TargetPoint()
                 {
@@ -262,28 +258,30 @@ namespace Daedalus.Daedalus.Programs
                     Type = Knossos.TargetPoint.DrawType.Square
                 });
             }
-
-            if (Knossos.KnossosUI.Settings.RoamTargets_Show && Queue.Count > 0)
+            if (Queue != null)
             {
-                KnossosForm.AddPoint(new Knossos.TargetPoint()
+                if (Knossos.KnossosUI.Settings.RoamTargets_Show && Queue.Count > 0 && Mode == Knossos.mapPenMode.Roam)
                 {
-                    Point = minotaurMap.GetClosestPoint(Queue[0]),
-                    color = col,
-                    Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
-                    Scale = true,
-                    Type = Knossos.TargetPoint.DrawType.Diamond
-                });
-                for (int i = 1; i < Queue.Count; i++)
-                {
-                    Color col1 = Map.HSL2RGB((double)i / (double)AStarPaths.Count, 0.5, 0.5);
                     KnossosForm.AddPoint(new Knossos.TargetPoint()
                     {
-                        Point = Queue[i],
-                        color = col1,
-                        Diameter = KnossosForm.Settings.Mino_Radius,
+                        Point = minotaurMap.GetClosestPoint(Queue[0]),
+                        color = col,
+                        Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
                         Scale = true,
                         Type = Knossos.TargetPoint.DrawType.Diamond
                     });
+                    for (int i = 1; i < Queue.Count; i++)
+                    {
+                        Color col1 = Map.HSL2RGB((double)i / (double)AStarPaths.Count, 0.5, 0.5);
+                        KnossosForm.AddPoint(new Knossos.TargetPoint()
+                        {
+                            Point = Queue[i],
+                            color = col1,
+                            Diameter = KnossosForm.Settings.Mino_Radius,
+                            Scale = true,
+                            Type = Knossos.TargetPoint.DrawType.Diamond
+                        });
+                    }
                 }
             }
             if (AStarPath != null)

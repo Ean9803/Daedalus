@@ -378,7 +378,7 @@ public class Map
             Range++;
         }
         if (Can.Count == 0)
-            Can.Add(Lacation);
+            Can.Add(Location);
         return Can;
     }
 
