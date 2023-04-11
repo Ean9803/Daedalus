@@ -93,6 +93,8 @@ namespace Daedalus.Daedalus.Programs
             if (minotaurMap.CreateBuffer(Hits, getPosition()))
             {
                 Queue = minotaurMap.RoamTargets(getPosition());
+                if (Frame > 5)
+                    Frame = 5;
             }
 
             Color col = Map.HSL2RGB(Clock, 0.5, 0.5);
@@ -106,9 +108,9 @@ namespace Daedalus.Daedalus.Programs
 
                 if (Queue.Count > 0)
                 {
-                    if (InRange(getPosition(), Queue[0], getRadius() / 2) || TimeAttempt >= TimeLimit)
+                    if (InRange(getPosition(), Queue[0], getRadius() / 2) /*|| TimeAttempt >= TimeLimit*/)
                     {
-                        TimeAttempt = 0;
+                        //TimeAttempt = 0;
                         Queue.RemoveAt(0);
                     }
                 }
