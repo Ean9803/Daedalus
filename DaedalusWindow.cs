@@ -66,7 +66,7 @@ namespace Daedalus
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
-                if (DataChuncks.Length != 28)
+                if (DataChuncks.Length != 27)
                 {
                     SetDefaults();
                 }
@@ -184,7 +184,7 @@ namespace Daedalus
 
                 Out += (RayHit_Show ? "1" : "0") + "/";
                 Out += (NonRayHit_Show ? "1" : "0") + "/";
-                Out += PathSmoothing.ToString();
+                Out += PathSmoothing.ToString() + "/";
 
                 return Out;
             }

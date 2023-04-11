@@ -93,8 +93,6 @@ namespace Daedalus.Daedalus.Programs
             if (minotaurMap.CreateBuffer(Hits, getPosition()))
             {
                 Queue = minotaurMap.RoamTargets(getPosition());
-                if (Frame > 5)
-                    Frame = 5;
             }
 
             Color col = Map.HSL2RGB(Clock, 0.5, 0.5);
