@@ -108,9 +108,9 @@ namespace Daedalus.Daedalus.Programs
 
                 if (Queue.Count > 0)
                 {
-                    if (InRange(getPosition(), Queue[0], getRadius() / 2) /*|| TimeAttempt >= TimeLimit*/)
+                    if (InRange(getPosition(), Queue[0], getRadius() / 2) || TimeAttempt >= TimeLimit)
                     {
-                        //TimeAttempt = 0;
+                        TimeAttempt = 0;
                         Queue.RemoveAt(0);
                     }
                 }

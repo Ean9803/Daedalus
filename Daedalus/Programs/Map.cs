@@ -358,7 +358,7 @@ public class Map
     public List<PointF> RoamTargets(PointF Location)
     {
         if (SortedNet.Count == 0)
-            return new List<PointF>();
+            return new List<PointF>() { Location };
         int Range = 2;
         List<PointF> Chunks;
         bool Check = true;
@@ -377,7 +377,8 @@ public class Map
             }
             Range++;
         }
-
+        if (Can.Count == 0)
+            Can.Add(Lacation);
         return Can;
     }
 
