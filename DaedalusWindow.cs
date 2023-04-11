@@ -184,7 +184,7 @@ namespace Daedalus
 
                 Out += (RayHit_Show ? "1" : "0") + "/";
                 Out += (NonRayHit_Show ? "1" : "0") + "/";
-                Out += PathSmoothing.ToString() + "/";
+                Out += PathSmoothing.ToString();
 
                 return Out;
             }
