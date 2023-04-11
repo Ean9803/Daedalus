@@ -1,6 +1,6 @@
 # Daedalus
-Created By: Ian R. Poll, Fillip L. Cannard, James P. Clark, Sophia A. Rodriguez, Mohammed Hani Shaik, Veerain Arya Manchikanti
----
+*Created By: Ian R. Poll, Fillip L. Cannard, James P. Clark, Sophia A. Rodriguez, Mohammed Hani Shaik, Veerain Arya Manchikanti*
+
 ![Display](GitFiles/DaleusDemo.png "Display")
 
 ## Summary
