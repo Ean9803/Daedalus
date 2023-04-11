@@ -23,8 +23,7 @@ namespace Daedalus.Daedalus.Programs
                 "Veerain Arya Manchikanti\n" +
                 "Mohammed Hani Shaik\n" +
                 "Sophia A. Rodrigue\n" +
-                "James P. Clark\n" +
-                "Alexus A. Fry\n\n" +
+                "James P. Clark\n\n" +
 
                 "OBJECTIVE:\n" +
                 "The objective of this project is to develop a program capable of pathfinding though an unknown environment\n\n" +
