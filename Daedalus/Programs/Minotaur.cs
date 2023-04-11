@@ -22,8 +22,13 @@ namespace Daedalus.Daedalus.Programs
         private List<PointF> Queue = new List<PointF>();
         private PointF Master_Bait;
         private PointF UserTarget;
-        private PointF[] PathPortion = new PointF[4];
+        private PointF[] PathPortion = new PointF[10];
+        private PointF[] PastPathPortion = new PointF[10];
+        private PointF[] FollowPath;
         private int LastPointIndex;
+        private int CurrentPositionIndex = 0;
+        private bool RefreshLocation = false;
+        private Random Random = new Random();
 
         public Minotaur(Knossos KnossosForm)
         {
@@ -108,7 +113,8 @@ namespace Daedalus.Daedalus.Programs
             }
             else
             {
-                Master_Bait = getPosition();
+                if (Random.NextDouble() > 0.8)
+                    Master_Bait = new PointF(getPosition().X + (float)((Random.NextDouble() - 0.5) * 2), getPosition().Y + (float)((Random.NextDouble() - 0.5) * 2));
             }
 
             AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait);
@@ -168,7 +174,7 @@ namespace Daedalus.Daedalus.Programs
                         Type = Knossos.TargetPoint.DrawType.Square
                     });
                 }
-                Map.AStarNode node = AStarPath.parent;
+                Map.AStarNode node = AStarPath;
                 PointF LastPoint = AStarPath.Point;
                 LastPointIndex = 0;
                 while (node != null)
@@ -205,6 +211,15 @@ namespace Daedalus.Daedalus.Programs
                     }
 
                     node = node.parent;
+                }
+            }
+
+            for (int i = 0; i < PathPortion.Length; i++)
+            {
+                if (!InRange(PathPortion[i], PastPathPortion[i], getRadius()))
+                {
+                    PastPathPortion[i] = PathPortion[i];
+                    RefreshLocation = true;
                 }
             }
 
@@ -257,29 +272,27 @@ namespace Daedalus.Daedalus.Programs
 
         private void MovePath()
         {
-            int Length = LastPointIndex + 1;
-            double[] xs1 = new double[Length];
-            double[] ys1 = new double[Length];
-            for (int i = 1; i < Length; i++)
+            if (FollowPath == null || RefreshLocation)
             {
-                PointF Point = PathPortion[i - 1];
-                xs1[i] = Point.X;
-                ys1[i] = Point.Y;
+                RefreshLocation = false;
+                RemakePath();
             }
-            PointF Position = getPosition();
-            xs1[0] = Position.X;
-            ys1[0] = Position.Y;
-
-            // Use cubic interpolation to smooth the original data
-            (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex * 3);
+            if (setMasterTarget(FollowPath[CurrentPositionIndex], getRadius() / 3))
+            {
+                if (++CurrentPositionIndex >= FollowPath.Length)
+                {
+                    CurrentPositionIndex = FollowPath.Length - 1;
+                    RemakePath();
+                }
+            }
 
             if (Knossos.KnossosUI.Settings.Path_Show)
             {
-                for (int i = 0; i < xs2.Length; i++)
+                for (int i = 0; i < FollowPath.Length; i++)
                 {
                     KnossosForm.AddPoint(new Knossos.TargetPoint()
                     {
-                        Point = new PointF((float)xs2[i], (float)ys2[i]),
+                        Point = FollowPath[i],
                         color = Color.GreenYellow,
                         Diameter = KnossosForm.Settings.Mino_Radius / 2,
                         Scale = true,
@@ -287,6 +300,54 @@ namespace Daedalus.Daedalus.Programs
                     });
                 }
             }
+        }
+
+        private bool RemakePath()
+        {
+            int Length = LastPointIndex;
+            double[] xs1 = new double[Length];
+            double[] ys1 = new double[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                PointF Point = PathPortion[i];
+                xs1[i] = Point.X;
+                ys1[i] = Point.Y;
+            }
+            bool Changed = false;
+            if (xs1.Length >= 2)
+            {
+                // Use cubic interpolation to smooth the original data
+                (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex * 3);
+                if (FollowPath == null)
+                    FollowPath = new PointF[xs2.Length];
+                if (FollowPath.Length != xs2.Length)
+                    FollowPath = new PointF[xs2.Length];
+                for (int i = 0; i < FollowPath.Length; i++)
+                {
+                    PointF NewPoint = new PointF((float)xs2[i], (float)ys2[i]);
+                    if (!FollowPath[i].Equals(NewPoint))
+                    {
+                        FollowPath[i] = NewPoint;
+                        Changed = true;
+                    }
+                }
+            }
+            if (Changed)
+            {
+                CurrentPositionIndex = 0;
+                double Dist = double.MaxValue;
+                double D = 0;
+                for (int i = 0; i < FollowPath.Length; i++)
+                {
+                    D = DistSqr(FollowPath[i], getPosition());
+                    if (D < Dist && i > CurrentPositionIndex)
+                    {
+                        CurrentPositionIndex = i;
+                        Dist = D;
+                    }
+                }
+            }
+            return Changed;
         }
 
         public void ConstantUpdate()
@@ -339,6 +400,13 @@ namespace Daedalus.Daedalus.Programs
         private bool InRange(PointF Val1, PointF Val2, float Thres)
         {
             return InRange(Val1.X, Val2.X, Thres) && InRange(Val1.Y, Val2.Y, Thres);
+        }
+
+        private double DistSqr(PointF P1, PointF P2)
+        {
+            float num = P1.X - P2.X;
+            float num2 = P1.Y - P2.Y;
+            return (num * num + num2 * num2);
         }
     }
 }

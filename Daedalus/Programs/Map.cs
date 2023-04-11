@@ -342,6 +342,7 @@ public class Map
         AStarNode ret = null;
         double COST = double.MaxValue;
         double cost = 0;
+        
         foreach (AStarNode item in Options)
         {
             cost = item.hCost;
@@ -358,7 +359,7 @@ public class Map
     {
         if (SortedNet.Count == 0)
             return new List<PointF> { Snap(Location) };
-        int Range = 1;
+        int Range = 2;
         List<PointF> Chunks;
         bool Check = true;
         List<PointF> Can = new List<PointF>();
@@ -372,10 +373,6 @@ public class Map
                 {
                     Can.Add(item);
                     Check = false;
-                }
-                else
-                {
-                    //Check = true;
                 }
             }
             Range++;
@@ -962,7 +959,7 @@ public class Map
                 Changed |= true;
             }
 
-            Changed |= Refresh(new List<PointF>() { Snap(location) });
+            Changed |= Refresh(SnapCoords(location, 1));
         }
         CanClear = true;
 
