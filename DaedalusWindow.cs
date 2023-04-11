@@ -66,7 +66,7 @@ namespace Daedalus
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
-                if (DataChuncks.Length != 27)
+                if (DataChuncks.Length != 28)
                 {
                     SetDefaults();
                 }
