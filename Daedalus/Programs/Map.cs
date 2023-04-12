@@ -285,9 +285,11 @@ public class Map
         }
     }
 
-    public List<AStarNode> Astar(PointF Location, PointF Target, int Iterations = 100)
+    public List<AStarNode> Astar(PointF Location, PointF Target, float Radius, int Iterations = 100)
     {
         AStarNode Ret = null;
+        if (SortedNet.Count == 0)
+            return null;
         double Dist = DistSqr(Location, Target);
         AStarNode startNode = new AStarNode() { Point = GetClosestPoint(Location), gCost = 0, hCost = Dist };
         AStarNode targetNode = new AStarNode() { Point = GetClosestPoint(Target), hCost = 0, gCost = Dist };
@@ -313,7 +315,12 @@ public class Map
 
             if (node.Point == targetNode.Point)
             {
-                Ret = new AStarNode() { Point = Target, parent = node };
+                Ret = node;
+                
+                if (!InsideWall(Target, Radius))
+                {
+                    Ret = new AStarNode() { Point = Target, parent = Ret };
+                }
                 return new List<AStarNode>() { Ret };
             }
 
@@ -337,12 +344,34 @@ public class Map
         return openSet;
     }
 
-    public AStarNode AstarPath(List<AStarNode> Options)
+    public bool InsideWall(PointF Point, double Radius)
+    {
+        bool Inside = false;
+        PointF ChunkPoint = Snap(Point);
+        if (SortedWalls.ContainsKey(ChunkPoint))
+        {
+            if (SortedWalls[ChunkPoint] != null)
+            {
+                PathsD Object = ChunkShape(Point, Radius);
+                PathsD Intersection = Clipper.BooleanOp(ClipType.Intersection, SortedWalls[ChunkPoint], Object, FillRule.NonZero);
+
+                if (Intersection.Count != 0)
+                {
+                    Inside = true;
+                }
+            }
+        }
+        return Inside;
+    }
+
+    public AStarNode AstarPath(List<AStarNode> Options, double Radius)
     {
         AStarNode ret = null;
+        if (Options == null)
+            return ret;
         double COST = double.MaxValue;
         double cost = 0;
-        
+        Radius = Radius * Radius;
         foreach (AStarNode item in Options)
         {
             cost = item.hCost;
@@ -352,21 +381,39 @@ public class Map
                 COST = cost;
             }
         }
+
+        if (ret != null)
+        {
+            AStarNode Node = ret.parent;
+            AStarNode Anchor = ret;
+            while (Node != null)
+            {
+                if (DistSqr(Node.Point, Anchor.Point) > Radius)
+                {
+                    Anchor = Node;
+                }
+                else
+                {
+                    Anchor.parent = Node;
+                }
+                Node = Node.parent;
+            }
+        }
+
         return ret;
     }
 
-    public List<PointF> RoamTargets(PointF Location)
+    public List<PointF> RoamTargets(PointF Location, int StartRange = 2)
     {
         if (SortedNet.Count == 0)
             return new List<PointF>() { Location };
-        int Range = 2;
-        List<PointF> Chunks;
+        int Range = StartRange;
+        List<PointF> Chunks = new List<PointF>();
         bool Check = true;
         List<PointF> Can = new List<PointF>();
-        while (Check && Range < 20)
+        while (Check)
         {
             Chunks = SnapCoords(Location, Range, true);
-            Check = false;
             foreach (PointF item in Chunks)
             {
                 if (!SortedNet.ContainsKey(item))
@@ -377,8 +424,10 @@ public class Map
             }
             Range++;
         }
+
         if (Can.Count == 0)
             Can.Add(Location);
+        
         return Can;
     }
 
@@ -445,6 +494,7 @@ public class Map
                 }
                 WallPoly.Clear();
                 SortedWalls[Point] = Clipper.BooleanOp(ClipType.Intersection, SortedWalls[Point], ChunkShape(Point), FillRule.NonZero);
+                SortedWalls[Point] = Clipper.SimplifyPaths(SortedWalls[Point], 0.1f);
             }
             if (item.Regions.Count != Coords.Count)
             {
@@ -661,6 +711,31 @@ public class Map
                 }
             }
         }
+        List<PointF> Ring = new List<PointF>();
+        if (Hollow)
+        {
+            Ring.Add(Coords[0]);
+            while(Ring.Count != Coords.Count)
+            {
+                double Dist = double.MaxValue;
+                double D = 0;
+                PointF Close = Ring[Ring.Count - 1];
+                foreach (PointF item in Coords)
+                {
+                    if (!Ring.Contains(item))
+                    {
+                        D = DistSqr(Ring[Ring.Count - 1], item);
+                        if (D < Dist)
+                        {
+                            Dist = D;
+                            Close = item;
+                        }
+                    }
+                }
+                Ring.Add(Close);
+            }
+            Coords = Ring;
+        }
 
         return Coords;
     }
@@ -811,7 +886,8 @@ public class Map
                         Point = collisionPoints[i].Point,
                         color = HSL2RGB(((angle + Clock) % 360.0f) / 360.0f, 0.5, 0.5),
                         Type = Knossos.TargetPoint.DrawType.Dot,
-                        Diameter = 5
+                        Diameter = 5,
+                        DisplayWindow = Knossos.Window.Map
                     });
                 }
                 if (Knossos.KnossosUI.Settings.RayHit_Show)
@@ -825,7 +901,8 @@ public class Map
                             P2 = location,
                             Width = 2
                         },
-                        Type = Knossos.TargetLine.DrawType.Solid
+                        Type = Knossos.TargetLine.DrawType.Solid,
+                        DisplayWindow = Knossos.Window.Map
                     });
                 }
             }       
@@ -895,7 +972,8 @@ public class Map
                                         Point = DeletePoint,
                                         color = Knossos.KnossosUI.Settings.NonPointColor,
                                         Type = Knossos.TargetPoint.DrawType.Diamond,
-                                        Diameter = 2.5f
+                                        Diameter = 2.5f,
+                                        DisplayWindow = Knossos.Window.Map
                                     });
                                 }
                                 if (Knossos.KnossosUI.Settings.NonRayHit_Show)
@@ -909,7 +987,8 @@ public class Map
                                             P2 = location,
                                             Width = 2
                                         },
-                                        Type = Knossos.TargetLine.DrawType.Solid
+                                        Type = Knossos.TargetLine.DrawType.Solid,
+                                        DisplayWindow = Knossos.Window.Map
                                     });
                                 }
                             }
@@ -926,7 +1005,8 @@ public class Map
                         Point = item,
                         color = Knossos.KnossosUI.Settings.NonPointColor,
                         Type = Knossos.TargetPoint.DrawType.Diamond,
-                        Diameter = 2.5f
+                        Diameter = 2.5f,
+                        DisplayWindow = Knossos.Window.Map
                     });
                 }
                 if (Knossos.KnossosUI.Settings.NonRayHit_Show)
@@ -940,7 +1020,8 @@ public class Map
                             P2 = location,
                             Width = 2
                         },
-                        Type = Knossos.TargetLine.DrawType.Solid
+                        Type = Knossos.TargetLine.DrawType.Solid,
+                        DisplayWindow = Knossos.Window.Map
                     });
                 }
             }
@@ -1021,8 +1102,12 @@ public class Map
             Drawn.Clear();
             if (DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
+                int LinesPerChunk = 20;
+                int LineDrawn = 0;
                 foreach (KeyValuePair<PointF, List<PointF>> Connection in SortedNet[item])
                 {
+                    if (LineDrawn > LinesPerChunk)
+                        break;
                     foreach (PointF EndPoint in Connection.Value)
                     {
                         if (!Drawn.Contains(EndPoint))
@@ -1036,8 +1121,11 @@ public class Map
                                     P2 = EndPoint,
                                     Width = 1
                                 },
-                                Type = Knossos.TargetLine.DrawType.Solid
+                                Type = Knossos.TargetLine.DrawType.Solid,
+                                DisplayWindow = Knossos.Window.Map
                             });
+                            if (LineDrawn++ > LinesPerChunk)
+                                break;
                         }
                     }
                     Drawn.Add(Connection.Key);
@@ -1065,7 +1153,8 @@ public class Map
                                     {
                                         color = Knossos.KnossosUI.Settings.Object_Color,
                                         Line = new Line() { P1 = Current, P2 = Last, Width = 1 },
-                                        Type = Knossos.TargetLine.DrawType.Solid
+                                        Type = Knossos.TargetLine.DrawType.Solid,
+                                        DisplayWindow = Knossos.Window.Map
                                     });
                                 }
                             }
@@ -1081,7 +1170,8 @@ public class Map
                         {
                             color = Knossos.KnossosUI.Settings.Wall_Color,
                             Line = Wall,
-                            Type = Knossos.TargetLine.DrawType.Outline
+                            Type = Knossos.TargetLine.DrawType.Outline,
+                            DisplayWindow = Knossos.Window.Map
                         });
                     }
                 }
@@ -1094,7 +1184,8 @@ public class Map
                     color = Knossos.KnossosUI.Settings.Chunk_Color,
                     Type = Knossos.TargetPoint.DrawType.Square,
                     Diameter = GridSize,
-                    Scale = true
+                    Scale = true,
+                    DisplayWindow = Knossos.Window.Map
                 });
             }
 
@@ -1112,7 +1203,8 @@ public class Map
                 color = Knossos.KnossosUI.Settings.Mino_Color,
                 Type = Knossos.TargetPoint.DrawType.Square,
                 Diameter = GridSize - (SortedChunks.Count > 0 ? 10 : 0),
-                Scale = true
+                Scale = true,
+                DisplayWindow = Knossos.Window.Map
             });
         }
         IsDrawing = false;
@@ -1296,14 +1388,19 @@ public class Map
         return (InRange(MathF.Abs(Slope1.X), MathF.Abs(Slope2.X), Thres)) && (InRange(MathF.Abs(Slope1.Y), MathF.Abs(Slope2.Y), Thres));
     }
 
-    private PathsD ChunkShape(PointF item)
+    private PathsD ChunkShape(PointF item, double Radius)
     {
         PathsD chunk = new PathsD();
-        chunk.Add(Clipper.MakePath(new double[] { item.X + GridSize, item.Y + GridSize,
-                                                  item.X + GridSize, item.Y - GridSize,
-                                                  item.X - GridSize, item.Y - GridSize,
-                                                  item.X - GridSize, item.Y + GridSize}));
+        chunk.Add(Clipper.MakePath(new double[] { item.X + Radius, item.Y + Radius,
+                                                  item.X + Radius, item.Y - Radius,
+                                                  item.X - Radius, item.Y - Radius,
+                                                  item.X - Radius, item.Y + Radius}));
         return chunk;
+    }
+
+    private PathsD ChunkShape(PointF item)
+    {
+        return ChunkShape(item, GridSize);
     }
 
     private bool Refresh(List<PointF> RegionsChanged)
@@ -1314,6 +1411,7 @@ public class Map
             if (SortedWalls.ContainsKey(item))
             {   // Create chunk to cut bricks out of
                 PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), SortedWalls[item], FillRule.NonZero);
+                chunk = Clipper.SimplifyPaths(chunk, 0.01f);
                 if (!SortedChunks.ContainsKey(item))
                 {
                     SortedChunks.Add(item, chunk);

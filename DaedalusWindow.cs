@@ -242,7 +242,7 @@ namespace Daedalus
         {
             InitializeComponent();
             LoadSettings();
-            AssignCallBacks();
+            this.Load += DaedalusForm_Load;
             KnossosUI = this;
         }
 
@@ -273,6 +273,7 @@ namespace Daedalus
         {
             Mino = new Minotaur(this);
 
+            AssignCallBacks();
             AssignSettings();
             HelpData.PopulateManual(treeHelp, richTextHelp);
             tabMenu.SelectedIndexChanged += TabMenu_SelectedIndexChanged;
@@ -389,7 +390,6 @@ namespace Daedalus
             this.ResetSet.Click += new System.EventHandler(this.Reset_Click);
             this.CancelSet.Click += new System.EventHandler(this.CancelSet_Click);
             this.FormClosing += DaedalusForm_Close;
-            this.Load += DaedalusForm_Load;
             this.FormClosing += Knossos_FormClosing;
         }
 
@@ -838,13 +838,15 @@ namespace Daedalus
             float DT = (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - milliseconds) / 100.0f;
             if (DT != 0)
                 Form.DeltaTime = DT;
-            HelpData.Update(Form.DeltaTime);            
+            HelpData.Update(Form.DeltaTime);
         }
 
         public void PaintWindows()
         {
+            CopyDisplayData();
             labyrinthScene.Refresh();
             mapScene.Refresh();
+            ClearDisplayData();
         }
 
         public void DebugLog(string Key, string Message, bool LabScene = true)
@@ -880,6 +882,186 @@ namespace Daedalus
             {
                 window.DrawString(item, DefaultFont, BrushColor, 0, i);
                 i += (0.2f + DefaultFont.Height);
+            }
+        }
+
+        KeyValuePair<PointF, TargetPoint>[] CopyMapPoints;
+        TargetLine[] CopyMapLines = new TargetLine[0];
+        TargetShape[] CopyMapShapes = new TargetShape[0];
+
+        private void CopyDisplayData()
+        {
+            int Count = MapPoints.Count;
+            CopyMapPoints = new KeyValuePair<PointF, TargetPoint>[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                if (i < MapPoints.Count)
+                {
+                    CopyMapPoints[i] = MapPoints[i];
+                }
+            }
+            if (UpdateFrame)
+            {
+                UpdateFrame = false;
+                Count = MapLines.Count;
+                CopyMapLines = new TargetLine[Count];
+                for (int i = 0; i < Count; i++)
+                {
+                    if (i < MapLines.Count && MapLines[i].Line != null)
+                    {
+                        CopyMapLines[i] = new TargetLine()
+                        {
+                            Line = new Lclass.Line() { P1 = MapLines[i].Line.P1, P2 = MapLines[i].Line.P2, Width = (MapLines[i].ViewWidth == 0 ? MapLines[i].Line.Width : MapLines[i].ViewWidth) },
+                            color = MapLines[i].color,
+                            Type = MapLines[i].Type,
+                            ViewWidth = MapLines[i].ViewWidth,
+                            DisplayWindow = MapLines[i].DisplayWindow
+                        };
+                    }
+                }
+
+                Count = MapShapes.Count;
+                CopyMapShapes = new TargetShape[Count];
+                for (int i = 0; i < Count; i++)
+                {
+                    if (i < MapShapes.Count && MapShapes[i].Points != null)
+                    {
+                        int L = MapShapes[i].Points.Length;
+                        CopyMapShapes[i] = new TargetShape()
+                        {
+                            Points = new PointF[L],
+                            color = MapShapes[i].color,
+                            DisplayWindow = MapShapes[i].DisplayWindow
+                        };
+                        Array.Copy(MapShapes[i].Points, CopyMapShapes[i].Points, L);
+                    }
+                }
+            }
+        }
+
+        private void ClearDisplayData()
+        {
+            if (ClearFrame)
+            {
+                ClearFrame = false;
+                MapPoints.Clear();
+                MapLines.Clear();
+            }
+        }
+
+        private bool CanDraw(Window window, Window subject)
+        {
+            if (subject == Window.Both)
+                return true;
+            return subject == window;
+        }
+
+        private void DrawDisplayData(bool Lab, Graphics window)
+        {
+            try
+            {
+
+                Pen DrawPen = new Pen(Settings.LabMap_Color, 2);
+
+                foreach (TargetShape item in CopyMapShapes)
+                {
+                    if (item.Points != null && CanDraw(Lab ? Window.Lab : Window.Map, item.DisplayWindow))
+                    {
+                        DrawPen.Color = item.color;
+                        window.DrawPolygon(DrawPen, item.Points);
+                    }
+                }
+
+                float Prev = DrawPen.Width;
+                foreach (TargetLine item in CopyMapLines)
+                {
+                    if (item.Line != null && CanDraw(Lab ? Window.Lab : Window.Map, item.DisplayWindow))
+                    {
+                        DrawPen.Color = item.color;
+                        switch (item.Type)
+                        {
+                            case TargetLine.DrawType.Solid:
+                                DrawPen.Width = ((item.ViewWidth == 0 ? item.Line.Width : item.ViewWidth) * 1.5f) / ZoomAmount;
+                                window.DrawLine(DrawPen, CalculateViewPosition(item.Line.P1), CalculateViewPosition(item.Line.P2));
+                                break;
+                            case TargetLine.DrawType.Outline:
+                                DrawPen.Width = Prev;
+                                foreach (Lclass.Line Wall in item.Line.GenerateRec(Origin, ZoomAmount))
+                                {
+                                    window.DrawLine(DrawPen, Wall.P1, Wall.P2);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                DrawPen.Width = Prev;
+
+                for (int i = 0; i < CopyMapPoints.Length; i++)
+                {
+                    if (CopyMapPoints[i].Key == null || CopyMapPoints[i].Value.color == null)
+                        continue;
+                    if (!CanDraw(Lab ? Window.Lab : Window.Map, CopyMapPoints[i].Value.DisplayWindow))
+                        continue;
+                    DrawPen.Color = CopyMapPoints[i].Value.color;
+                    float Diameter = CopyMapPoints[i].Value.Diameter / (CopyMapPoints[i].Value.Scale ? ZoomAmount : 1);
+                    Diameter = Math.Max(Diameter, 0.01f);
+                    switch (CopyMapPoints[i].Value.Type)
+                    {
+                        case TargetPoint.DrawType.Dot:
+                            SolidBrush Fill = new SolidBrush(CopyMapPoints[i].Value.color);
+                            window.FillEllipse(Fill, new Rectangle()
+                            {
+                                X = (int)(CopyMapPoints[i].Key.X - (Diameter / 2)),
+                                Y = (int)(CopyMapPoints[i].Key.Y - (Diameter / 2)),
+                                Width = (int)Diameter,
+                                Height = (int)Diameter
+                            });
+                            Fill.Dispose();
+                            break;
+                        case TargetPoint.DrawType.Cross:
+                            PointF UpperLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y - Diameter);
+                            PointF LowerRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y + Diameter);
+
+                            PointF LowerLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y + Diameter);
+                            PointF UpperRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y - Diameter);
+
+                            window.DrawLine(DrawPen, UpperLeft, LowerRight);
+                            window.DrawLine(DrawPen, LowerLeft, UpperRight);
+                            break;
+                        case TargetPoint.DrawType.Diamond:
+                            PointF Top = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y - Diameter);
+                            PointF Bottom = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y + Diameter);
+
+                            PointF Left = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y);
+                            PointF Right = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y);
+
+                            window.DrawLine(DrawPen, Top, Left);
+                            window.DrawLine(DrawPen, Left, Bottom);
+                            window.DrawLine(DrawPen, Bottom, Right);
+                            window.DrawLine(DrawPen, Right, Top);
+                            break;
+                        case TargetPoint.DrawType.Square:
+                            PointF TopLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y - Diameter);
+                            PointF BottomRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y + Diameter);
+
+                            PointF BottomLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y + Diameter);
+                            PointF TopRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y - Diameter);
+
+                            window.DrawLine(DrawPen, TopLeft, TopRight);
+                            window.DrawLine(DrawPen, TopRight, BottomRight);
+                            window.DrawLine(DrawPen, BottomRight, BottomLeft);
+                            window.DrawLine(DrawPen, BottomLeft, TopLeft);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                DrawPen.Dispose();
+            }
+            catch (Exception e)
+            {
             }
         }
 
@@ -920,6 +1102,8 @@ namespace Daedalus
             DrawPen.Color = Settings.Mino_Color;
             window.DrawEllipse(DrawPen, ScreenOrigin.X, ScreenOrigin.Y, 1, 1);
 
+            DrawDisplayData(true, window);
+
             DrawMino(window);
 
             PrintMessages(window, LogOuput);
@@ -927,164 +1111,16 @@ namespace Daedalus
             RedPen.Dispose();
         }
 
-        KeyValuePair<PointF, TargetPoint>[] CopyMapPoints;
-        TargetLine[] CopyMapLines = new TargetLine[0];
-        TargetShape[] CopyMapShapes = new TargetShape[0];
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Color.White, 2);
             SolidBrush FillBrush = new SolidBrush(Color.White);
             Graphics window = e.Graphics;
 
-            int Count = MapPoints.Count;
-            CopyMapPoints = new KeyValuePair<PointF, TargetPoint>[Count];
-            for (int i = 0; i < Count; i++)
-            {
-                if (i < MapPoints.Count)
-                {
-                    CopyMapPoints[i] = MapPoints[i];
-                }
-            }
-            if (UpdateFrame)
-            {
-                UpdateFrame = false;
-                Count = MapLines.Count;
-                CopyMapLines = new TargetLine[Count];
-                for (int i = 0; i < Count; i++)
-                {
-                    if (i < MapLines.Count && MapLines[i].Line != null)
-                    {
-                        CopyMapLines[i] = new TargetLine()
-                        {
-                            Line = new Lclass.Line() { P1 = MapLines[i].Line.P1, P2 = MapLines[i].Line.P2, Width = (MapLines[i].ViewWidth == 0 ? MapLines[i].Line.Width : MapLines[i].ViewWidth) },
-                            color = MapLines[i].color,
-                            Type = MapLines[i].Type,
-                            ViewWidth = MapLines[i].ViewWidth
-                        };
-                    }
-                }
-
-                Count = MapShapes.Count;
-                CopyMapShapes = new TargetShape[Count];
-                for (int i = 0; i < Count; i++)
-                {
-                    if (i < MapShapes.Count && MapShapes[i].Points != null)
-                    {
-                        int L = MapShapes[i].Points.Length;
-                        CopyMapShapes[i] = new TargetShape()
-                        {
-                            Points = new PointF[L],
-                            color = MapShapes[i].color
-                        };
-                        Array.Copy(MapShapes[i].Points, CopyMapShapes[i].Points, L);
-                    }
-                }
-            }
-
             window.DrawEllipse(DrawPen, Origin.X, Origin.Y, 1, 1);
             DebugLog("Mouse Location - Map", "Marker Location: " + MouseLocationMap.X.ToString() + " : " + MouseLocationMap.Y.ToString(), false);
 
-            foreach (TargetShape item in CopyMapShapes)
-            {
-                if (item.Points != null)
-                {
-                    DrawPen.Color = item.color;
-                    window.DrawPolygon(DrawPen, item.Points);
-                }
-            }
-
-            float Prev = DrawPen.Width;
-            foreach (TargetLine item in CopyMapLines)
-            {
-                if (item.Line != null)
-                {
-                    DrawPen.Color = item.color;
-                    switch (item.Type)
-                    {
-                        case TargetLine.DrawType.Solid:
-                            DrawPen.Width = ((item.ViewWidth == 0 ? item.Line.Width : item.ViewWidth) * 1.5f) / ZoomAmount;
-                            window.DrawLine(DrawPen, CalculateViewPosition(item.Line.P1), CalculateViewPosition(item.Line.P2));
-                            break;
-                        case TargetLine.DrawType.Outline:
-                            DrawPen.Width = Prev;
-                            foreach (Lclass.Line Wall in item.Line.GenerateRec(Origin, ZoomAmount))
-                            {
-                                window.DrawLine(DrawPen, Wall.P1, Wall.P2);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            DrawPen.Width = Prev;
-
-            for (int i = 0; i < CopyMapPoints.Length; i++)
-            {
-                if (CopyMapPoints[i].Key == null || CopyMapPoints[i].Value.color == null)
-                    continue;
-                DrawPen.Color = CopyMapPoints[i].Value.color;
-                float Diameter = CopyMapPoints[i].Value.Diameter / (CopyMapPoints[i].Value.Scale ? ZoomAmount : 1);
-                Diameter = Math.Max(Diameter, 0.01f);
-                switch (CopyMapPoints[i].Value.Type)
-                {
-                    case TargetPoint.DrawType.Dot:
-                        SolidBrush Fill = new SolidBrush(CopyMapPoints[i].Value.color);
-                        window.FillEllipse(Fill, new Rectangle()
-                        {
-                            X = (int)(CopyMapPoints[i].Key.X - (Diameter / 2)),
-                            Y = (int)(CopyMapPoints[i].Key.Y - (Diameter / 2)),
-                            Width = (int)Diameter,
-                            Height = (int)Diameter
-                        });
-                        Fill.Dispose();
-                        break;
-                    case TargetPoint.DrawType.Cross:
-                        PointF UpperLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y - Diameter);
-                        PointF LowerRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y + Diameter);
-
-                        PointF LowerLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y + Diameter);
-                        PointF UpperRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y - Diameter);
-
-                        window.DrawLine(DrawPen, UpperLeft, LowerRight);
-                        window.DrawLine(DrawPen, LowerLeft, UpperRight);
-                        break;
-                    case TargetPoint.DrawType.Diamond:
-                        PointF Top = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y - Diameter);
-                        PointF Bottom = new PointF(CopyMapPoints[i].Key.X, CopyMapPoints[i].Key.Y + Diameter);
-
-                        PointF Left = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y);
-                        PointF Right = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y);
-
-                        window.DrawLine(DrawPen, Top, Left);
-                        window.DrawLine(DrawPen, Left, Bottom);
-                        window.DrawLine(DrawPen, Bottom, Right);
-                        window.DrawLine(DrawPen, Right, Top);
-                        break;
-                    case TargetPoint.DrawType.Square:
-                        PointF TopLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y - Diameter);
-                        PointF BottomRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y + Diameter);
-
-                        PointF BottomLeft = new PointF(CopyMapPoints[i].Key.X - Diameter, CopyMapPoints[i].Key.Y + Diameter);
-                        PointF TopRight = new PointF(CopyMapPoints[i].Key.X + Diameter, CopyMapPoints[i].Key.Y - Diameter);
-
-                        window.DrawLine(DrawPen, TopLeft, TopRight);
-                        window.DrawLine(DrawPen, TopRight, BottomRight);
-                        window.DrawLine(DrawPen, BottomRight, BottomLeft);
-                        window.DrawLine(DrawPen, BottomLeft, TopLeft);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-
-            if (ClearFrame)
-            {
-                ClearFrame = false;
-                MapPoints.Clear();
-                MapLines.Clear();
-            }
+            DrawDisplayData(false, window);
 
             DrawMino(window);
 
@@ -1097,13 +1133,20 @@ namespace Daedalus
             Pen DrawPen = new Pen(Settings.Mino_Color, 2);
             PointF MinoPosition = CalculateViewPosition(Mino.getPosition());
             float Radius = Mino.getRadius() / ZoomAmount;
-            window.DrawEllipse(DrawPen, new Rectangle()
+            try
             {
-                X = (int)(MinoPosition.X - (Radius / 2)),
-                Y = (int)(MinoPosition.Y - (Radius / 2)),
-                Width = (int)Radius,
-                Height = (int)Radius
-            });
+                window.DrawEllipse(DrawPen, new Rectangle()
+                {
+                    X = (int)(MinoPosition.X - (Radius / 2)),
+                    Y = (int)(MinoPosition.Y - (Radius / 2)),
+                    Width = (int)Radius,
+                    Height = (int)Radius
+                });
+            }
+            catch (Exception m)
+            {
+                DebugLog("Error", m.Message + "\n" + m.StackTrace, false);
+            }
             DrawPen.Dispose();
         }
 
@@ -1142,18 +1185,25 @@ namespace Daedalus
         {
             while (UpdateFrames)
             {
-                if (MinoState == MinoMode.On)
+                try
                 {
-                    DebugLog("Mino Status", "Mino Active", false);
-                    Mino.Update(mapPen);
+                    if (MinoState == MinoMode.On)
+                    {
+                        DebugLog("Mino Status", "Mino Active", false);
+                        Mino.Update(mapPen);
+                    }
+                    else
+                    {
+                        DebugLog("Mino Status", "Mino Disabled", false);
+                    }
+                    if (MinoDisplay == MinoMode.On)
+                        Mino.ConstantUpdate();
+                    Mino.setUserTarget(UserTarget);
                 }
-                else
+                catch (Exception c)
                 {
-                    DebugLog("Mino Status", "Mino Disabled", false);
+                    DebugLog("Error", c.Message + "\n" + c.StackTrace, false);
                 }
-                if (MinoDisplay == MinoMode.On)
-                    Mino.ConstantUpdate();
-                Mino.setUserTarget(UserTarget);
             }
         }
 
@@ -1236,6 +1286,8 @@ namespace Daedalus
             UpdateFrame = true;
         }
 
+        public enum Window { Both, Lab, Map }
+
         public struct TargetPoint
         {
             public PointF Point;
@@ -1244,6 +1296,7 @@ namespace Daedalus
             public Color color;
             public float Diameter;
             public bool Scale;
+            public Window DisplayWindow;
         }
         public void AddPoint(TargetPoint Point)
         {
@@ -1260,6 +1313,7 @@ namespace Daedalus
             public enum DrawType { Solid, Outline }
             public DrawType Type;
             public float ViewWidth;
+            public Window DisplayWindow;
         }
 
         public void AddLine(TargetLine Line)
@@ -1272,6 +1326,7 @@ namespace Daedalus
         {
             public PointF[] Points;
             public Color color;
+            public Window DisplayWindow;
         }
 
         public void AddShape(TargetShape Shape)

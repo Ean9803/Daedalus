@@ -19,7 +19,7 @@ namespace Daedalus.Daedalus.Programs
         private List<Map.AStarNode> AStarPaths;
         private Map.AStarNode AStarPath;
         private float Clock = 0;
-        private float TimeLimit = 5;
+        private float TimeLimit = 15;
         private float TimeAttempt = 0;
         private List<PointF> Queue = new List<PointF>();
         private PointF Master_Bait;
@@ -31,14 +31,13 @@ namespace Daedalus.Daedalus.Programs
         private int CurrentPositionIndex = 0;
         private bool RefreshLocation = false;
         private Random Random = new Random();
-        private int FrameGap = 10;
-        private int Frame;
+        private Map.AStarNode CollapsedAStarPath;
+        private int SearchRange = 2;
 
         public Minotaur(Knossos KnossosForm)
         {
             this.KnossosForm = KnossosForm;
             CalculateRes();
-            Frame = FrameGap;
             minotaurMap = new Map(25);
         }
 
@@ -89,81 +88,123 @@ namespace Daedalus.Daedalus.Programs
                 CalculateRes();
                 LastRes = (int)Knossos.KnossosUI.Settings.RayCount;
             }
+            
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            if (minotaurMap.CreateBuffer(Hits, getPosition()))
+            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition());
+
+            CalculateAStar(ForceRefresh, Mode);
+            GrabPoints();
+            DisplayData(Map.HSL2RGB(Clock, 0.5, 0.5), Mode);
+            
+            PostProcessTarget(Mode);
+
+            if (AStarPath != null)
+                MovePath(ForceRefresh);
+        }
+
+        private void CalculateAStar(bool ForceRefresh, Knossos.mapPenMode Mode)
+        {
+            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, 10);
+            CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2);
+            if (CollapsedAStarPath == null)
+                return;
+            if (AStarPath == null)
+                AStarPath = CollapsedAStarPath;
+            if (Mode == Knossos.mapPenMode.Target ? (CollapsedAStarPath.Point != AStarPath.Point) : false || ForceRefresh)
             {
-                Queue = minotaurMap.RoamTargets(getPosition());
-                if (Frame > 5)
-                    Frame = 5;
+                AStarPath = CollapsedAStarPath;
+            }
+        }
+
+        private void PostProcessTarget(Knossos.mapPenMode Mode)
+        {
+            if (Mode == Knossos.mapPenMode.Target)
+            {
+                Master_Bait = UserTarget;
+            }
+            else if (Queue.Count > 0 && AStarPath != null)
+            {
+                Master_Bait = Queue[0];
+
+                if (TimeAttempt >= TimeLimit || InRange(getPosition(), Master_Bait, getRadius()))
+                {
+                    Queue.RemoveAt(0);
+                    TimeAttempt = 0;
+                }
+                SearchRange = 2;
+            }
+            else
+            {
+                if (TimeAttempt >= TimeLimit)
+                {
+                    Master_Bait = new PointF(getPosition().X + (float)((Random.NextDouble() - 0.5) * getRadius() * 2), getPosition().Y + (float)((Random.NextDouble() - 0.5) * getRadius() * 2));
+                    Queue = minotaurMap.RoamTargets(getPosition(), SearchRange++);
+                }
             }
 
-            Color col = Map.HSL2RGB(Clock, 0.5, 0.5);
-
-            if (Frame-- <= 0)
+            if (minotaurMap.InsideWall(getPosition(), 1))
             {
-                Frame = FrameGap;
-
-                AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait);
-                AStarPath = minotaurMap.AstarPath(AStarPaths);
-
-                if (Queue.Count > 0)
+                PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 0);
+                if(!InRange(getPosition(), FallBack, getRadius() * 1.5f))
                 {
-                    if (InRange(getPosition(), Queue[0], getRadius() / 2) || TimeAttempt >= TimeLimit)
+                    Master_Bait = FallBack;
+                }
+            }
+
+            if (TimeAttempt >= TimeLimit)
+            {
+                TimeAttempt = 0;
+            }
+        }
+
+        private void GrabPoints()
+        {
+            if (AStarPath != null)
+            {
+                Map.AStarNode node = AStarPath;
+                LastPointIndex = 0;
+                while (node != null)
+                {
+                    Map.AStarNode ParentNode = node;
+                    int IndexCount = 0;
+                    while (ParentNode != null && IndexCount < PathPortion.Length)
                     {
-                        TimeAttempt = 0;
-                        Queue.RemoveAt(0);
+                        IndexCount++;
+                        ParentNode = ParentNode.parent;
                     }
-                }
-
-                if (Mode == Knossos.mapPenMode.Target)
-                {
-                    Master_Bait = UserTarget;
-                }
-                else if (Queue.Count > 0)
-                {
-                    Master_Bait = Queue[0];
-                }
-                else
-                {
-                    if (Random.NextDouble() > 0.1)
-                        Master_Bait = new PointF(getPosition().X + (float)((Random.NextDouble() - 0.5) * 2), getPosition().Y + (float)((Random.NextDouble() - 0.5) * 2));
-                }
-
-                if (AStarPath != null)
-                {
-                    Map.AStarNode node = AStarPath;
-                    LastPointIndex = 0;
-                    while (node != null)
+                    if (IndexCount > LastPointIndex)
                     {
-                        Map.AStarNode ParentNode = node;
-                        int ParentCount = 0;
-                        while (ParentNode != null && ParentCount < PathPortion.Length)
-                        {
-                            ParentCount++;
-                            ParentNode = ParentNode.parent;
-                        }
-                        if (ParentCount > LastPointIndex)
-                        {
-                            LastPointIndex = ParentCount;
-                        }
-                        for (int i = 0; i < ParentCount; i++)
-                        {
-                            PathPortion[i] = node.Point;
-                        }
-
-                        node = node.parent;
+                        LastPointIndex = IndexCount;
                     }
-                }
+                    for (int i = 0; i < IndexCount; i++)
+                    {
+                        PathPortion[i] = node.Point;
+                    }
 
+                    node = node.parent;
+                }
+            }
+            else
+            {
+                PathPortion = new PointF[3];
                 for (int i = 0; i < PathPortion.Length; i++)
                 {
-                    if (!InRange(PathPortion[i], PastPathPortion[i], getRadius()))
-                    {
-                        PastPathPortion[i] = PathPortion[i];
-                        RefreshLocation = true;
-                    }
+                    PathPortion[i] = getPosition();
                 }
             }
+
+            for (int i = 0; i < PathPortion.Length; i++)
+            {
+                if (!InRange(PathPortion[i], PastPathPortion[i], getRadius()))
+                {
+                    PastPathPortion[i] = PathPortion[i];
+                    RefreshLocation = true;
+                }
+            }
+        }
+
+        private void DisplayData(Color col, Knossos.mapPenMode Mode)
+        {
 
             if (AStarPath != null)
             {
@@ -175,7 +216,8 @@ namespace Daedalus.Daedalus.Programs
                         color = col,
                         Diameter = KnossosForm.Settings.Mino_Radius,
                         Scale = false,
-                        Type = Knossos.TargetPoint.DrawType.Square
+                        Type = Knossos.TargetPoint.DrawType.Square,
+                        DisplayWindow = Knossos.Window.Map
                     });
 
                     Map.AStarNode node = AStarPath.parent;
@@ -192,7 +234,8 @@ namespace Daedalus.Daedalus.Programs
                                 P2 = LastPoint
                             },
                             Type = Knossos.TargetLine.DrawType.Solid,
-                            ViewWidth = 2
+                            ViewWidth = 2,
+                            DisplayWindow = Knossos.Window.Map
                         });
                         LastPoint = node.Point;
                         node = node.parent;
@@ -214,7 +257,8 @@ namespace Daedalus.Daedalus.Programs
                             color = col1,
                             Diameter = KnossosForm.Settings.Mino_Radius / 2,
                             Scale = true,
-                            Type = Knossos.TargetPoint.DrawType.Square
+                            Type = Knossos.TargetPoint.DrawType.Square,
+                            DisplayWindow = Knossos.Window.Map
                         });
                         Map.AStarNode node = item.parent;
                         PointF LastPoint = item.Point;
@@ -229,7 +273,8 @@ namespace Daedalus.Daedalus.Programs
                                     P2 = LastPoint
                                 },
                                 Type = Knossos.TargetLine.DrawType.Solid,
-                                ViewWidth = 1
+                                ViewWidth = 1,
+                                DisplayWindow = Knossos.Window.Map
                             });
                             LastPoint = node.Point;
                             node = node.parent;
@@ -239,37 +284,10 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (Knossos.KnossosUI.Settings.UserTarget_Show && Mode == Knossos.mapPenMode.Target)
-            {
-                KnossosForm.AddPoint(new Knossos.TargetPoint()
-                {
-                    Point = minotaurMap.GetClosestPoint(UserTarget),
-                    color = col,
-                    Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
-                    Scale = true,
-                    Type = Knossos.TargetPoint.DrawType.Cross
-                });
-                KnossosForm.AddPoint(new Knossos.TargetPoint()
-                {
-                    Point = minotaurMap.GetClosestPoint(UserTarget),
-                    color = col,
-                    Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
-                    Scale = true,
-                    Type = Knossos.TargetPoint.DrawType.Square
-                });
-            }
             if (Queue != null)
             {
                 if (Knossos.KnossosUI.Settings.RoamTargets_Show && Queue.Count > 0 && Mode == Knossos.mapPenMode.Roam)
                 {
-                    KnossosForm.AddPoint(new Knossos.TargetPoint()
-                    {
-                        Point = minotaurMap.GetClosestPoint(Queue[0]),
-                        color = col,
-                        Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
-                        Scale = true,
-                        Type = Knossos.TargetPoint.DrawType.Diamond
-                    });
                     for (int i = 1; i < Queue.Count; i++)
                     {
                         Color col1 = Map.HSL2RGB((double)i / (double)AStarPaths.Count, 0.5, 0.5);
@@ -279,18 +297,36 @@ namespace Daedalus.Daedalus.Programs
                             color = col1,
                             Diameter = KnossosForm.Settings.Mino_Radius,
                             Scale = true,
-                            Type = Knossos.TargetPoint.DrawType.Diamond
+                            Type = Knossos.TargetPoint.DrawType.Diamond,
+                            DisplayWindow = Knossos.Window.Map
                         });
                     }
                 }
             }
-            if (AStarPath != null)
-                MovePath();
+
+            KnossosForm.AddPoint(new Knossos.TargetPoint()
+            {
+                Point = Master_Bait,
+                color = col,
+                Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
+                Scale = true,
+                Type = Knossos.TargetPoint.DrawType.Cross,
+                DisplayWindow = Knossos.Window.Map
+            });
+            KnossosForm.AddPoint(new Knossos.TargetPoint()
+            {
+                Point = Master_Bait,
+                color = col,
+                Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
+                Scale = true,
+                Type = Knossos.TargetPoint.DrawType.Square,
+                DisplayWindow = Knossos.Window.Map
+            });
         }
 
-        private void MovePath()
+        private void MovePath(bool ForceRefresh)
         {
-            if (FollowPath == null || RefreshLocation)
+            if (FollowPath == null || RefreshLocation || ForceRefresh)
             {
                 RefreshLocation = false;
                 RemakePath();
@@ -302,10 +338,12 @@ namespace Daedalus.Daedalus.Programs
                     if (++CurrentPositionIndex >= FollowPath.Length)
                     {
                         CurrentPositionIndex = FollowPath.Length - 1;
+                        AStarPath = CollapsedAStarPath;
                         RemakePath();
                     }
                 }
             }
+
             if (Knossos.KnossosUI.Settings.Path_Show)
             {
                 for (int i = 0; i < FollowPath.Length; i++)
@@ -316,7 +354,8 @@ namespace Daedalus.Daedalus.Programs
                         color = Color.GreenYellow,
                         Diameter = KnossosForm.Settings.Mino_Radius / 2,
                         Scale = true,
-                        Type = Knossos.TargetPoint.DrawType.Diamond
+                        Type = Knossos.TargetPoint.DrawType.Diamond,
+                        DisplayWindow = Knossos.Window.Map
                     });
                 }
             }
@@ -352,6 +391,22 @@ namespace Daedalus.Daedalus.Programs
                     }
                 }
             }
+            else
+            {
+                if (FollowPath == null)
+                    FollowPath = new PointF[xs1.Length];
+                if (FollowPath.Length != xs1.Length)
+                    FollowPath = new PointF[xs1.Length];
+                for (int i = 0; i < FollowPath.Length; i++)
+                {
+                    PointF NewPoint = new PointF((float)xs1[i], (float)ys1[i]);
+                    if (!FollowPath[i].Equals(NewPoint))
+                    {
+                        FollowPath[i] = NewPoint;
+                        Changed = true;
+                    }
+                }
+            }
             if (Changed)
             {
                 CurrentPositionIndex = 0;
@@ -360,13 +415,16 @@ namespace Daedalus.Daedalus.Programs
                 for (int i = 0; i < FollowPath.Length; i++)
                 {
                     D = DistSqr(FollowPath[i], getPosition());
-                    if (D < Dist && i > CurrentPositionIndex)
+                    if (D < Dist)
                     {
                         CurrentPositionIndex = i;
                         Dist = D;
                     }
                 }
+                if (++CurrentPositionIndex >= FollowPath.Length)
+                    CurrentPositionIndex--;
             }
+
             return Changed;
         }
 
@@ -389,7 +447,8 @@ namespace Daedalus.Daedalus.Programs
                 color = Knossos.KnossosUI.Settings.Mino_Color,
                 Scale = false,
                 Diameter = Knossos.KnossosUI.Settings.Mino_Radius * (1.0f / (Clock + 1)),
-                Type = Knossos.TargetPoint.DrawType.Diamond
+                Type = Knossos.TargetPoint.DrawType.Diamond,
+                DisplayWindow = Knossos.Window.Both
             });
         }
 
@@ -408,8 +467,10 @@ namespace Daedalus.Daedalus.Programs
             { 
                 return true;
             }
-            Pos.X += (masterTarget.X - Pos.X) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
-            Pos.Y += (masterTarget.Y - Pos.Y) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
+            PointF Direction = new PointF((masterTarget.X - Pos.X), (masterTarget.Y - Pos.Y));
+            float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
+            Pos.X += (Direction.X / distance) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
+            Pos.Y += (Direction.Y / distance) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
             return false;
         }
 
