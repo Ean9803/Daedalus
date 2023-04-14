@@ -44,6 +44,7 @@ public class Map
     private int CurrentSweep = 0;
     private double Clock = 0;
     public bool CanRefresh = true;
+    private List<PointF> EdgeChunks = new List<PointF>();
     private float GridSize { get { return Knossos.KnossosUI.Settings.GridRadius; } }
     private float Diameter { get { return Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias; } }
 
@@ -403,32 +404,50 @@ public class Map
         return ret;
     }
 
-    public List<PointF> RoamTargets(PointF Location, int StartRange = 2)
+    public List<PointF> RoamTargets(PointF Location)
     {
         if (SortedNet.Count == 0)
             return new List<PointF>() { Location };
-        int Range = StartRange;
-        List<PointF> Chunks = new List<PointF>();
-        bool Check = true;
-        List<PointF> Can = new List<PointF>();
-        while (Check)
+        if (EdgeChunks.Count == 0)
+            return new List<PointF>() { Location };
+        else
         {
-            Chunks = SnapCoords(Location, Range, true);
-            foreach (PointF item in Chunks)
+            List<PointF> Ring = new List<PointF>();
+            double Dist = double.MaxValue;
+            double D = 0;
+            PointF Start = EdgeChunks[0];
+            for (int i = 0; i < EdgeChunks.Count; i++)
             {
-                if (!SortedNet.ContainsKey(item))
+                D = DistSqr(EdgeChunks[i], Location);
+                if (D < Dist)
                 {
-                    Can.Add(item);
-                    Check = false;
+                    Dist = D;
+                    Start = EdgeChunks[i];
                 }
             }
-            Range++;
+            Ring.Add(Start);
+            while (Ring.Count != EdgeChunks.Count)
+            {
+                Dist = double.MaxValue;
+                PointF Close = Ring[Ring.Count - 1];
+                foreach (PointF item in EdgeChunks)
+                {
+                    if (!Ring.Contains(item))
+                    {
+                        D = DistSqr(Ring[Ring.Count - 1], item);
+                        if (D < Dist)
+                        {
+                            Dist = D;
+                            Close = item;
+                        }
+                    }
+                }
+                Ring.Add(Close);
+            }
+            EdgeChunks = Ring;
         }
 
-        if (Can.Count == 0)
-            Can.Add(Location);
-        
-        return Can;
+        return EdgeChunks;
     }
 
     private List<Lclass.Brick> GetBricksAt(List<PointF> GridCoords)
@@ -818,6 +837,7 @@ public class Map
             SortedWalls.Clear();
             SortedChunks.Clear();
             SortedNet.Clear();
+            EdgeChunks.Clear();
         }
         else
             Clear = true;
@@ -845,6 +865,7 @@ public class Map
             SortedWalls.Clear();
             SortedChunks.Clear();
             SortedNet.Clear();
+            EdgeChunks.Clear();
             RefreshSortedBricks();
         }
         else
@@ -1403,6 +1424,42 @@ public class Map
         return ChunkShape(item, GridSize);
     }
 
+    private PointF GetChunkPointFrom(PointF Chunk, float DirectionX = 0, float DirectionY = 0)
+    {
+        PointF Start = Snap(Chunk);
+        return Snap(new PointF(Start.X + (DirectionX * 2 * GridSize), Start.Y + (DirectionY * 2 * GridSize)));
+    }
+
+    private void AddEdgeChunk(PointF Point)
+    {
+        if (SortedChunks.ContainsKey(Point))
+        {
+            if (EdgeChunks.Contains(Point))
+            {
+                EdgeChunks.Remove(Point);
+            }
+        }
+        else
+        {
+            if (!EdgeChunks.Contains(Point))
+                EdgeChunks.Add(Point);
+        }
+    }
+
+    private void NewChunk(PointF Point)
+    {
+        AddEdgeChunk(Point);
+        AddEdgeChunk(GetChunkPointFrom(Point, 1));
+        AddEdgeChunk(GetChunkPointFrom(Point, -1));
+        AddEdgeChunk(GetChunkPointFrom(Point, 0, 1));
+        AddEdgeChunk(GetChunkPointFrom(Point, 0, -1));
+
+        AddEdgeChunk(GetChunkPointFrom(Point, 1, 1));
+        AddEdgeChunk(GetChunkPointFrom(Point, -1, 1));
+        AddEdgeChunk(GetChunkPointFrom(Point, 1, -1));
+        AddEdgeChunk(GetChunkPointFrom(Point, -1, -1));
+    }
+
     private bool Refresh(List<PointF> RegionsChanged)
     {
         bool Ret = false;
@@ -1415,6 +1472,7 @@ public class Map
                 if (!SortedChunks.ContainsKey(item))
                 {
                     SortedChunks.Add(item, chunk);
+                    NewChunk(item);
                 }
                 else
                 {
@@ -1427,6 +1485,7 @@ public class Map
                 if (!SortedChunks.ContainsKey(item))
                 {
                     SortedChunks.Add(item, ChunkShape(item));
+                    NewChunk(item);
                     Ret = true;
                 }
             }

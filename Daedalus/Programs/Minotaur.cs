@@ -19,7 +19,7 @@ namespace Daedalus.Daedalus.Programs
         private List<Map.AStarNode> AStarPaths;
         private Map.AStarNode AStarPath;
         private float Clock = 0;
-        private float TimeLimit = 15;
+        private float TimeLimit = 3;
         private float TimeAttempt = 0;
         private List<PointF> Queue = new List<PointF>();
         private PointF Master_Bait;
@@ -32,7 +32,7 @@ namespace Daedalus.Daedalus.Programs
         private bool RefreshLocation = false;
         private Random Random = new Random();
         private Map.AStarNode CollapsedAStarPath;
-        private int SearchRange = 2;
+        private PointF LastPosition;
 
         public Minotaur(Knossos KnossosForm)
         {
@@ -131,14 +131,13 @@ namespace Daedalus.Daedalus.Programs
                     Queue.RemoveAt(0);
                     TimeAttempt = 0;
                 }
-                SearchRange = 2;
             }
             else
             {
                 if (TimeAttempt >= TimeLimit)
                 {
                     Master_Bait = new PointF(getPosition().X + (float)((Random.NextDouble() - 0.5) * getRadius() * 2), getPosition().Y + (float)((Random.NextDouble() - 0.5) * getRadius() * 2));
-                    Queue = minotaurMap.RoamTargets(getPosition(), SearchRange++);
+                    Queue = minotaurMap.RoamTargets(getPosition());
                 }
             }
 
@@ -155,6 +154,14 @@ namespace Daedalus.Daedalus.Programs
             {
                 TimeAttempt = 0;
             }
+        }
+
+        private bool IsStanding()
+        {
+            if (InRange(getPosition(), LastPosition, getRadius() / 2))
+                return true;
+            LastPosition = getPosition();
+            return false;
         }
 
         private void GrabPoints()
@@ -435,7 +442,11 @@ namespace Daedalus.Daedalus.Programs
             KnossosForm.MinoEndUpdate();
 
             Clock += Knossos.KnossosUI.DeltaTime * 0.05f;
-            TimeAttempt += Knossos.KnossosUI.DeltaTime;
+            if (IsStanding())
+                TimeAttempt += Knossos.KnossosUI.DeltaTime;
+            else
+                TimeAttempt = 0;
+
             if (Clock >= 1)
             {
                 Clock = 0;
