@@ -33,6 +33,7 @@ namespace Daedalus.Daedalus.Programs
         private Random Random = new Random();
         private Map.AStarNode CollapsedAStarPath;
         private PointF LastPosition;
+        private bool Escaped = false;
 
         public Minotaur(Knossos KnossosForm)
         {
@@ -90,9 +91,9 @@ namespace Daedalus.Daedalus.Programs
             }
             
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition());
+            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || Mode == Knossos.mapPenMode.Target;
 
-            CalculateAStar(ForceRefresh, Mode);
+            CalculateAStar(ForceRefresh);
             GrabPoints();
             DisplayData(Map.HSL2RGB(Clock, 0.5, 0.5), Mode);
             
@@ -102,15 +103,15 @@ namespace Daedalus.Daedalus.Programs
                 MovePath(ForceRefresh);
         }
 
-        private void CalculateAStar(bool ForceRefresh, Knossos.mapPenMode Mode)
+        private void CalculateAStar(bool ForceRefresh)
         {
-            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, 10);
+            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, (int)Math.Max(Knossos.KnossosUI.Settings.AStar, 1));
             CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2);
             if (CollapsedAStarPath == null)
                 return;
             if (AStarPath == null)
                 AStarPath = CollapsedAStarPath;
-            if (Mode == Knossos.mapPenMode.Target ? (CollapsedAStarPath.Point != AStarPath.Point) : false || ForceRefresh)
+            if (ForceRefresh)
             {
                 AStarPath = CollapsedAStarPath;
             }
@@ -120,11 +121,11 @@ namespace Daedalus.Daedalus.Programs
         {
             if (Mode == Knossos.mapPenMode.Target)
             {
-                Master_Bait = UserTarget;
+                SetMaster(UserTarget);
             }
             else if (Queue.Count > 0 && AStarPath != null)
             {
-                Master_Bait = Queue[0];
+                SetMaster(Queue[0]);
 
                 if (TimeAttempt >= TimeLimit || InRange(getPosition(), Master_Bait, getRadius()))
                 {
@@ -141,12 +142,12 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (minotaurMap.InsideWall(getPosition(), 1))
+            if (minotaurMap.InsideWall(getPosition(), getRadius()))
             {
                 PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 0);
-                if(!InRange(getPosition(), FallBack, getRadius() * 1.5f))
+                if(!InRange(getPosition(), FallBack, getRadius()))
                 {
-                    Master_Bait = FallBack;
+                    SetMaster(FallBack);
                 }
             }
 
@@ -154,6 +155,28 @@ namespace Daedalus.Daedalus.Programs
             {
                 TimeAttempt = 0;
             }
+        }
+
+        private void SetMaster(PointF Bait)
+        {
+            double CurrentDist = DistSqr(Master_Bait, getPosition());
+            double NewDist = DistSqr(Bait, getPosition());
+
+            double Closest = Math.Min(CurrentDist, NewDist);
+            double Furthest = Math.Max(CurrentDist, NewDist);
+
+            double Pick = 0;
+            double TooClose = getRadius();
+            if (Closest < TooClose)
+            {
+                Pick = Furthest;
+            }
+            else if (Closest > TooClose)
+            {
+                Pick = Closest;
+            }
+            Master_Bait = Bait;
+            //Master_Bait = Pick == CurrentDist ? Master_Bait : Bait;
         }
 
         private bool IsStanding()

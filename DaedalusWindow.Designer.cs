@@ -160,6 +160,10 @@ namespace Daedalus
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.MinoRadius = new System.Windows.Forms.TextBox();
             this.MinoRadiusSlider = new System.Windows.Forms.TrackBar();
+            this.groupBox36 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
+            this.AStarItText = new System.Windows.Forms.TextBox();
+            this.AStarItSlider = new System.Windows.Forms.TrackBar();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.ExpansionBias = new System.Windows.Forms.TextBox();
@@ -285,6 +289,9 @@ namespace Daedalus
             this.groupBox21.SuspendLayout();
             this.tableLayoutPanel12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinoRadiusSlider)).BeginInit();
+            this.groupBox36.SuspendLayout();
+            this.tableLayoutPanel23.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AStarItSlider)).BeginInit();
             this.groupBox22.SuspendLayout();
             this.tableLayoutPanel13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExpansionBiasSlider)).BeginInit();
@@ -1685,6 +1692,7 @@ namespace Daedalus
             // 
             this.flowLayoutPanel3.AutoScroll = true;
             this.flowLayoutPanel3.Controls.Add(this.groupBox21);
+            this.flowLayoutPanel3.Controls.Add(this.groupBox36);
             this.flowLayoutPanel3.Controls.Add(this.groupBox22);
             this.flowLayoutPanel3.Controls.Add(this.groupBox26);
             this.flowLayoutPanel3.Controls.Add(this.groupBox35);
@@ -1753,12 +1761,68 @@ namespace Daedalus
             this.MinoRadiusSlider.TickFrequency = 0;
             this.MinoRadiusSlider.Value = 3;
             // 
+            // groupBox36
+            // 
+            this.groupBox36.Controls.Add(this.tableLayoutPanel23);
+            this.groupBox36.ForeColor = System.Drawing.SystemColors.Info;
+            this.groupBox36.Location = new System.Drawing.Point(3, 100);
+            this.groupBox36.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox36.Name = "groupBox36";
+            this.groupBox36.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox36.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.groupBox36.Size = new System.Drawing.Size(744, 88);
+            this.groupBox36.TabIndex = 2;
+            this.groupBox36.TabStop = false;
+            this.groupBox36.Text = "A* Iterations";
+            // 
+            // tableLayoutPanel23
+            // 
+            this.tableLayoutPanel23.ColumnCount = 1;
+            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.Controls.Add(this.AStarItText, 0, 0);
+            this.tableLayoutPanel23.Controls.Add(this.AStarItSlider, 0, 1);
+            this.tableLayoutPanel23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel23.Location = new System.Drawing.Point(3, 24);
+            this.tableLayoutPanel23.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tableLayoutPanel23.Name = "tableLayoutPanel23";
+            this.tableLayoutPanel23.RowCount = 2;
+            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.Size = new System.Drawing.Size(738, 60);
+            this.tableLayoutPanel23.TabIndex = 0;
+            // 
+            // AStarItText
+            // 
+            this.AStarItText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AStarItText.Location = new System.Drawing.Point(3, 4);
+            this.AStarItText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.AStarItText.Name = "AStarItText";
+            this.AStarItText.Size = new System.Drawing.Size(732, 27);
+            this.AStarItText.TabIndex = 0;
+            this.AStarItText.TextChanged += new System.EventHandler(this.AStarItText_TextChanged);
+            // 
+            // AStarItSlider
+            // 
+            this.AStarItSlider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AStarItSlider.Location = new System.Drawing.Point(3, 34);
+            this.AStarItSlider.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.AStarItSlider.Maximum = 200;
+            this.AStarItSlider.Minimum = 1;
+            this.AStarItSlider.Name = "AStarItSlider";
+            this.AStarItSlider.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.AStarItSlider.Size = new System.Drawing.Size(732, 22);
+            this.AStarItSlider.TabIndex = 1;
+            this.AStarItSlider.TickFrequency = 0;
+            this.AStarItSlider.Value = 3;
+            this.AStarItSlider.Scroll += new System.EventHandler(this.AStarItSlider_Scroll);
+            // 
             // groupBox22
             // 
             this.groupBox22.Controls.Add(this.tableLayoutPanel13);
             this.groupBox22.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox22.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox22.Location = new System.Drawing.Point(3, 100);
+            this.groupBox22.Location = new System.Drawing.Point(3, 196);
             this.groupBox22.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox22.Name = "groupBox22";
             this.groupBox22.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1812,7 +1876,7 @@ namespace Daedalus
             this.groupBox26.Controls.Add(this.tableLayoutPanel17);
             this.groupBox26.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox26.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox26.Location = new System.Drawing.Point(3, 196);
+            this.groupBox26.Location = new System.Drawing.Point(3, 292);
             this.groupBox26.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox26.Name = "groupBox26";
             this.groupBox26.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1865,7 +1929,7 @@ namespace Daedalus
             // 
             this.groupBox35.Controls.Add(this.tableLayoutPanel22);
             this.groupBox35.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox35.Location = new System.Drawing.Point(3, 292);
+            this.groupBox35.Location = new System.Drawing.Point(3, 388);
             this.groupBox35.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox35.Name = "groupBox35";
             this.groupBox35.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1921,7 +1985,7 @@ namespace Daedalus
             this.groupBox19.Controls.Add(this.tableLayoutPanel14);
             this.groupBox19.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox19.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox19.Location = new System.Drawing.Point(3, 388);
+            this.groupBox19.Location = new System.Drawing.Point(3, 484);
             this.groupBox19.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox19.Name = "groupBox19";
             this.groupBox19.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1975,7 +2039,7 @@ namespace Daedalus
             this.groupBox20.Controls.Add(this.tableLayoutPanel15);
             this.groupBox20.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox20.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox20.Location = new System.Drawing.Point(3, 484);
+            this.groupBox20.Location = new System.Drawing.Point(3, 580);
             this.groupBox20.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox20.Name = "groupBox20";
             this.groupBox20.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -2027,7 +2091,7 @@ namespace Daedalus
             // 
             this.groupBox23.Controls.Add(this.tableLayoutPanel16);
             this.groupBox23.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox23.Location = new System.Drawing.Point(3, 580);
+            this.groupBox23.Location = new System.Drawing.Point(3, 676);
             this.groupBox23.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox23.Name = "groupBox23";
             this.groupBox23.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -2577,6 +2641,10 @@ namespace Daedalus
             this.tableLayoutPanel12.ResumeLayout(false);
             this.tableLayoutPanel12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinoRadiusSlider)).EndInit();
+            this.groupBox36.ResumeLayout(false);
+            this.tableLayoutPanel23.ResumeLayout(false);
+            this.tableLayoutPanel23.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AStarItSlider)).EndInit();
             this.groupBox22.ResumeLayout(false);
             this.tableLayoutPanel13.ResumeLayout(false);
             this.tableLayoutPanel13.PerformLayout();
@@ -2786,6 +2854,10 @@ namespace Daedalus
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel22;
         private System.Windows.Forms.TextBox textBoxs;
         private System.Windows.Forms.TrackBar trackBars;
+        private System.Windows.Forms.GroupBox groupBox36;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
+        private System.Windows.Forms.TextBox AStarItText;
+        private System.Windows.Forms.TrackBar AStarItSlider;
     }
 }
 

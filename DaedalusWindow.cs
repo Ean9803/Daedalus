@@ -55,6 +55,7 @@ namespace Daedalus
 
             public float WallWidth;
             public float PathSmoothing;
+            public float AStar;
 
             private Color GenerateColor(string Data)
             {
@@ -66,7 +67,7 @@ namespace Daedalus
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
-                if (DataChuncks.Length != 27)
+                if (DataChuncks.Length != 28)
                 {
                     SetDefaults();
                 }
@@ -106,6 +107,7 @@ namespace Daedalus
                     NonRayHit_Show = DataChuncks[25].Equals("1");
 
                     PathSmoothing = float.Parse(DataChuncks[26]);
+                    AStar = float.Parse(DataChuncks[27]);
                 }
             }
 
@@ -148,6 +150,7 @@ namespace Daedalus
                 NonPointColor = Color.ForestGreen;
                 RayColor = Color.LightSeaGreen;
                 PathSmoothing = 3;
+                AStar = 10;
             }
 
             public string Export()
@@ -184,7 +187,8 @@ namespace Daedalus
 
                 Out += (RayHit_Show ? "1" : "0") + "/";
                 Out += (NonRayHit_Show ? "1" : "0") + "/";
-                Out += PathSmoothing.ToString();
+                Out += PathSmoothing.ToString() + "/";
+                Out += AStar.ToString();
 
                 return Out;
             }
@@ -237,6 +241,7 @@ namespace Daedalus
         private float DT = 0;
         public float DeltaTime { set { if (value != 0) { DT = value; } } get { return MathF.Max(0.01f, DT); } }
         public PointF UserTarget;
+        public string ErrorOut = "";
 
         public Knossos()
         {
@@ -849,7 +854,7 @@ namespace Daedalus
             ClearDisplayData();
         }
 
-        public void DebugLog(string Key, string Message, bool LabScene = true)
+        public void DebugLog(string Key, string Message, bool LabScene = true, bool AddToError = false)
         {
             Dictionary<string, string> Dic = (LabScene ? LogOuput : MapLogOuput);
             if (string.IsNullOrEmpty(Message) && Dic.ContainsKey(Key))
@@ -863,6 +868,13 @@ namespace Daedalus
                 else
                     Dic.Add(Key, Message);
             }
+            if (AddToError)
+                AddError(Message);
+        }
+
+        public void AddError(string Message)
+        {
+            ErrorOut += Message + "\n\n";
         }
 
         private void EraseDebugLog(string Key, bool LabScene = true)
@@ -1142,12 +1154,12 @@ namespace Daedalus
                     Width = (int)Radius,
                     Height = (int)Radius
                 });
+                DrawPen.Dispose();
             }
             catch (Exception m)
             {
-                DebugLog("Error", m.Message + "\n" + m.StackTrace, false);
+                DebugLog("Error", m.Message + "\n" + m.StackTrace, false, true);
             }
-            DrawPen.Dispose();
         }
 
         #endregion
@@ -1202,7 +1214,7 @@ namespace Daedalus
                 }
                 catch (Exception c)
                 {
-                    DebugLog("Error", c.Message + "\n" + c.StackTrace, false);
+                    DebugLog("Error", c.Message + "\n" + c.StackTrace, false, true);
                 }
             }
         }
@@ -1408,6 +1420,10 @@ namespace Daedalus
         private void SaveSettings()
         {
             File.WriteAllText(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings", Settings.Export());
+            if (!Directory.Exists(Directory.GetCurrentDirectory() + "/ERRORs/"))
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/ERRORs/");
+            if (ErrorOut.Length > 0)
+                File.WriteAllText(Directory.GetCurrentDirectory() + "/ERRORs/Error-" + DateTime.Now.TimeOfDay.ToString().Replace(".", ":").Replace(":", "") + ".txt", ErrorOut);
         }
 
         private void LoadSettings()
@@ -1460,6 +1476,7 @@ namespace Daedalus
             MinoViewDistance.Text = Settings.Mino_ViewDist.ToString();
             GridRadius.Text = Settings.GridRadius.ToString();
             textBoxs.Text = ((int)(Settings.PathSmoothing)).ToString();
+            AStarItText.Text = ((int)(Settings.AStar)).ToString();
 
             MinoRadiusSlider.Value = (int)Math.Clamp(Settings.Mino_Radius, MinoRadiusSlider.Minimum, MinoRadiusSlider.Maximum);
             ExpansionBiasSlider.Value = (int)Math.Clamp(Settings.ExpansionBias, ExpansionBiasSlider.Minimum, ExpansionBiasSlider.Maximum);
@@ -1468,6 +1485,7 @@ namespace Daedalus
             MinoViewDistanceSlider.Value = (int)Math.Clamp(Settings.Mino_ViewDist, MinoViewDistanceSlider.Minimum, MinoViewDistanceSlider.Maximum);
             GridRadiusSlider.Value = (int)Math.Clamp(Settings.GridRadius, GridRadiusSlider.Minimum, GridRadiusSlider.Maximum);
             trackBars.Value = (int)Math.Clamp(Settings.PathSmoothing, trackBars.Minimum, trackBars.Maximum);
+            AStarItSlider.Value = (int)Math.Clamp(Settings.AStar, AStarItSlider.Minimum, AStarItSlider.Maximum);
         }
 
         private void AssignEnvironmentSettings()
@@ -1692,6 +1710,16 @@ namespace Daedalus
         private void trackBars_Scroll(object sender, EventArgs e)
         {
             SetFloatSetting(trackBars.Value, textBoxs, ref Settings.PathSmoothing);
+        }
+
+        private void AStarItText_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(AStarItText.Text, AStarItSlider, ref Settings.AStar);
+        }
+
+        private void AStarItSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(AStarItSlider.Value, AStarItText, ref Settings.AStar);
         }
 
         #endregion

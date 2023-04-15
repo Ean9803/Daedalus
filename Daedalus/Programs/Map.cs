@@ -785,8 +785,11 @@ public class Map
         float a, b, astep, bstep, dda, ddb;
         float dx = (mP2.X - mP1.X) / Increment;
         float dy = (mP2.Y - mP1.Y) / Increment;
+        if (mP1.X == float.NaN || mP1.Y == float.NaN)
+            return GridCorrdinates;
         GridCorrdinates.Add(mP1);
-
+        if (dy == float.NaN || dx == float.NaN)
+            return GridCorrdinates;
         float ystep = Math.Sign(dy) * Increment;
         float xstep = Math.Sign(dx) * Increment;
         dy = Math.Abs(dy);
@@ -1530,43 +1533,50 @@ public class Map
             {
                 earClipper = new EarClipping();
                 earClipper.SetPoints(dori_the_polygon, holes);
-                earClipper.Triangulate();
-                result = earClipper.Result;
-                Dictionary<PointF, List<PointF>> Connections = new Dictionary<PointF, List<PointF>>();
-                for (int Group = 0; Group < result.Count; Group += 3)
+                try
                 {
-                    KeyPoints[0] = new PointF((float)result[Group].X.ToDouble(), (float)result[Group].Y.ToDouble());
-                    KeyPoints[1] = new PointF((float)result[Group + 1].X.ToDouble(), (float)result[Group + 1].Y.ToDouble());
-                    KeyPoints[2] = new PointF((float)result[Group + 2].X.ToDouble(), (float)result[Group + 2].Y.ToDouble());
-                    for (int i = 0; i < 3; i++)
+                    earClipper.Triangulate();
+                    result = earClipper.Result;
+                    Dictionary<PointF, List<PointF>> Connections = new Dictionary<PointF, List<PointF>>();
+                    for (int Group = 0; Group < result.Count; Group += 3)
                     {
-                        KeyPoint = KeyPoints[i];
-                        ConnectionPoint = KeyPoints[(i + 1) % 3];
-                        LastConnectionPoint = KeyPoints[(i + 2) % 3];
+                        KeyPoints[0] = new PointF((float)result[Group].X.ToDouble(), (float)result[Group].Y.ToDouble());
+                        KeyPoints[1] = new PointF((float)result[Group + 1].X.ToDouble(), (float)result[Group + 1].Y.ToDouble());
+                        KeyPoints[2] = new PointF((float)result[Group + 2].X.ToDouble(), (float)result[Group + 2].Y.ToDouble());
+                        for (int i = 0; i < 3; i++)
+                        {
+                            KeyPoint = KeyPoints[i];
+                            ConnectionPoint = KeyPoints[(i + 1) % 3];
+                            LastConnectionPoint = KeyPoints[(i + 2) % 3];
 
-                        if (Connections.ContainsKey(KeyPoint))
-                        {
-                            if (!Connections[KeyPoint].Contains(ConnectionPoint))
-                                Connections[KeyPoint].Add(ConnectionPoint);
-                            if (!Connections[KeyPoint].Contains(LastConnectionPoint))
-                                Connections[KeyPoint].Add(LastConnectionPoint);
-                        }
-                        else
-                        {
-                            Connections.Add(KeyPoint, new List<PointF>() { ConnectionPoint, LastConnectionPoint });
+                            if (Connections.ContainsKey(KeyPoint))
+                            {
+                                if (!Connections[KeyPoint].Contains(ConnectionPoint))
+                                    Connections[KeyPoint].Add(ConnectionPoint);
+                                if (!Connections[KeyPoint].Contains(LastConnectionPoint))
+                                    Connections[KeyPoint].Add(LastConnectionPoint);
+                            }
+                            else
+                            {
+                                Connections.Add(KeyPoint, new List<PointF>() { ConnectionPoint, LastConnectionPoint });
+                            }
                         }
                     }
-                }
 
-                // Adding new chunk to the sorted net
-                if (!SortedNet.ContainsKey(item))
-                {
-                    SortedNet.Add(item, Connections);
+                    // Adding new chunk to the sorted net
+                    if (!SortedNet.ContainsKey(item))
+                    {
+                        SortedNet.Add(item, Connections);
+                    }
+                    // Already prcoessed this chunk
+                    else
+                    {
+                        SortedNet[item] = Connections;
+                    }
                 }
-                // Already prcoessed this chunk
-                else
+                catch (Exception Failed)
                 {
-                    SortedNet[item] = Connections;
+                    continue;
                 }
             }
         }
