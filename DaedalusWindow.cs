@@ -56,6 +56,7 @@ namespace Daedalus
             public float WallWidth;
             public float PathSmoothing;
             public float AStar;
+            public float WallSimplify;
 
             private Color GenerateColor(string Data)
             {
@@ -67,7 +68,7 @@ namespace Daedalus
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
-                if (DataChuncks.Length != 28)
+                if (DataChuncks.Length != 29)
                 {
                     SetDefaults();
                 }
@@ -108,6 +109,7 @@ namespace Daedalus
 
                     PathSmoothing = float.Parse(DataChuncks[26]);
                     AStar = float.Parse(DataChuncks[27]);
+                    WallSimplify = float.Parse(DataChuncks[28]);
                 }
             }
 
@@ -151,6 +153,7 @@ namespace Daedalus
                 RayColor = Color.LightSeaGreen;
                 PathSmoothing = 3;
                 AStar = 10;
+                WallSimplify = 50;
             }
 
             public string Export()
@@ -188,7 +191,8 @@ namespace Daedalus
                 Out += (RayHit_Show ? "1" : "0") + "/";
                 Out += (NonRayHit_Show ? "1" : "0") + "/";
                 Out += PathSmoothing.ToString() + "/";
-                Out += AStar.ToString();
+                Out += AStar.ToString() + "/";
+                Out += WallSimplify.ToString();
 
                 return Out;
             }
@@ -1491,6 +1495,7 @@ namespace Daedalus
             GridRadius.Text = Settings.GridRadius.ToString();
             textBoxs.Text = ((int)(Settings.PathSmoothing)).ToString();
             AStarItText.Text = ((int)(Settings.AStar)).ToString();
+            WallSimpText.Text = ((int)Settings.WallSimplify).ToString();
 
             MinoRadiusSlider.Value = (int)Math.Clamp(Settings.Mino_Radius, MinoRadiusSlider.Minimum, MinoRadiusSlider.Maximum);
             ExpansionBiasSlider.Value = (int)Math.Clamp(Settings.ExpansionBias, ExpansionBiasSlider.Minimum, ExpansionBiasSlider.Maximum);
@@ -1500,6 +1505,7 @@ namespace Daedalus
             GridRadiusSlider.Value = (int)Math.Clamp(Settings.GridRadius, GridRadiusSlider.Minimum, GridRadiusSlider.Maximum);
             trackBars.Value = (int)Math.Clamp(Settings.PathSmoothing, trackBars.Minimum, trackBars.Maximum);
             AStarItSlider.Value = (int)Math.Clamp(Settings.AStar, AStarItSlider.Minimum, AStarItSlider.Maximum);
+            WallSimpSlider.Value = (int)Math.Clamp(Settings.WallSimplify, WallSimpSlider.Minimum, WallSimpSlider.Maximum);
         }
 
         private void AssignEnvironmentSettings()
@@ -1734,6 +1740,16 @@ namespace Daedalus
         private void AStarItSlider_Scroll(object sender, EventArgs e)
         {
             SetFloatSetting(AStarItSlider.Value, AStarItText, ref Settings.AStar);
+        }
+
+        private void WallSimp_TextChanged(object sender, EventArgs e)
+        {
+            SetFloatSetting(WallSimpText.Text, WallSimpSlider, ref Settings.WallSimplify);
+        }
+
+        private void WallSimpSlider_Scroll(object sender, EventArgs e)
+        {
+            SetFloatSetting(WallSimpSlider.Value, WallSimpText, ref Settings.WallSimplify);
         }
 
         #endregion

@@ -180,9 +180,13 @@ namespace Daedalus.Daedalus.Programs
                 "Manual/Tabs/Settings/Internal/",
                 "\n{ENGINE}\n\n" +
                 "This section contains settings for how data is processed in Daedalus. Each setting is labeled with a name which describes what variable will be set.\n" +
-                "Settings that can be changed:\n" +
+                "Settings that can be changed:\n\n" +
                 "-Mino Radius:\n" +
                 "Sets the radius of the Mino and the minimum distance the Mino can be near a wall it detects.\n\n" +
+                "-A* Iterations:\n" +
+                "Maximum amount of iterations made to find a path from the Mino to the target point.\n\n" +
+                "-Wall Simplification:\n" +
+                "The maximum distance between vertices where they would merge together. Distance = [1 / (50 / value)]\n\n" +
                 "-Object Expansion Bias:\n" +
                 "Sets an additional value to the radius of the Mino when doing calculations, this does not affect the Mino size, but it does affect the minimum distance the Mino can be near a wall.\n\n" +
                 "-Grid Radius:\n" +

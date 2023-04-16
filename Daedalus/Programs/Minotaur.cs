@@ -34,6 +34,7 @@ namespace Daedalus.Daedalus.Programs
         private Map.AStarNode CollapsedAStarPath;
         private PointF LastPosition;
         private bool Escaped = false;
+        private bool GoalChange = false;
 
         public Minotaur(Knossos KnossosForm)
         {
@@ -91,8 +92,8 @@ namespace Daedalus.Daedalus.Programs
             }
             
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition());// || Mode == Knossos.mapPenMode.Target;
-
+            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || GoalChange;// || Mode == Knossos.mapPenMode.Target;
+            GoalChange = false;
             CalculateAStar(ForceRefresh);
             GrabPoints();
             DisplayData(Map.HSL2RGB(Clock, 0.5, 0.5), Mode);
@@ -186,7 +187,11 @@ namespace Daedalus.Daedalus.Programs
                 Pick = Closest;
             }
             */
-            Master_Bait = Bait;
+            if (Bait != Master_Bait)
+            {
+                Master_Bait = Bait;
+                GoalChange = true;
+            }
             //Master_Bait = Pick == CurrentDist ? Master_Bait : Bait;
         }
 
@@ -413,6 +418,11 @@ namespace Daedalus.Daedalus.Programs
                 ys1[i] = Point.Y;
             }
             bool Changed = false;
+            PointF CurrentPoint = PointF.Empty;
+            if (FollowPath != null)
+            {
+                CurrentPoint = FollowPath[CurrentPositionIndex];
+            }
             if (xs1.Length >= 3)
             {
                 // Use cubic interpolation to smooth the original data
@@ -427,7 +437,6 @@ namespace Daedalus.Daedalus.Programs
                     if (!FollowPath[i].Equals(NewPoint))
                     {
                         FollowPath[i] = NewPoint;
-                        Changed = true;
                     }
                 }
             }
@@ -443,34 +452,44 @@ namespace Daedalus.Daedalus.Programs
                     if (!FollowPath[i].Equals(NewPoint))
                     {
                         FollowPath[i] = NewPoint;
-                        Changed = true;
                     }
                 }
             }
+
+            if (CurrentPositionIndex >= FollowPath.Length)
+            {
+                Changed = true;
+            }
+            else
+            {
+                Changed = FollowPath[CurrentPositionIndex] != CurrentPoint;
+            }
+
             if (Changed)
             {
                 CurrentPositionIndex = 0;
                 double Dist = double.MaxValue;
                 double D = 0;
-                for (int i = 0; i < FollowPath.Length; i++)
+                for (int i = 1; i < FollowPath.Length; i++)
                 {
-                    D = DistSqr(FollowPath[i], getPosition());
+                    D = DistSqr(midpoint(FollowPath[i], FollowPath[i - 1]), getPosition());
                     if (D < Dist)
                     {
                         CurrentPositionIndex = i;
                         Dist = D;
                     }
-                    if (D == Dist)
-                    {
-                        if (i > CurrentPositionIndex)
-                            CurrentPositionIndex = i;
-                    }
                 }
-                if (++CurrentPositionIndex >= FollowPath.Length)
-                    CurrentPositionIndex--;
             }
 
             return Changed;
+        }
+
+        private PointF midpoint(PointF A, PointF B)
+        {
+            PointF ret = new PointF();
+            ret.X = (A.X + B.X) / 2;
+            ret.Y = (A.Y + B.Y) / 2;
+            return ret;
         }
 
         public void ConstantUpdate()

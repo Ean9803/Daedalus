@@ -136,7 +136,7 @@ public class Map
         ClearMem = true;
     }
 
-    public PointF GetClosestPoint(PointF Location, int StartRange = 0)
+    public PointF GetClosestPoint(PointF Location, int StartRange = 0, int EndRange = 500)
     {
         if (SortedNet.Count == 0)
             return Snap(Location);
@@ -144,7 +144,7 @@ public class Map
         List<PointF> Chunks;
         bool Check = true;
         List<PointF> Can = new List<PointF>();
-        while (Check)
+        while (Check && Range <= EndRange)
         {
             Chunks = SnapCoords(Location, Range, true);
             foreach (PointF item in Chunks)
@@ -184,13 +184,16 @@ public class Map
 
         Dist = double.MaxValue;
         PointF Vertex = Chunk;
-        foreach (PointF item in SortedNet[Chunk].Keys)
+        if (SortedNet.ContainsKey(Chunk))
         {
-            D = DistSqr(item, Location);
-            if (D < Dist)
+            foreach (PointF item in SortedNet[Chunk].Keys)
             {
-                Dist = D;
-                Vertex = item;
+                D = DistSqr(item, Location);
+                if (D < Dist)
+                {
+                    Dist = D;
+                    Vertex = item;
+                }
             }
         }
         return Vertex;
@@ -221,19 +224,30 @@ public class Map
         }
         
         PointF Current = Snap(Point);
-        bool[] Edges = new bool[4];
-        PointF[] EdgeChunks = new PointF[4];
+        bool[] Edges = new bool[8];
+        PointF[] EdgeChunks = new PointF[8];
         Edges[0] = InRange(Point.X, Current.X + GridSize, Thres);
         Edges[1] = InRange(Point.X, Current.X - GridSize, Thres);
         Edges[2] = InRange(Point.Y, Current.Y + GridSize, Thres);
         Edges[3] = InRange(Point.Y, Current.Y - GridSize, Thres);
+        
+        Edges[4] = Edges[0] && Edges[2];
+        Edges[5] = Edges[0] && Edges[3];
+        Edges[6] = Edges[1] && Edges[2];
+        Edges[7] = Edges[1] && Edges[3];
 
         EdgeChunks[0] = Snap(new PointF(Current.X + GridSize * 2, Current.Y));
         EdgeChunks[1] = Snap(new PointF(Current.X - GridSize * 2, Current.Y));
         EdgeChunks[2] = Snap(new PointF(Current.X, Current.Y + GridSize * 2));
         EdgeChunks[3] = Snap(new PointF(Current.X, Current.Y - GridSize * 2));
+
+        EdgeChunks[4] = Snap(new PointF(Current.X + GridSize * 2, Current.Y + GridSize * 2));
+        EdgeChunks[5] = Snap(new PointF(Current.X + GridSize * 2, Current.Y - GridSize * 2));
+        EdgeChunks[6] = Snap(new PointF(Current.X - GridSize * 2, Current.Y + GridSize * 2));
+        EdgeChunks[7] = Snap(new PointF(Current.X - GridSize * 2, Current.Y - GridSize * 2));
+
         ContainsChunks = false;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 8; i++)
         {
             if (Edges[i] || !InChunk)
             {
@@ -263,6 +277,7 @@ public class Map
                 if (Possible)
                 {
                     Avalable.Add(EdgeChunks[i]);
+
                     ContainsChunks = true;
                 }
             }
@@ -316,7 +331,7 @@ public class Map
             openSet.Remove(node);
             closeSet.Add(node);
 
-            if (node.Point == targetNode.Point)
+            if (node.Point == targetNode.Point || node.Point == Snap(Target))
             {
                 Ret = node;
                 
@@ -344,7 +359,7 @@ public class Map
                     }
                     else
                     {
-                        //openSet[openSet.IndexOf(neighbour)] = neighbour;
+                        openSet[openSet.IndexOf(neighbour)] = neighbour;
                     }
                 }
             }
@@ -382,11 +397,24 @@ public class Map
         Radius = Radius * Radius;
         foreach (AStarNode item in Options)
         {
-            cost = item.hCost;
-            if (cost < COST)
+            AStarNode Node = item;
+            bool Discard = false;
+            while (Node != null && !Discard)
             {
-                ret = item;
-                COST = cost;
+                if (InsideWall(Node.Point, 1))
+                {
+                    Discard = true;
+                }
+                Node = Node.parent;
+            }
+            if (!Discard)
+            {
+                cost = item.hCost;
+                if (cost < COST)
+                {
+                    ret = item;
+                    COST = cost;
+                }
             }
         }
 
@@ -520,7 +548,7 @@ public class Map
                 }
                 WallPoly.Clear();
                 SortedWalls[Point] = Clipper.BooleanOp(ClipType.Intersection, SortedWalls[Point], ChunkShape(Point), FillRule.NonZero);
-                SortedWalls[Point] = Clipper.SimplifyPaths(SortedWalls[Point], 0.1f);
+                SortedWalls[Point] = Clipper.SimplifyPaths(SortedWalls[Point], 1.0f / (50.0f / Knossos.KnossosUI.Settings.WallSimplify));
             }
             if (item.Regions.Count != Coords.Count)
             {
@@ -962,7 +990,7 @@ public class Map
             prevIndex = i - 1;
             index = i % currentPoints.Count;
 
-            if (DistSqr(currentPoints[index].Value, currentPoints[prevIndex].Value) < Diameter)
+            if (DistSqr(currentPoints[index].Value, currentPoints[prevIndex].Value) < MathF.Pow(Diameter, 2))
             {
                 preBuffers.Add(new Lclass.Line() { P1 = currentPoints[prevIndex].Value, P2 = currentPoints[index].Value, Width = 2 });
             }
@@ -1138,7 +1166,7 @@ public class Map
             Drawn.Clear();
             if (DistSqr(item, Focus) < Math.Pow((GridSize * (DisplayRadius)) + ((DisplayRadius * 2) * GridSize), 2))
             {
-                int LinesPerChunk = 20;
+                int LinesPerChunk = 10;
                 int LineDrawn = 0;
                 foreach (KeyValuePair<PointF, List<PointF>> Connection in SortedNet[item])
                 {
