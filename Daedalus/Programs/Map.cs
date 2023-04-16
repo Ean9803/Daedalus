@@ -1487,7 +1487,10 @@ public class Map
                 // Create chunk to cut bricks out of
                 PathsD Inflated;
                 if (SortedWalls[item].Count > 0)
+                {
                     Inflated = Clipper.InflatePaths(SortedWalls[item], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
+                    Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
+                }
                 else
                     Inflated = SortedWalls[item];
                 PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), Inflated, FillRule.NonZero);

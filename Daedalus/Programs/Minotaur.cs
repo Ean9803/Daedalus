@@ -91,7 +91,7 @@ namespace Daedalus.Daedalus.Programs
             }
             
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || Mode == Knossos.mapPenMode.Target;
+            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition());// || Mode == Knossos.mapPenMode.Target;
 
             CalculateAStar(ForceRefresh);
             GrabPoints();
@@ -168,6 +168,7 @@ namespace Daedalus.Daedalus.Programs
 
         private void SetMaster(PointF Bait)
         {
+            /*
             double CurrentDist = DistSqr(Master_Bait, getPosition());
             double NewDist = DistSqr(Bait, getPosition());
 
@@ -184,6 +185,7 @@ namespace Daedalus.Daedalus.Programs
             {
                 Pick = Closest;
             }
+            */
             Master_Bait = Bait;
             //Master_Bait = Pick == CurrentDist ? Master_Bait : Bait;
         }
