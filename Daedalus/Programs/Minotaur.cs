@@ -105,7 +105,7 @@ namespace Daedalus.Daedalus.Programs
 
         private void CalculateAStar(bool ForceRefresh)
         {
-            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, (int)Math.Max(Knossos.KnossosUI.Settings.AStar, 1));
+            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, (int)Knossos.KnossosUI.Settings.AStar);
             CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2);
             if (CollapsedAStarPath == null)
                 return;
@@ -142,12 +142,21 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (minotaurMap.InsideWall(getPosition(), getRadius()))
+            if (minotaurMap.InsideWall(getPosition(), 2))
+            {
+                Escaped = true;
+            }
+
+            if (Escaped)
             {
                 PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 0);
-                if(!InRange(getPosition(), FallBack, getRadius()))
+                if (!InRange(getPosition(), FallBack, getRadius()))
                 {
                     SetMaster(FallBack);
+                }
+                else
+                {
+                    Escaped = false;
                 }
             }
 
@@ -166,7 +175,7 @@ namespace Daedalus.Daedalus.Programs
             double Furthest = Math.Max(CurrentDist, NewDist);
 
             double Pick = 0;
-            double TooClose = getRadius();
+            double TooClose = getRadius() * 1.1;
             if (Closest < TooClose)
             {
                 Pick = Furthest;
@@ -216,7 +225,6 @@ namespace Daedalus.Daedalus.Programs
             }
             else
             {
-                PathPortion = new PointF[3];
                 for (int i = 0; i < PathPortion.Length; i++)
                 {
                     PathPortion[i] = getPosition();
@@ -363,7 +371,7 @@ namespace Daedalus.Daedalus.Programs
             }
             if (FollowPath != null)
             {
-                if (setMasterTarget(FollowPath[CurrentPositionIndex], getRadius() / 3))
+                if (setMasterTarget(FollowPath[CurrentPositionIndex], getRadius() / 2))
                 {
                     if (++CurrentPositionIndex >= FollowPath.Length)
                     {
@@ -403,7 +411,7 @@ namespace Daedalus.Daedalus.Programs
                 ys1[i] = Point.Y;
             }
             bool Changed = false;
-            if (xs1.Length >= 2)
+            if (xs1.Length >= 3)
             {
                 // Use cubic interpolation to smooth the original data
                 (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex + (int)Knossos.KnossosUI.Settings.PathSmoothing);
@@ -449,6 +457,11 @@ namespace Daedalus.Daedalus.Programs
                     {
                         CurrentPositionIndex = i;
                         Dist = D;
+                    }
+                    if (D == Dist)
+                    {
+                        if (i > CurrentPositionIndex)
+                            CurrentPositionIndex = i;
                     }
                 }
                 if (++CurrentPositionIndex >= FollowPath.Length)
@@ -503,8 +516,13 @@ namespace Daedalus.Daedalus.Programs
             }
             PointF Direction = new PointF((masterTarget.X - Pos.X), (masterTarget.Y - Pos.Y));
             float distance = (float)Math.Sqrt(Math.Pow((Direction.X), 2) + Math.Pow((Direction.Y), 2));
-            Pos.X += (Direction.X / distance) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
-            Pos.Y += (Direction.Y / distance) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
+            
+            float Xc = (Direction.X / distance) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
+            float Yc = (Direction.Y / distance) * Knossos.KnossosUI.Settings.Mino_Speed * Knossos.KnossosUI.DeltaTime;
+
+            Pos.X += Xc;
+            Pos.Y += Yc;
+
             return false;
         }
 

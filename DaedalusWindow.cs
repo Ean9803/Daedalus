@@ -1142,18 +1142,23 @@ namespace Daedalus
 
         private void DrawMino(Graphics window)
         {
-            Pen DrawPen = new Pen(Settings.Mino_Color, 2);
-            PointF MinoPosition = CalculateViewPosition(Mino.getPosition());
-            float Radius = Mino.getRadius() / ZoomAmount;
             try
             {
-                window.DrawEllipse(DrawPen, new Rectangle()
+                Pen DrawPen = new Pen(Settings.Mino_Color, 2);
+                PointF MinoPosition = CalculateViewPosition(Mino.getPosition());
+                float Radius = Mino.getRadius() / ZoomAmount;
+
+                PointF Prv = new PointF(MinoPosition.X + (Radius * MathF.Cos(0)), MinoPosition.Y + (Radius * MathF.Sin(0)));
+
+                int Sides = 10;
+                for (int i = 1; i < Sides + 1; i++)
                 {
-                    X = (int)(MinoPosition.X - (Radius / 2)),
-                    Y = (int)(MinoPosition.Y - (Radius / 2)),
-                    Width = (int)Radius,
-                    Height = (int)Radius
-                });
+                    PointF Cur = new PointF(MinoPosition.X + (Radius * MathF.Cos((MathF.PI / 180) * (((float)i/(float)Sides) * 360))), MinoPosition.Y + (Radius * MathF.Sin((MathF.PI / 180) * (((float)i / (float)Sides) * 360))));
+
+                    window.DrawLine(DrawPen, Prv, Cur);
+
+                    Prv = Cur;
+                }
                 DrawPen.Dispose();
             }
             catch (Exception m)
@@ -1224,14 +1229,14 @@ namespace Daedalus
             PointF[] Slopes = new PointF[Angles.Length];
             for (int i = 0; i < Slopes.Length; i++)
             {
-                Slopes[i] = new PointF(MathF.Cos(Angles[i]), MathF.Sin(Angles[i]));
+                Slopes[i] = new PointF(MathF.Cos((MathF.PI / 180) * Angles[i]), MathF.Sin((MathF.PI / 180) * Angles[i]));
             }
             return WallDetect(Origin, Slopes, Dist, out Hits);
         }
 
         public bool WallDetect(PointF Origin, PointF[] Slopes, float Dist, out List<Lclass.CollisionPoint> Hits)
         {
-            PointF[] Ray = new PointF[Slopes.Length];
+            PointF?[] Ray = new PointF?[Slopes.Length];
             float[] Percents = new float[Slopes.Length];
             Hits = new List<Lclass.CollisionPoint>();
             for (int i = 0; i < Ray.Length; i++)
@@ -1239,7 +1244,11 @@ namespace Daedalus
                 PointF Max = Origin;
 
                 float distance = (float)Math.Sqrt(Math.Pow((Slopes[i].X), 2) + Math.Pow((Slopes[i].Y), 2));
-
+                if (distance == 0)
+                {
+                    Ray[i] = null;
+                    continue;
+                }
                 float YSlope = (Slopes[i].Y / distance);
                 float XSlope = (Slopes[i].X / distance);
 
@@ -1267,17 +1276,22 @@ namespace Daedalus
                 {
                     for (int i = 0; i < Slopes.Length; i++)
                     {
+                        if (Ray[i] == null)
+                            continue;
                         PointF WallLine = new PointF(Face.P2.X - Face.P1.X, Face.P2.Y - Face.P1.Y);
-                        float t = (((Face.P1.X - Origin.X) * WallLine.Y) - ((Face.P1.Y - Origin.Y) * WallLine.X)) / (Ray[i].X * WallLine.Y - Ray[i].Y * WallLine.X);
-                        float u = (((Origin.X - Face.P1.X) * Ray[i].Y) - ((Origin.Y - Face.P1.Y) * Ray[i].X)) / (WallLine.X * Ray[i].Y - WallLine.Y * Ray[i].X);
-                        if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
+                        float? t = (((Face.P1.X - Origin.X) * WallLine.Y) - ((Face.P1.Y - Origin.Y) * WallLine.X)) / (Ray[i]?.X * WallLine.Y - Ray[i]?.Y * WallLine.X);
+                        float? u = (((Origin.X - Face.P1.X) * Ray[i]?.Y) - ((Origin.Y - Face.P1.Y) * Ray[i]?.X)) / (WallLine.X * Ray[i]?.Y - WallLine.Y * Ray[i]?.X);
+                        if (t != null && u != null)
                         {
-                            if (t < Percents[i])
+                            if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
                             {
-                                Percents[i] = t;
-                                Hits[i].Point = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * u));
-                                Hits[i].Hit = true;
-                                Hitted = true;
+                                if (t < Percents[i])
+                                {
+                                    Percents[i] = (float)t;
+                                    Hits[i].Point = new PointF(Face.P1.X + ((Face.P2.X - Face.P1.X) * (float)u), Face.P1.Y + ((Face.P2.Y - Face.P1.Y) * (float)u));
+                                    Hits[i].Hit = true;
+                                    Hitted = true;
+                                }
                             }
                         }
                     }

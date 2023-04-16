@@ -22,6 +22,7 @@ using System.Security.Cryptography.Xml;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 
 public class Map
 {
@@ -292,6 +293,7 @@ public class Map
         if (SortedNet.Count == 0)
             return null;
         double Dist = DistSqr(Location, Target);
+        
         AStarNode startNode = new AStarNode() { Point = GetClosestPoint(Location), gCost = 0, hCost = Dist };
         AStarNode targetNode = new AStarNode() { Point = GetClosestPoint(Target), hCost = 0, gCost = Dist };
 
@@ -328,16 +330,21 @@ public class Map
             foreach (PointF Con in GetConnections(node.Point, out bool Chunks))
             {
                 AStarNode neighbour = new AStarNode() { Point = Con, gCost = DistSqr(Con, Location), hCost = DistSqr(Con, Target) };
-                if (!closeSet.Contains(neighbour))
+                if (closeSet.Contains(neighbour))
+                    continue;
+                double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
+                if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                 {
-                    double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
-                    if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                    neighbour.gCost = newCostToNeighbour;
+                    neighbour.hCost = DistSqr(neighbour.Point, targetNode.Point);
+                    neighbour.parent = node;
+                    if (!openSet.Contains(neighbour))
                     {
-                        neighbour.gCost = newCostToNeighbour;
-                        neighbour.hCost = DistSqr(neighbour.Point, targetNode.Point);
-                        neighbour.parent = node;
-                        if (!openSet.Contains(neighbour))
-                            openSet.Add(neighbour);
+                        openSet.Add(neighbour);
+                    }
+                    else
+                    {
+                        //openSet[openSet.IndexOf(neighbour)] = neighbour;
                     }
                 }
             }
@@ -773,7 +780,6 @@ public class Map
     private List<PointF> LineCoords(PointF P1, PointF P2)
     {
         List<PointF> GridCorrdinates = new List<PointF>();
-
         // Raduis of chunk
         float Increment = (GridSize * 2);
 
@@ -785,11 +791,9 @@ public class Map
         float a, b, astep, bstep, dda, ddb;
         float dx = (mP2.X - mP1.X) / Increment;
         float dy = (mP2.Y - mP1.Y) / Increment;
-        if (mP1.X == float.NaN || mP1.Y == float.NaN)
-            return GridCorrdinates;
+
         GridCorrdinates.Add(mP1);
-        if (dy == float.NaN || dx == float.NaN)
-            return GridCorrdinates;
+
         float ystep = Math.Sign(dy) * Increment;
         float xstep = Math.Sign(dx) * Increment;
         dy = Math.Abs(dy);
@@ -966,60 +970,68 @@ public class Map
 
         List<Lclass.Line> DeleteWalls = new List<Lclass.Line>();
         List<Lclass.Brick> DeleteBricks = new List<Lclass.Brick>();
-        bool UnHit = true;
+            bool UnHit = true;
         foreach (PointF item in uncollidedPoints.Values)
         {
             UnHit = true;
             List<PointF> Regions = LineCoords(item, location);
-            foreach (PointF Region in Regions)
+            try
             {
-                if (SortedBricks.ContainsKey(Region))
+                foreach (PointF Region in Regions)
                 {
-                    foreach (Brick Barrier in SortedBricks[Region])
+                    if (SortedBricks.ContainsKey(Region))
                     {
-                        PointF Ray = new PointF(item.X - location.X, item.Y - location.Y);
-                        PointF WallLine = new PointF(Barrier.P2.X - Barrier.P1.X, Barrier.P2.Y - Barrier.P1.Y);
-                        float t = (((Barrier.P1.X - location.X) * WallLine.Y) - ((Barrier.P1.Y - location.Y) * WallLine.X)) / (Ray.X * WallLine.Y - Ray.Y * WallLine.X);
-                        float u = (((location.X - Barrier.P1.X) * Ray.Y) - ((location.Y - Barrier.P1.Y) * Ray.X)) / (WallLine.X * Ray.Y - WallLine.Y * Ray.X);
-                        if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
+                        foreach (Brick Barrier in SortedBricks[Region])
                         {
-                            if (t < 1)
+                            PointF Ray = new PointF(item.X - location.X, item.Y - location.Y);
+                            PointF WallLine = new PointF(Barrier.P2.X - Barrier.P1.X, Barrier.P2.Y - Barrier.P1.Y);
+                            float t = (((Barrier.P1.X - location.X) * WallLine.Y) - ((Barrier.P1.Y - location.Y) * WallLine.X)) / (Ray.X * WallLine.Y - Ray.Y * WallLine.X);
+                            float u = (((location.X - Barrier.P1.X) * Ray.Y) - ((location.Y - Barrier.P1.Y) * Ray.X)) / (WallLine.X * Ray.Y - WallLine.Y * Ray.X);
+                            if (u >= 0 && u <= 1 && t >= 0 && t <= 1)
                             {
-                                UnHit = false;
-                                DeleteBricks.Add(Barrier);
-                                PointF DeletePoint = new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u));
-                                DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(DeletePoint.X + brickWidth * 1.5f, DeletePoint.Y), P2 = new PointF(DeletePoint.X - brickWidth * 1.5f, DeletePoint.Y), Width = brickWidth * 1.5f });
-                                if (Knossos.KnossosUI.Settings.Uncollided_Show)
+                                if (t < 1)
                                 {
-                                    Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
+                                    UnHit = false;
+                                    DeleteBricks.Add(Barrier);
+                                    PointF DeletePoint = new PointF(Barrier.P1.X + ((Barrier.P2.X - Barrier.P1.X) * u), Barrier.P1.Y + ((Barrier.P2.Y - Barrier.P1.Y) * u));
+                                    DeleteWalls.Add(new Lclass.Line() { P1 = new PointF(DeletePoint.X + brickWidth * 1.5f, DeletePoint.Y), P2 = new PointF(DeletePoint.X - brickWidth * 1.5f, DeletePoint.Y), Width = brickWidth * 1.5f });
+                                    if (Knossos.KnossosUI.Settings.Uncollided_Show)
                                     {
-                                        Point = DeletePoint,
-                                        color = Knossos.KnossosUI.Settings.NonPointColor,
-                                        Type = Knossos.TargetPoint.DrawType.Diamond,
-                                        Diameter = 2.5f,
-                                        DisplayWindow = Knossos.Window.Map
-                                    });
-                                }
-                                if (Knossos.KnossosUI.Settings.NonRayHit_Show)
-                                {
-                                    Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
-                                    {
-                                        color = Knossos.KnossosUI.Settings.NonPointColor,
-                                        Line = new Line()
+                                        Knossos.KnossosUI.AddPoint(new Knossos.TargetPoint()
                                         {
-                                            P1 = DeletePoint,
-                                            P2 = location,
-                                            Width = 2
-                                        },
-                                        Type = Knossos.TargetLine.DrawType.Solid,
-                                        DisplayWindow = Knossos.Window.Map
-                                    });
+                                            Point = DeletePoint,
+                                            color = Knossos.KnossosUI.Settings.NonPointColor,
+                                            Type = Knossos.TargetPoint.DrawType.Diamond,
+                                            Diameter = 2.5f,
+                                            DisplayWindow = Knossos.Window.Map
+                                        });
+                                    }
+                                    if (Knossos.KnossosUI.Settings.NonRayHit_Show)
+                                    {
+                                        Knossos.KnossosUI.AddLine(new Knossos.TargetLine()
+                                        {
+                                            color = Knossos.KnossosUI.Settings.NonPointColor,
+                                            Line = new Line()
+                                            {
+                                                P1 = DeletePoint,
+                                                P2 = location,
+                                                Width = 2
+                                            },
+                                            Type = Knossos.TargetLine.DrawType.Solid,
+                                            DisplayWindow = Knossos.Window.Map
+                                        });
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            catch (Exception PointFail)
+            {
+                Knossos.KnossosUI.DebugLog("Error", PointFail.Message + "\n" + PointFail.StackTrace, false, true);
+            }
+
             if (UnHit)
             {
                 if (Knossos.KnossosUI.Settings.Uncollided_Show)
@@ -1468,9 +1480,17 @@ public class Map
         bool Ret = false;
         foreach (PointF item in RegionsChanged)
         {
+            if (item.X == float.NaN || item.Y == float.NaN)
+                continue;
             if (SortedWalls.ContainsKey(item))
-            {   // Create chunk to cut bricks out of
-                PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), SortedWalls[item], FillRule.NonZero);
+            {
+                // Create chunk to cut bricks out of
+                PathsD Inflated;
+                if (SortedWalls[item].Count > 0)
+                    Inflated = Clipper.InflatePaths(SortedWalls[item], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
+                else
+                    Inflated = SortedWalls[item];
+                PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), Inflated, FillRule.NonZero);
                 chunk = Clipper.SimplifyPaths(chunk, 0.01f);
                 if (!SortedChunks.ContainsKey(item))
                 {
@@ -1494,9 +1514,13 @@ public class Map
             }
         }
         foreach (PointF item in RegionsChanged)
-        {            
+        {
+            if (item.X == float.NaN || item.Y == float.NaN)
+                continue;
             List<List<Vector3m>> polygons = new List<List<Vector3m>>();
             List<List<Vector3m>> holes = new List<List<Vector3m>>();
+            if (!SortedChunks.ContainsKey(item))
+                continue;
             foreach (PathD rings in SortedChunks[item])
             {   
                 // Adds solid polygons to solid polygons list
