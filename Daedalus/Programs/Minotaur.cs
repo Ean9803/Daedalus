@@ -507,7 +507,7 @@ namespace Daedalus.Daedalus.Programs
                 Angles[i] = ((float)i / (int)Knossos.KnossosUI.Settings.RayCount) * 360;
             }
         }
-        //master_bait
+        
         public bool setMasterTarget(PointF masterTarget, float threshold)
         {
             if (InRange(masterTarget, Pos, threshold))
