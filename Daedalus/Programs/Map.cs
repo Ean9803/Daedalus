@@ -259,7 +259,7 @@ public class Map
                     {
                         P1 = EdgeChunks[i],
                         P2 = Point,
-                        Width = 1
+                        Width = 2
                     };
                     PossibleSegment = RaySegment.GenerateRec();
                     Line.Add(Clipper.MakePath(new double[] {PossibleSegment[0].P1.X, PossibleSegment[0].P1.Y,
@@ -267,7 +267,15 @@ public class Map
                                                                 PossibleSegment[1].P2.X, PossibleSegment[1].P2.Y,
                                                                 PossibleSegment[1].P1.X, PossibleSegment[1].P1.Y}));
                     int Prev = SortedWalls[EdgeChunks[i]].Count;
-                    Intersection = Clipper.BooleanOp(ClipType.Union, SortedWalls[EdgeChunks[i]], Line, FillRule.NonZero);
+                    PathsD Inflated;
+                    if (SortedWalls[EdgeChunks[i]].Count > 0)
+                    {
+                        Inflated = Clipper.InflatePaths(SortedWalls[EdgeChunks[i]], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
+                        Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
+                    }
+                    else
+                        Inflated = SortedWalls[EdgeChunks[i]];
+                    Intersection = Clipper.BooleanOp(ClipType.Union, Inflated, Line, FillRule.NonZero);
 
                     if (Intersection.Count == Prev)
                     {
@@ -345,7 +353,7 @@ public class Map
             foreach (PointF Con in GetConnections(node.Point, out bool Chunks))
             {
                 AStarNode neighbour = new AStarNode() { Point = Con, gCost = DistSqr(Con, Location), hCost = DistSqr(Con, Target) };
-                if (closeSet.Contains(neighbour))
+                if (/*closeSet.Contains(neighbour) || */InsideWall(Con, 1, true))
                     continue;
                 double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
                 if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
@@ -367,7 +375,7 @@ public class Map
         return openSet;
     }
 
-    public bool InsideWall(PointF Point, double Radius)
+    public bool InsideWall(PointF Point, double Radius, bool Cover = false)
     {
         bool Inside = false;
         PointF ChunkPoint = Snap(Point);
@@ -376,7 +384,15 @@ public class Map
             if (SortedWalls[ChunkPoint] != null)
             {
                 PathsD Object = ChunkShape(Point, Radius);
-                PathsD Intersection = Clipper.BooleanOp(ClipType.Intersection, SortedWalls[ChunkPoint], Object, FillRule.NonZero);
+                PathsD Inflated;
+                if (SortedWalls[ChunkPoint].Count > 0 && Cover)
+                {
+                    Inflated = Clipper.InflatePaths(SortedWalls[ChunkPoint], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
+                    Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
+                }
+                else
+                    Inflated = SortedWalls[ChunkPoint];
+                PathsD Intersection = Clipper.BooleanOp(ClipType.Intersection, Inflated, Object, FillRule.NonZero);
 
                 if (Intersection.Count != 0)
                 {
