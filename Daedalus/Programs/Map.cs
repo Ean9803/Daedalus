@@ -153,16 +153,8 @@ public class Map
                 {
                     if (SortedNet[item].Keys.Count > 0)
                     {
-                        foreach (PointF PointCon in SortedNet[item].Keys)
-                        {
-                            GetConnections(PointCon, out bool Contains);
-                            if (Contains)
-                            {
-                                Check = false;
-                                Can.Add(item);
-                                break;
-                            }
-                        }
+                        Check = false;
+                        Can.Add(item);
                     }
                 }
             }
@@ -207,8 +199,8 @@ public class Map
 
         bool Possible = true;
         PathsD Line = new PathsD();
-        PathsD Intersection;
-        Lclass.Line RaySegment;
+        PathsD Intersection = new PathsD();
+        Lclass.Line RaySegment = new Lclass.Line();
         Lclass.Line[] PossibleSegment = new Lclass.Line[4];
 
         foreach (PointF item in Chunks)
@@ -247,51 +239,92 @@ public class Map
         EdgeChunks[7] = Snap(new PointF(Current.X - GridSize * 2, Current.Y - GridSize * 2));
 
         ContainsChunks = false;
+        double D = 0;
+        double Dist = double.MaxValue;
+        PointF ClosePoint = PointF.Empty;
         for (int i = 0; i < 8; i++)
         {
             if (Edges[i] || !InChunk)
             {
-                Possible = true;
-                if (SortedWalls.ContainsKey(EdgeChunks[i]))
+                if (!SortedNet.ContainsKey(EdgeChunks[i]))
                 {
-                    Line.Clear();
-                    RaySegment = new Line()
+                    Possible = CheckForIntersection(Line, Intersection, RaySegment, EdgeChunks[i], Point, 2);
+                    if (Possible)
                     {
-                        P1 = EdgeChunks[i],
-                        P2 = Point,
-                        Width = 2
-                    };
-                    PossibleSegment = RaySegment.GenerateRec();
-                    Line.Add(Clipper.MakePath(new double[] {PossibleSegment[0].P1.X, PossibleSegment[0].P1.Y,
-                                                                PossibleSegment[0].P2.X, PossibleSegment[0].P2.Y,
-                                                                PossibleSegment[1].P2.X, PossibleSegment[1].P2.Y,
-                                                                PossibleSegment[1].P1.X, PossibleSegment[1].P1.Y}));
-                    int Prev = SortedWalls[EdgeChunks[i]].Count;
-                    PathsD Inflated;
-                    if (SortedWalls[EdgeChunks[i]].Count > 0)
-                    {
-                        Inflated = Clipper.InflatePaths(SortedWalls[EdgeChunks[i]], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
-                        Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
-                    }
-                    else
-                        Inflated = SortedWalls[EdgeChunks[i]];
-                    Intersection = Clipper.BooleanOp(ClipType.Union, Inflated, Line, FillRule.NonZero);
+                        Avalable.Add(EdgeChunks[i]);
 
-                    if (Intersection.Count == Prev)
-                    {
-                        Possible = false;
+                        ContainsChunks |= true;
                     }
                 }
-                if (Possible)
+                else
                 {
-                    Avalable.Add(EdgeChunks[i]);
-
-                    ContainsChunks = true;
+                    D = 0;
+                    Dist = double.MaxValue;
+                    foreach (PointF item in SortedNet[EdgeChunks[i]].Keys)
+                    {
+                        if (!CheckForIntersection(Line, Intersection, RaySegment, item, Point, 2))
+                        {
+                            D = DistSqr(item, Point);
+                            if (D < Dist)
+                            {
+                                Dist = D;
+                                ClosePoint = item;
+                            }
+                        }
+                    }
+                    if (SortedNet[EdgeChunks[i]].ContainsKey(ClosePoint))
+                    {
+                        Avalable.AddRange(SortedNet[EdgeChunks[i]][ClosePoint]);
+                        ContainsChunks |= false;
+                    }
                 }
             }
         }
         
         return Avalable;
+    }
+
+    private bool CheckForIntersection(PathsD Line, PathsD Intersection, Lclass.Line RaySegment, PointF P1, PointF P2, float Width)
+    {
+        Line.Clear();
+        RaySegment = new Line()
+        {
+            P1 = P1,
+            P2 = P2,
+            Width = Width
+        };
+        Lclass.Line[] PossibleSegment = RaySegment.GenerateRec();
+        if (PossibleSegment.Length > 0)
+        {
+            Line.Add(Clipper.MakePath(new double[] {PossibleSegment[0].P1.X, PossibleSegment[0].P1.Y,
+                                                                PossibleSegment[0].P2.X, PossibleSegment[0].P2.Y,
+                                                                PossibleSegment[1].P2.X, PossibleSegment[1].P2.Y,
+                                                                PossibleSegment[1].P1.X, PossibleSegment[1].P1.Y}));
+            PathsD Inflated;
+
+            List<PointF> Chunks = BrickCoords(RaySegment);
+            foreach (PointF item in Chunks)
+            {
+                if (!SortedWalls.ContainsKey(item))
+                    continue;
+
+                int Prev = SortedWalls[item].Count;
+                if (SortedWalls[item].Count > 0)
+                {
+                    Inflated = Clipper.InflatePaths(SortedWalls[item], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
+                    Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
+                }
+                else
+                    Inflated = SortedWalls[item];
+                Intersection = Clipper.BooleanOp(ClipType.Union, Inflated, Line, FillRule.NonZero);
+                if (Intersection.Count != Prev)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
     public class AStarNode : IEquatable<AStarNode>
@@ -353,9 +386,20 @@ public class Map
             foreach (PointF Con in GetConnections(node.Point, out bool Chunks))
             {
                 AStarNode neighbour = new AStarNode() { Point = Con, gCost = DistSqr(Con, Location), hCost = DistSqr(Con, Target) };
-                if (/*closeSet.Contains(neighbour) || */InsideWall(Con, 1, true))
-                    continue;
+
+                if (!neighbour.Equals(targetNode))
+                {
+                    if (closeSet.Contains(neighbour) || InsideWall(Con, Knossos.KnossosUI.Settings.Mino_Radius, false))
+                        continue;
+                }
+                else
+                {
+                    if (closeSet.Contains(neighbour))
+                        continue;
+                }
+
                 double newCostToNeighbour = node.gCost + DistSqr(node.Point, neighbour.Point);
+                
                 if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                 {
                     neighbour.gCost = newCostToNeighbour;
@@ -403,7 +447,7 @@ public class Map
         return Inside;
     }
 
-    public AStarNode AstarPath(List<AStarNode> Options, double Radius)
+    public AStarNode AstarPath(List<AStarNode> Options, double Radius, bool IsInsideWall)
     {
         AStarNode ret = null;
         if (Options == null)
@@ -414,16 +458,16 @@ public class Map
         foreach (AStarNode item in Options)
         {
             AStarNode Node = item;
-            bool Discard = false;
-            while (Node != null && !Discard)
+            /*bool Discard = false;
+            while (Node != null && !Discard && IsInsideWall && false)
             {
-                if (InsideWall(Node.Point, 1))
+                if (InsideWall(Node.Point, Knossos.KnossosUI.Settings.Mino_Radius, false))
                 {
                     Discard = true;
                 }
                 Node = Node.parent;
             }
-            if (!Discard)
+            if (!Discard)*/
             {
                 cost = item.hCost;
                 if (cost < COST)

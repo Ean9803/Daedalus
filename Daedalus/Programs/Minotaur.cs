@@ -15,6 +15,8 @@ namespace Daedalus.Daedalus.Programs
         private float[] Angles;
         private int LastRes;
 
+        private const int SmoothLenght = 10;
+
         private Map minotaurMap;
         private List<Map.AStarNode> AStarPaths;
         private Map.AStarNode AStarPath;
@@ -24,8 +26,8 @@ namespace Daedalus.Daedalus.Programs
         private List<PointF> Queue = new List<PointF>();
         private PointF Master_Bait;
         private PointF UserTarget;
-        private PointF[] PathPortion = new PointF[10];
-        private PointF[] PastPathPortion = new PointF[10];
+        private PointF[] PathPortion = new PointF[SmoothLenght];
+        private PointF[] PastPathPortion = new PointF[SmoothLenght];
         private PointF[] FollowPath;
         private int LastPointIndex;
         private int CurrentPositionIndex = 0;
@@ -92,8 +94,8 @@ namespace Daedalus.Daedalus.Programs
             }
             
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || GoalChange;// || Mode == Knossos.mapPenMode.Target;
-            GoalChange = false;
+            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || GoalChange;
+            ForceRefresh |= true;
             CalculateAStar(ForceRefresh);
             GrabPoints();
             DisplayData(Map.HSL2RGB(Clock, 0.5, 0.5), Mode);
@@ -101,13 +103,13 @@ namespace Daedalus.Daedalus.Programs
             PostProcessTarget(Mode);
 
             if (AStarPath != null)
-                MovePath(ForceRefresh);
+                MovePath();
         }
 
         private void CalculateAStar(bool ForceRefresh)
         {
             AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, (int)Knossos.KnossosUI.Settings.AStar);
-            CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2);
+            CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2, Escaped);
             if (CollapsedAStarPath == null)
                 return;
             if (AStarPath == null)
@@ -115,6 +117,7 @@ namespace Daedalus.Daedalus.Programs
             if (ForceRefresh)
             {
                 AStarPath = CollapsedAStarPath;
+                GoalChange = false;
             }
         }
 
@@ -169,30 +172,11 @@ namespace Daedalus.Daedalus.Programs
 
         private void SetMaster(PointF Bait)
         {
-            /*
-            double CurrentDist = DistSqr(Master_Bait, getPosition());
-            double NewDist = DistSqr(Bait, getPosition());
-
-            double Closest = Math.Min(CurrentDist, NewDist);
-            double Furthest = Math.Max(CurrentDist, NewDist);
-
-            double Pick = 0;
-            double TooClose = getRadius() * 1.1;
-            if (Closest < TooClose)
-            {
-                Pick = Furthest;
-            }
-            else if (Closest > TooClose)
-            {
-                Pick = Closest;
-            }
-            */
             if (Bait != Master_Bait)
             {
                 Master_Bait = Bait;
                 GoalChange = true;
             }
-            //Master_Bait = Pick == CurrentDist ? Master_Bait : Bait;
         }
 
         private bool IsStanding()
@@ -351,7 +335,7 @@ namespace Daedalus.Daedalus.Programs
 
             KnossosForm.AddPoint(new Knossos.TargetPoint()
             {
-                Point = Master_Bait,
+                Point = minotaurMap.GetClosestPoint(Master_Bait),
                 color = col,
                 Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
                 Scale = true,
@@ -360,7 +344,7 @@ namespace Daedalus.Daedalus.Programs
             });
             KnossosForm.AddPoint(new Knossos.TargetPoint()
             {
-                Point = Master_Bait,
+                Point = minotaurMap.GetClosestPoint(Master_Bait),
                 color = col,
                 Diameter = KnossosForm.Settings.Mino_Radius * (1.0f / (Clock + 1)),
                 Scale = true,
@@ -369,9 +353,9 @@ namespace Daedalus.Daedalus.Programs
             });
         }
 
-        private void MovePath(bool ForceRefresh)
+        private void MovePath()
         {
-            if (FollowPath == null || RefreshLocation || ForceRefresh)
+            if (FollowPath == null || RefreshLocation)
             {
                 RefreshLocation = false;
                 RemakePath();
@@ -470,7 +454,16 @@ namespace Daedalus.Daedalus.Programs
                 CurrentPositionIndex = 0;
                 double Dist = double.MaxValue;
                 double D = 0;
+                int StartIndex = 1;
                 for (int i = 1; i < FollowPath.Length; i++)
+                {
+                    if (!minotaurMap.InsideWall(FollowPath[i], getRadius() / 2, true))
+                    {
+                        CurrentPositionIndex = StartIndex = i;
+                        break;
+                    }
+                }
+                for (int i = StartIndex; i < FollowPath.Length; i++)
                 {
                     D = DistSqr(midpoint(FollowPath[i], FollowPath[i - 1]), getPosition());
                     if (D < Dist)
