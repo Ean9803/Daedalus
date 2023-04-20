@@ -48,7 +48,7 @@ namespace Daedalus.Daedalus.Programs
             {
                 "Manual/Tabs/Tower/",
                 "\n[TOWER]\n\n" +
-                "This is the main tab. In here the user is able to create/save blueprints. Each blueprint contains data about the user made labyrinth and map made from Mino."
+                "This is the main tab. In there the user is able to create/save blueprints. Each blueprint contains data about the user made labyrinth and map made from Mino."
             },
             {
                 "Manual/Tabs/Tower/Tool_Box/",
