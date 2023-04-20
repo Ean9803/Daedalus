@@ -167,7 +167,7 @@ namespace Daedalus.Daedalus.Programs
                 "-Map Object Radius:\n" +
                 "Sets the maximum range that Objects the Mino knows exist are displayed.\n\n" +
                 "-Map Chunk Radius:\n" +
-                "Sets the how much extra range is needed for Chunks the Mino knows exist are displayed. NOTE: The range that chunks are displayed is the Object radius PLUS this setting value. \n\n" +
+                "Sets how much extra range is needed for Chunks the Mino knows exist are displayed. NOTE: The range that chunks are displayed is the Object radius PLUS this setting value. \n\n" +
                 "-Non-Hit Rays:\n" +
                 "Sets if the line connecting the Mino to a point that did not collide with the Labyrinth is displayed.\n\n" +
                 "-Hit Rays:\n" +
@@ -190,7 +190,7 @@ namespace Daedalus.Daedalus.Programs
                 "-Object Expansion Bias:\n" +
                 "Sets an additional value to the radius of the Mino when doing calculations, this does not affect the Mino size, but it does affect the minimum distance the Mino can be near a wall.\n\n" +
                 "-Grid Radius:\n" +
-                "Sets the Chunk radius. This radius controls how much is displayed to the screen and how detailed the path the Mino will take to is destination.\n\n" +
+                "Sets the Chunk radius. This radius controls how much is displayed to the screen and how detailed the path the Mino will take to its destination.\n\n" +
                 "-Mino Ray Count:\n" +
                 "Sets the amount of rays emitted from the Mino position. Each ray contributes to how detailed the Mino will see its surroundings.\n\n" +
                 "-Mino Speed:\n" +
