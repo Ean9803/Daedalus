@@ -95,7 +95,8 @@ namespace Daedalus.Daedalus.Programs
             
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
             bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || GoalChange;
-            ForceRefresh |= true;
+            //ForceRefresh |= true;
+            ForceRefresh |= minotaurMap.LineIntersection(FollowPath);
             CalculateAStar(ForceRefresh);
             GrabPoints();
             DisplayData(Map.HSL2RGB(Clock, 0.5, 0.5), Mode);
@@ -108,14 +109,12 @@ namespace Daedalus.Daedalus.Programs
 
         private void CalculateAStar(bool ForceRefresh)
         {
-            AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, (int)Knossos.KnossosUI.Settings.AStar);
-            CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2, Escaped);
-            if (CollapsedAStarPath == null)
-                return;
-            if (AStarPath == null)
-                AStarPath = CollapsedAStarPath;
+            if (CollapsedAStarPath == null || AStarPath == null)
+                ForceRefresh = true;
             if (ForceRefresh)
             {
+                AStarPaths = minotaurMap.Astar(getPosition(), Master_Bait, getRadius() / 2, (int)Knossos.KnossosUI.Settings.AStar);
+                CollapsedAStarPath = minotaurMap.AstarPath(AStarPaths, Knossos.KnossosUI.Settings.ExpansionBias / 2, Escaped);
                 AStarPath = CollapsedAStarPath;
                 GoalChange = false;
             }
@@ -355,7 +354,7 @@ namespace Daedalus.Daedalus.Programs
 
         private void MovePath()
         {
-            if (FollowPath == null || RefreshLocation)
+            if (FollowPath == null || RefreshLocation || CurrentPositionIndex >= FollowPath.Length)
             {
                 RefreshLocation = false;
                 RemakePath();
@@ -390,91 +389,69 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
-        private bool RemakePath()
+        private void RemakePath()
         {
             int Length = LastPointIndex;
             double[] xs1 = new double[Length];
             double[] ys1 = new double[Length];
+            List<PointF> FollowLine = new List<PointF>();
             for (int i = 0; i < Length; i++)
             {
                 PointF Point = PathPortion[i];
+                FollowLine.Add(Point);
                 xs1[i] = Point.X;
                 ys1[i] = Point.Y;
             }
-            bool Changed = false;
+
             PointF CurrentPoint = PointF.Empty;
             if (FollowPath != null)
             {
-                CurrentPoint = FollowPath[CurrentPositionIndex];
+                if (CurrentPositionIndex < FollowPath.Length)
+                    CurrentPoint = FollowPath[CurrentPositionIndex];
+                else
+                    CurrentPoint = getPosition();
+            }
+            else
+            {
+                CurrentPoint = getPosition();
             }
             if (xs1.Length >= 3)
             {
                 // Use cubic interpolation to smooth the original data
                 (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex + (int)Knossos.KnossosUI.Settings.PathSmoothing);
-                if (FollowPath == null)
-                    FollowPath = new PointF[xs2.Length];
-                if (FollowPath.Length != xs2.Length)
-                    FollowPath = new PointF[xs2.Length];
-                for (int i = 0; i < FollowPath.Length; i++)
+                int InsertIndex = FollowLine.Count;
+                for (int i = xs2.Length - 1; i >= 0; i--)
                 {
+                    if (double.IsNaN(xs2[i]) || double.IsNaN(ys2[i]))
+                        continue;
+
                     PointF NewPoint = new PointF((float)xs2[i], (float)ys2[i]);
-                    if (!FollowPath[i].Equals(NewPoint))
+                    int Index = FollowLine.IndexOf(NewPoint);
+                    if (Index != -1)
                     {
-                        FollowPath[i] = NewPoint;
+                        InsertIndex = Index;
                     }
-                }
-            }
-            else
-            {
-                if (FollowPath == null)
-                    FollowPath = new PointF[xs1.Length];
-                if (FollowPath.Length != xs1.Length)
-                    FollowPath = new PointF[xs1.Length];
-                for (int i = 0; i < FollowPath.Length; i++)
-                {
-                    PointF NewPoint = new PointF((float)xs1[i], (float)ys1[i]);
-                    if (!FollowPath[i].Equals(NewPoint))
+                    else
                     {
-                        FollowPath[i] = NewPoint;
+                        FollowLine.Insert(InsertIndex, NewPoint);
                     }
                 }
             }
 
-            if (CurrentPositionIndex >= FollowPath.Length)
-            {
-                Changed = true;
-            }
-            else
-            {
-                Changed = FollowPath[CurrentPositionIndex] != CurrentPoint;
-            }
+            FollowPath = FollowLine.ToArray();
 
-            if (Changed)
+            CurrentPositionIndex = 0;
+            double Dist = double.MaxValue;
+            double D = 0;
+            for (int i = 1; i < FollowPath.Length; i++)
             {
-                CurrentPositionIndex = 0;
-                double Dist = double.MaxValue;
-                double D = 0;
-                int StartIndex = 1;
-                for (int i = 1; i < FollowPath.Length; i++)
+                D = DistSqr(FollowPath[i], CurrentPoint);
+                if (D < Dist)
                 {
-                    if (!minotaurMap.InsideWall(FollowPath[i], getRadius() / 2, true))
-                    {
-                        CurrentPositionIndex = StartIndex = i;
-                        break;
-                    }
-                }
-                for (int i = StartIndex; i < FollowPath.Length; i++)
-                {
-                    D = DistSqr(midpoint(FollowPath[i], FollowPath[i - 1]), getPosition());
-                    if (D < Dist)
-                    {
-                        CurrentPositionIndex = i;
-                        Dist = D;
-                    }
+                    CurrentPositionIndex = i;
+                    Dist = D;
                 }
             }
-
-            return Changed;
         }
 
         private PointF midpoint(PointF A, PointF B)

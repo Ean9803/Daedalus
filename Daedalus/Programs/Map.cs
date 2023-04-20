@@ -197,11 +197,7 @@ public class Map
         List<PointF> Chunks = SnapCoords(Point, Radius, true);
         bool InChunk = false;
 
-        bool Possible = true;
-        PathsD Line = new PathsD();
-        PathsD Intersection = new PathsD();
-        Lclass.Line RaySegment = new Lclass.Line();
-        Lclass.Line[] PossibleSegment = new Lclass.Line[4];
+        bool possible = true;
 
         foreach (PointF item in Chunks)
         {
@@ -248,8 +244,8 @@ public class Map
             {
                 if (!SortedNet.ContainsKey(EdgeChunks[i]))
                 {
-                    Possible = CheckForIntersection(Line, Intersection, RaySegment, EdgeChunks[i], Point, 2);
-                    if (Possible)
+                    possible = !Intersection(EdgeChunks[i], Point, 2, true);
+                    if (possible)
                     {
                         Avalable.Add(EdgeChunks[i]);
 
@@ -262,7 +258,7 @@ public class Map
                     Dist = double.MaxValue;
                     foreach (PointF item in SortedNet[EdgeChunks[i]].Keys)
                     {
-                        if (!CheckForIntersection(Line, Intersection, RaySegment, item, Point, 2))
+                        if (!Intersection(item, Point, 2, true))
                         {
                             D = DistSqr(item, Point);
                             if (D < Dist)
@@ -284,8 +280,12 @@ public class Map
         return Avalable;
     }
 
-    private bool CheckForIntersection(PathsD Line, PathsD Intersection, Lclass.Line RaySegment, PointF P1, PointF P2, float Width)
+    private bool Intersection(PointF P1, PointF P2, float Width, bool Inflate)
     {
+        PathsD Line = new PathsD();
+        PathsD Intersection = new PathsD();
+        Lclass.Line RaySegment = new Lclass.Line();
+
         Line.Clear();
         RaySegment = new Line()
         {
@@ -303,26 +303,37 @@ public class Map
             PathsD Inflated;
 
             List<PointF> Chunks = BrickCoords(RaySegment);
+            bool Ret = false;
             foreach (PointF item in Chunks)
             {
                 if (!SortedWalls.ContainsKey(item))
                     continue;
 
-                int Prev = SortedWalls[item].Count;
-                if (SortedWalls[item].Count > 0)
+                if (SortedWalls[item].Count > 0 && Inflate)
                 {
                     Inflated = Clipper.InflatePaths(SortedWalls[item], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
                     Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
                 }
                 else
                     Inflated = SortedWalls[item];
-                Intersection = Clipper.BooleanOp(ClipType.Union, Inflated, Line, FillRule.NonZero);
-                if (Intersection.Count != Prev)
+                Intersection = Clipper.BooleanOp(ClipType.Intersection, Inflated, Line, FillRule.NonZero);
+                if (Intersection.Count != 0)
                 {
-                    return true;
+                    bool Exists = true;
+                    foreach (PathD Poly in Intersection)
+                    {
+                        if (Poly.Count != 0)
+                        {
+                            Exists = false;
+                            break;
+                        }
+                    }
+                    Ret = Exists;
                 }
+                if (Ret)
+                    break;
             }
-            return false;
+            return Ret;
         }
         return false;
     }
@@ -389,8 +400,11 @@ public class Map
 
                 if (!neighbour.Equals(targetNode))
                 {
-                    if (closeSet.Contains(neighbour) || InsideWall(Con, Knossos.KnossosUI.Settings.Mino_Radius, false))
-                        continue;
+                    if (!neighbour.Equals(startNode))
+                    {
+                        if (closeSet.Contains(neighbour) || Intersection(Con, node.Point, 1, true))
+                            continue;
+                    }
                 }
                 else
                 {
@@ -417,6 +431,19 @@ public class Map
             }
         }
         return openSet;
+    }
+
+    public bool LineIntersection(PointF[] Points)
+    {
+        if (Points == null)
+            return true;
+        for (int i = 1; i < Points.Length; i++)
+        {
+            bool Inter = Intersection(Points[i - 1], Points[i], 1, true);
+            if (Inter)
+                return true;
+        }
+        return false;
     }
 
     public bool InsideWall(PointF Point, double Radius, bool Cover = false)
@@ -452,8 +479,8 @@ public class Map
         AStarNode ret = null;
         if (Options == null)
             return ret;
-        double COST = double.MaxValue;
-        double cost = 0;
+        double TARCOST = double.MaxValue;
+        double DISTCOST = 0;
         Radius = Radius * Radius;
         foreach (AStarNode item in Options)
         {
@@ -469,11 +496,19 @@ public class Map
             }
             if (!Discard)*/
             {
-                cost = item.hCost;
-                if (cost < COST)
+                bool Check = false;
+                if (item.hCost <= TARCOST)
                 {
-                    ret = item;
-                    COST = cost;
+                    Check = true;
+                }
+                if (Check)
+                {
+                    if (item.gCost <= DISTCOST)
+                    {
+                        ret = item;
+                        TARCOST = item.hCost;
+                        DISTCOST = item.gCost;
+                    }
                 }
             }
         }
