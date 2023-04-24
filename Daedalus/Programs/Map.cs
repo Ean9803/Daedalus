@@ -480,7 +480,7 @@ public class Map
         if (Options == null)
             return ret;
         double TARCOST = double.MaxValue;
-        double DISTCOST = 0;
+        double DISTCOST = double.MaxValue;
         Radius = Radius * Radius;
         foreach (AStarNode item in Options)
         {
