@@ -199,7 +199,7 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (minotaurMap.InsideWall(getPosition(), 3, false))
+            if (minotaurMap.InsideWall(getPosition(), 3, false) && (FollowPath != null ? minotaurMap.InsideWall(FollowPath[CurrentPositionIndex], 3, false) : true))
             {
                 Escaped = true;
             }
@@ -438,9 +438,7 @@ namespace Daedalus.Daedalus.Programs
                 {
                     if (++CurrentPositionIndex >= FollowPath.Length)
                     {
-                        CurrentPositionIndex = FollowPath.Length - 1;
-                        AStarPath = CollapsedAStarPath;
-                        RemakePath();
+                        GoalChange = true;
                     }
                 }
             }
@@ -474,7 +472,8 @@ namespace Daedalus.Daedalus.Programs
             for (int i = 0; i < Length; i++)
             {
                 PointF Point = PathPortion[i];
-                FollowLine.Add(Point);
+                if (!FollowLine.Contains(Point))
+                    FollowLine.Add(Point);
                 xs1[i] = Point.X;
                 ys1[i] = Point.Y;
             }
@@ -496,21 +495,14 @@ namespace Daedalus.Daedalus.Programs
                 // Use cubic interpolation to smooth the original data
                 (double[] xs2, double[] ys2) = Cubic.InterpolateXY(xs1, ys1, LastPointIndex + (int)Knossos.KnossosUI.Settings.PathSmoothing);
                 int InsertIndex = FollowLine.Count;
+                FollowLine.Clear();
                 for (int i = xs2.Length - 1; i >= 0; i--)
                 {
                     if (double.IsNaN(xs2[i]) || double.IsNaN(ys2[i]))
                         continue;
 
                     PointF NewPoint = new PointF((float)xs2[i], (float)ys2[i]);
-                    int Index = FollowLine.IndexOf(NewPoint);
-                    if (Index != -1)
-                    {
-                        InsertIndex = Index;
-                    }
-                    else
-                    {
-                        FollowLine.Insert(InsertIndex, NewPoint);
-                    }
+                    FollowLine.Insert(0, NewPoint);
                 }
             }
 

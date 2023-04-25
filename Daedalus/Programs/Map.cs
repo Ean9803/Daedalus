@@ -546,7 +546,7 @@ public class Map
                 if (SortedWalls[ChunkPoint].Count > 0 && Cover)
                 {
                     Inflated = Clipper.InflatePaths(SortedWalls[ChunkPoint], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
-                    Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
+                    Inflated = Clipper.SimplifyPaths(Inflated, Knossos.KnossosUI.Settings.Mino_Radius);
                 }
                 else
                     Inflated = SortedWalls[ChunkPoint];
@@ -742,7 +742,7 @@ public class Map
                 }
                 WallPoly.Clear();
                 SortedWalls[Point] = Clipper.BooleanOp(ClipType.Intersection, SortedWalls[Point], ChunkShape(Point), FillRule.NonZero);
-                SortedWalls[Point] = Clipper.SimplifyPaths(SortedWalls[Point], 1.0f / (50.0f / Knossos.KnossosUI.Settings.WallSimplify));
+                SortedWalls[Point] = Clipper.SimplifyPaths(SortedWalls[Point], (1.0f / (50.0f / Knossos.KnossosUI.Settings.WallSimplify)));
             }
             if (item.Regions.Count != Coords.Count)
             {
@@ -1015,14 +1015,50 @@ public class Map
     /**
      * Gets the rough coordinates of a specified Brick within the grid
      */
-    private List<PointF> BrickCoords(Lclass.Line Wall)
+    private List<PointF> BrickCoords(Lclass.Line Wall, int Extra = 1)
     {
         List<PointF> GridCorrdinates = LineCoords(Wall.P1, Wall.P2);
+        List<PointF> Edges = new List<PointF>();
         //return GridCorrdinates;
         foreach (Lclass.Line item in Wall.GenerateRec())
         {
-            GridCorrdinates.AddRange(LineCoords(item.P1, item.P2));
+            List<PointF> Line = LineCoords(item.P1, item.P2);
+            GridCorrdinates.AddRange(Line);
+            foreach (PointF point in Line)
+            {
+                if (!Edges.Contains(point))
+                {
+                    List<PointF> E = ChunkEdges(point);
+                    foreach (PointF Edge in E)
+                    {
+                        if (!Edges.Contains(Edge))
+                        {
+                            Edges.Add(Edge);
+                        }
+                    }
+                }
+            }
         }
+        for (int i = 0; i < Extra; i++)
+        {
+            List<PointF> NewC = new List<PointF>();
+            foreach (PointF item in Edges)
+            {
+                if (!NewC.Contains(item))
+                {
+                    List<PointF> E = ChunkEdges(item);
+                    foreach (PointF Edge in E)
+                    {
+                        if (!NewC.Contains(Edge))
+                        {
+                            NewC.Add(Edge);
+                        }
+                    }
+                }
+            }
+            Edges = NewC;
+        }
+        GridCorrdinates.AddRange(Edges);
         return GridCorrdinates;
     }
 
@@ -1338,7 +1374,7 @@ public class Map
                 Refresh(Changed ? SortedBricks.Keys.ToList() : NewData);
                 Changed |= true;
             }
-
+            
             Changed |= Refresh(SnapCoords(location, 1));
         }
         CanClear = true;
@@ -1776,6 +1812,22 @@ public class Map
         AddEdgeChunk(GetChunkPointFrom(Point, -1, -1));
     }
 
+    private List<PointF> ChunkEdges(PointF Point)
+    {
+        List<PointF> Edges = new List<PointF>();
+        Edges.Add(GetChunkPointFrom(Point, 1));
+        Edges.Add(GetChunkPointFrom(Point, -1));
+        Edges.Add(GetChunkPointFrom(Point, 0, 1));
+        Edges.Add(GetChunkPointFrom(Point, 0, -1));
+
+        Edges.Add(GetChunkPointFrom(Point, 1, 1));
+        Edges.Add(GetChunkPointFrom(Point, -1, 1));
+        Edges.Add(GetChunkPointFrom(Point, 1, -1));
+        Edges.Add(GetChunkPointFrom(Point, -1, -1));
+
+        return Edges;
+    }
+
     /**
      * Main function that performs ear clipping. It essentially takes a list of
      * points that make up the lines of the walls and cuts a polygon out of the
@@ -1795,12 +1847,12 @@ public class Map
                 if (SortedWalls[item].Count > 0)
                 {
                     Inflated = Clipper.InflatePaths(SortedWalls[item], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
-                    Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
+                    Inflated = Clipper.SimplifyPaths(Inflated, Knossos.KnossosUI.Settings.Mino_Radius);
                 }
                 else
                     Inflated = SortedWalls[item];
                 PathsD chunk = Clipper.BooleanOp(ClipType.Difference, ChunkShape(item), Inflated, FillRule.NonZero);
-                chunk = Clipper.SimplifyPaths(chunk, 0.01f);
+                chunk = Clipper.SimplifyPaths(chunk, Knossos.KnossosUI.Settings.Mino_Radius);
                 if (!SortedChunks.ContainsKey(item))
                 {
                     SortedChunks.Add(item, chunk);
@@ -1864,6 +1916,10 @@ public class Map
             PointF LastConnectionPoint;
             foreach (List<Vector3m> dori_the_polygon in polygons)
             {
+                if (dori_the_polygon == null)
+                    continue;
+                if (dori_the_polygon.Count < 3)
+                    continue;
                 earClipper = new EarClipping();
                 earClipper.SetPoints(dori_the_polygon, holes);
                 try
