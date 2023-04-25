@@ -1,7 +1,9 @@
 ﻿/**
  * HelpData.cs
  * 
- * This file contains 
+ * This file contains the main controls, properties, and data collection and processing of 
+ * the minotaur. This inludes creating a navnet and using the navnet through 
+ * AStar pahtfinding.
  * 
  * Last Modifier: Fillip Cannard
  * Last Modified: 4/24/2023
