@@ -6,6 +6,8 @@
  * will smooth out the path and travel in a curve to make the movement look
  * more natural.
  * 
+ * Credit to: https://swharden.com/blog/2022-01-22-spline-interpolation/
+ * 
  * Last Modifier: Fillip Cannard
  * Last Modified: 4/24/2023
  */
@@ -41,6 +43,9 @@ public static class Cubic
         return (xsOut, ysOut);
     }
 
+    /*
+     * Generates points between points
+     */
     private static double[] Interpolate(double[] xOrig, double[] yOrig, double[] xInterp)
     {
         (double[] a, double[] b) = FitMatrix(xOrig, yOrig);
@@ -63,6 +68,9 @@ public static class Cubic
         return yInterp;
     }
 
+    /*
+     * Finds the slopes of points to generate points along
+     */
     private static (double[] a, double[] b) FitMatrix(double[] x, double[] y)
     {
         int n = x.Length;
