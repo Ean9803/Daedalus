@@ -138,9 +138,11 @@ namespace Daedalus.Daedalus.Programs
             }
             
             KnossosForm.WallDetectAngle(Pos, Angles, Knossos.KnossosUI.Settings.Mino_ViewDist, out List<Lclass.CollisionPoint> Hits);
-            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition()) || GoalChange;
+            bool ForceRefresh = minotaurMap.CreateBuffer(Hits, getPosition());
+            ForceRefresh = GoalChange;
             //ForceRefresh |= true;
-            ForceRefresh |= minotaurMap.LineIntersection(FollowPath);
+            //ForceRefresh |= minotaurMap.LineIntersection(FollowPath);
+            ForceRefresh |= minotaurMap.PathIntersect(FollowPath);
             CalculateAStar(ForceRefresh);
             GrabPoints();
             DisplayData(Map.HSL2RGB(Clock, 0.5, 0.5), Mode);
@@ -197,14 +199,18 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (minotaurMap.InsideWall(getPosition(), 2))
+            if (minotaurMap.InsideWall(getPosition(), 3, false))
             {
                 Escaped = true;
+            }
+            else
+            {
+                Escaped = false;
             }
 
             if (Escaped)
             {
-                PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 0);
+                PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 1);
                 if (!InRange(getPosition(), FallBack, getRadius()))
                 {
                     SetMaster(FallBack);

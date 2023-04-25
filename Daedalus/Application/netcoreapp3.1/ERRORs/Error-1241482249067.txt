@@ -1,0 +1,12 @@
+The given key '{X=100, Y=0}' was not present in the dictionary.
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Map.GetConnections(PointF Point, Boolean& ContainsChunks, Single Thres, Int32 Radius) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 289
+   at Map.Astar(PointF Location, PointF Target, Single Radius, Int32 Iterations) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 441
+   at Daedalus.Daedalus.Programs.Minotaur.CalculateAStar(Boolean ForceRefresh) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 169
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 152
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Collection was modified; enumeration operation may not execute.
+   at System.Collections.Generic.List`1.Enumerator.MoveNextRare()
+   at Map.CreateBuffer(List`1 collisionPoints, PointF location) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 1112
+

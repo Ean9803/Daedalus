@@ -274,7 +274,7 @@ public class Map
             {
                 if (!SortedNet.ContainsKey(EdgeChunks[i]))
                 {
-                    possible = !Intersection(EdgeChunks[i], Point, 2, true);
+                    possible = !Intersection(EdgeChunks[i], Point, Knossos.KnossosUI.Settings.Mino_Radius, false);
                     if (possible)
                     {
                         Avalable.Add(EdgeChunks[i]);
@@ -288,7 +288,7 @@ public class Map
                     Dist = double.MaxValue;
                     foreach (PointF item in SortedNet[EdgeChunks[i]].Keys)
                     {
-                        if (!Intersection(item, Point, 2, true))
+                        if (!Intersection(item, Point, Knossos.KnossosUI.Settings.Mino_Radius, false))
                         {
                             D = DistSqr(item, Point);
                             if (D < Dist)
@@ -345,7 +345,6 @@ public class Map
                 if (SortedWalls[item].Count > 0 && Inflate)
                 {
                     Inflated = Clipper.InflatePaths(SortedWalls[item], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
-                    Inflated = Clipper.SimplifyPaths(Inflated, 0.01f);
                 }
                 else
                     Inflated = SortedWalls[item];
@@ -446,7 +445,8 @@ public class Map
                 {
                     if (!neighbour.Equals(startNode))
                     {
-                        if (closeSet.Contains(neighbour) || Intersection(Con, node.Point, 1, true))
+                        bool Inside = PathIntersect(node.Point, Con);
+                        if (closeSet.Contains(neighbour) || Intersection(Con, node.Point, Knossos.KnossosUI.Settings.Mino_Radius, true) || Inside)
                             continue;
                     }
                 }
@@ -475,6 +475,43 @@ public class Map
             }
         }
         return openSet;
+    }
+
+    /*
+     * Checks if a series of points intersects with walls
+     */
+    public bool PathIntersect(PointF P1, PointF P2, bool Cover = true)
+    {
+        bool Inside = false;
+        PointF Mid = midpoint(P1, P2);
+        PointF ForwardCheck = Mid;
+        PointF BackwardCheck = Mid;
+        for (int i = 0; i < 20; i++)
+        {
+            if (Inside)
+                break;
+            Inside = InsideWall(ForwardCheck, Knossos.KnossosUI.Settings.Mino_Radius, Cover) || InsideWall(BackwardCheck, Knossos.KnossosUI.Settings.Mino_Radius, Cover);
+            ForwardCheck = midpoint(ForwardCheck, Mid);
+            BackwardCheck = midpoint(BackwardCheck, Mid);
+        }
+        return Inside;
+    }
+
+    /*
+     * Checks if an array of points intersects with walls
+     */
+    public bool PathIntersect(PointF[] Ps)
+    {
+        bool Inside = false;
+        if (Ps == null)
+            return false;
+        for (int i = 1; i < Ps.Length; i++)
+        {
+            Inside = PathIntersect(Ps[i - 1], Ps[i], false);
+            if (Inside)
+                break;
+        }
+        return Inside;
     }
 
     /**

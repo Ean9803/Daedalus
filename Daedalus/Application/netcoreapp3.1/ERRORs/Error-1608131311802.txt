@@ -1,0 +1,470 @@
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
+Object reference not set to an instance of an object.
+   at Map.PathIntersect(PointF[] Ps) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Map.cs:line 508
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Programming Projects\School\Software Engineering Project\Daedalus\Daedalus\Programs\Minotaur.cs:line 145
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Programming Projects\School\Software Engineering Project\Daedalus\DaedalusWindow.cs:line 1443
+
