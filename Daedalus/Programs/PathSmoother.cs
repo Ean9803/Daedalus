@@ -1,12 +1,24 @@
-﻿using System;
+﻿/**
+ * PathSmoother.cs
+ * 
+ * This file contains the algorithm to smooth out the path of the minotaur.
+ * Rather than going from point to point in a straight line, the minotaur
+ * will smooth out the path and travel in a curve to make the movement look
+ * more natural.
+ * 
+ * Last Modifier: Fillip Cannard
+ * Last Modified: 4/24/2023
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public static class Cubic
 {
-    /// <summary>
-    /// Generate a smooth (interpolated) curve that follows the path of the given X/Y points
-    /// </summary>
+    /**
+     * Generate a smooth (interpolated) curve that follows the path of the given X/Y points
+     */
     public static (double[] xs, double[] ys) InterpolateXY(double[] xs, double[] ys, int count)
     {
         if (xs is null || ys is null || xs.Length != ys.Length)

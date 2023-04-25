@@ -1,4 +1,13 @@
-﻿using System;
+﻿/**
+ * HelpData.cs
+ * 
+ * This file contains 
+ * 
+ * Last Modifier: Fillip Cannard
+ * Last Modified: 4/24/2023
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Cryptography;
@@ -8,6 +17,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Daedalus.Daedalus.Programs
 {
+    /**
+     * Main class that controls and keeps track of the status of the minotaur
+     */
     public class Minotaur
     {
         private Knossos KnossosForm;
@@ -38,6 +50,9 @@ namespace Daedalus.Daedalus.Programs
         private bool Escaped = false;
         private bool GoalChange = false;
 
+        /**
+         * Minotaur Constructor
+         */
         public Minotaur(Knossos KnossosForm)
         {
             this.KnossosForm = KnossosForm;
@@ -45,46 +60,73 @@ namespace Daedalus.Daedalus.Programs
             minotaurMap = new Map(25);
         }
 
+        /**
+         * Gets minotaur's radius
+         */
         public float getRadius()
         {
             return Knossos.KnossosUI.Settings.Mino_Radius;
         }
 
+        /**
+         * Clears the minotaur's memory
+         */
         public void WipeMemory()
         {
             minotaurMap.ClearMemory();
         }
 
+        /**
+         * Refreshes the minotaur's map in order to be drawn again
+         */
         public void RefreshMap()
         {
             minotaurMap.RefreshChunks();
         }
 
+        /**
+         * Gets minotaur's position
+         */
         public PointF getPosition()
         {
             return Pos;
         }
 
+        /**
+         * Sets minotaur's position
+         */
         public void SetPosition(PointF Point)
         {
             Pos = Point;
         }
-        
+
+        /**
+         * Sets user selected target position
+         */
         public void setUserTarget(PointF Point)
         {
             UserTarget = Point;
         }
 
+        /**
+         * Exports minotaur's map data to text file
+         */
         public string ExportMapData()
         {
             return minotaurMap.ExportMapData();
         }
 
+        /**
+         * Imports minotaur's map data from text file
+         */
         public void ImportMapData(string Data)
         {
             minotaurMap.ImportMapData(Data, getRadius() + Knossos.KnossosUI.Settings.ExpansionBias);
         }
 
+        /**
+         * Updates all the properties of the minotaur
+         */
         public void Update(Knossos.mapPenMode Mode)
         {
             if (LastRes != (int)Knossos.KnossosUI.Settings.RayCount)
@@ -107,6 +149,10 @@ namespace Daedalus.Daedalus.Programs
                 MovePath();
         }
 
+        /**
+         * Calls the AStar function in order to calculate the next path to take given the
+         * walls detected and the distance from the target
+         */
         private void CalculateAStar(bool ForceRefresh)
         {
             if (CollapsedAStarPath == null || AStarPath == null)
@@ -120,6 +166,10 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Prepares to get new target after movement and also sets a timeout for the minotaur movement
+         * to prevent it from getting stuck if two paths are equally long
+         */
         private void PostProcessTarget(Knossos.mapPenMode Mode)
         {
             if (Mode == Knossos.mapPenMode.Target)
@@ -169,6 +219,9 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Sets a master target or a "bait" point for the minotaur to get to
+         */
         private void SetMaster(PointF Bait)
         {
             if (Bait != Master_Bait)
@@ -178,6 +231,9 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Determines whenther the minotaur has stalled and stopped moving
+         */
         private bool IsStanding()
         {
             if (InRange(getPosition(), LastPosition, getRadius() / 2))
@@ -186,6 +242,9 @@ namespace Daedalus.Daedalus.Programs
             return false;
         }
 
+        /**
+         * Gets the points that the minotaur needs to get to 
+         */
         private void GrabPoints()
         {
             if (AStarPath != null)
@@ -231,6 +290,9 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Displays minotaur data to the map
+         */
         private void DisplayData(Color col, Knossos.mapPenMode Mode)
         {
 
@@ -352,6 +414,9 @@ namespace Daedalus.Daedalus.Programs
             });
         }
 
+        /**
+         * Moves the minotaur along its target path
+         */
         private void MovePath()
         {
             if (FollowPath == null || RefreshLocation || CurrentPositionIndex >= FollowPath.Length)
@@ -389,6 +454,9 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Recreates minotuar's path and trajectory
+         */
         private void RemakePath()
         {
             int Length = LastPointIndex;
@@ -454,6 +522,9 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Calculates midpoint between two points 
+         */
         private PointF midpoint(PointF A, PointF B)
         {
             PointF ret = new PointF();
@@ -462,6 +533,9 @@ namespace Daedalus.Daedalus.Programs
             return ret;
         }
 
+        /**
+         * Refreshes the minotaur's map
+         */
         public void ConstantUpdate()
         {
             minotaurMap.DisplayMap(getPosition(), (int)Knossos.KnossosUI.Settings.ObjectRadius_Show, (int)Knossos.KnossosUI.Settings.ChunkRadius_Show);
@@ -490,6 +564,9 @@ namespace Daedalus.Daedalus.Programs
             });
         }
 
+        /**
+         * Calculates minotaur's vision resolution using the number of rays being projected
+         */
         private void CalculateRes()
         {
             Angles = new float[(int)Knossos.KnossosUI.Settings.RayCount + 1];
@@ -498,7 +575,10 @@ namespace Daedalus.Daedalus.Programs
                 Angles[i] = ((float)i / (int)Knossos.KnossosUI.Settings.RayCount) * 360;
             }
         }
-        
+
+        /**
+         * Sets the master taget for the minotaur to travel to
+         */
         public bool setMasterTarget(PointF masterTarget, float threshold)
         {
             if (InRange(masterTarget, Pos, threshold))
@@ -517,16 +597,27 @@ namespace Daedalus.Daedalus.Programs
             return false;
         }
 
+        /**
+         * Determines whenther two values are within a certain range from one another
+         */
         private bool InRange(float Val1, float Val2, float Thres)
         {
             return MathF.Abs(Val1 - Val2) <= Thres;
         }
 
+        /**
+         * Determines if two points are within a certain threshold distance from one another
+         */
         private bool InRange(PointF Val1, PointF Val2, float Thres)
         {
             return InRange(Val1.X, Val2.X, Thres) && InRange(Val1.Y, Val2.Y, Thres);
         }
 
+        /**
+         * Calculates the distance squared between two points
+         * (Square root is not always necessary, so avoiding the sqaure root saves
+         * on computational power.)
+         */
         private double DistSqr(PointF P1, PointF P2)
         {
             float num = P1.X - P2.X;

@@ -1,4 +1,14 @@
-﻿using System;
+﻿/**
+ * DaedalusWindow.cs
+ * 
+ * This file contains all the main UI controls and displaying functions
+ * for the application.
+ * 
+ * Last Modifier: Fillip Cannard
+ * Last Modified: 4/24/2023
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,9 +27,16 @@ using Microsoft.Win32;
 
 namespace Daedalus
 {
+    /**
+     * The main container (form) object that holds all the labyrinth and map components
+     * and their controls
+     */
     public partial class Knossos : Form
     {
         #region SettingProfile
+        /**
+         * Settings UI control class
+         */
         public class DaedalusFormSettings
         {
             public Color LabMap_Color;
@@ -58,6 +75,9 @@ namespace Daedalus
             public float AStar;
             public float WallSimplify;
 
+            /**
+             * Generates a color based on a given RGBA string of values
+             */
             private Color GenerateColor(string Data)
             {
                 string[] RGBA = Data.Split(':');
@@ -65,6 +85,9 @@ namespace Daedalus
                 return Ret;
             }
 
+            /**
+             * Constructor
+             */
             public DaedalusFormSettings(string Data)
             {
                 string[] DataChuncks = Data.Split('/');
@@ -113,11 +136,17 @@ namespace Daedalus
                 }
             }
 
+            /**
+             * Default Contructor
+             */
             public DaedalusFormSettings()
             {
                 SetDefaults();
             }
 
+            /**
+             * Sets all setting values to their defaults
+             */
             public void SetDefaults()
             {
                 LabMap_Color = Color.White;
@@ -156,6 +185,10 @@ namespace Daedalus
                 WallSimplify = 50;
             }
 
+            /**
+             * Exports settings to be stored as a string for later use even after the application
+             * has been closed.
+             */
             public string Export()
             {
                 string Out = "";
@@ -200,6 +233,9 @@ namespace Daedalus
             public enum ColorBlindness { Protanopia, Tritanopia, Achromatopsia }
             public ColorBlindness Blindness;
 
+            /**
+             * Applies color changes depending on colorblindness
+             */
             public void ApplyColorChanges()
             {
                 switch (Blindness)
@@ -247,6 +283,9 @@ namespace Daedalus
         public PointF UserTarget;
         public string ErrorOut = "";
 
+        /**
+         * Knossos Constructor
+         */
         public Knossos()
         {
             InitializeComponent();
@@ -266,18 +305,23 @@ namespace Daedalus
 
         private float ZoomAmount;
 
-
+        /**
+         * Calculates view position (center of the screen) based on the zoom and pan amount
+         */
         public PointF CalculateViewPosition(PointF In)
         {
             return new PointF((In.X / ZoomAmount) + Origin.X, -(In.Y / ZoomAmount) + Origin.Y);
         }
 
-        public List<Lclass.Line> Walls = new List<Lclass.Line>();
-        public List<Lclass.Line> EraseWalls = new List<Lclass.Line>();
+        public List<Lclass.Line> Walls = new List<Lclass.Line>(); // Walls to be drawn to the labyrinth
+        public List<Lclass.Line> EraseWalls = new List<Lclass.Line>(); // Walls to be erased from the labyrinth
         public List<KeyValuePair<PointF, TargetPoint>> MapPoints = new List<KeyValuePair<PointF, TargetPoint>>();
         public List<TargetLine> MapLines = new List<TargetLine>();
         public List<TargetShape> MapShapes = new List<TargetShape>();
 
+        /**
+         * Loads the window UI and sets all tools in the tool bars to their default settings
+         */
         private void DaedalusForm_Load(object sender, EventArgs e)
         {
             Mino = new Minotaur(this);
@@ -297,6 +341,9 @@ namespace Daedalus
             ZoomAmount = 1;
         }
 
+        /**
+         * Refreshes the map if the user goes back to the "tower" (main) tab
+         */
         private void TabMenu_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabMenu.SelectedIndex == 0)
@@ -305,12 +352,18 @@ namespace Daedalus
 
         int WorkersOpen = 0;
 
+        /**
+         * Closes the window UI (form)
+         */
         private void DaedalusForm_Close(object sender, FormClosingEventArgs e)
         {
             DisposeWorkers();
             Dispose(true);
         }
 
+        /**
+         * Assigns button and other UI element callback functions
+         */
         private void AssignCallBacks()
         {
             this.labyrinthScene.Paint += labyrinthScene_Paint;
@@ -402,6 +455,9 @@ namespace Daedalus
             this.FormClosing += Knossos_FormClosing;
         }
 
+        /**
+         * Saves user settings, stops the minotaur, and closes the window UI (form)
+         */
         private void Knossos_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
@@ -417,6 +473,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Begins minotaur and map processes
+         */
         private void StartWorkers()
         {
             UpdateFrames = true;
@@ -425,12 +484,18 @@ namespace Daedalus
             LabyrinthUpdate.RunWorkerAsync(this);
         }
 
+        /**
+         * Ends minotaur and map processes
+         */
         private void DisposeWorkers()
         {
             MinotaurWorker.Dispose();
             LabyrinthUpdate.Dispose();
         }
 
+        /**
+         * Begins background worker processes
+         */
         private void backgroundWorker_End(object sender, RunWorkerCompletedEventArgs e)
         {
             WorkersOpen--;
@@ -444,48 +509,76 @@ namespace Daedalus
         private labPenMode labPen = labPenMode.Draw;
         private mapPenMode mapPen = mapPenMode.Roam;
 
+        /**
+         * Updates labyrinth toolbar status text to display the pen mode
+         */
         private void UpdateLabToolBar()
         {
             labyrinthTool.Text = "Pen Mode: " + labPen.ToString();
         }
 
+        /**
+         * Updates map toolbar status text to display the map mode
+         */
         private void UpdateMapToolBar()
         {
             mapMode.Text = "Mode: " + mapPen.ToString();
         }
 
+        /**
+         * Updates labyrinth pen mode
+         */
         public void SetLabPenMode(labPenMode Mode)
         {
             labPen = Mode;
             UpdateLabToolBar();
         }
 
+        /**
+         * Updates map mode
+         */
         public void SetMapMode(mapPenMode Mode)
         {
             mapPen = Mode;
             UpdateMapToolBar();
         }
 
+        /**
+         * Draw button callback to set the pen mode to draw walls
+         */
         private void drawBtn_Click(object sender, EventArgs e)
         {
             SetLabPenMode(labPenMode.Draw);
         }
 
+        /**
+         * Erase button callback to set the pen mode to erase walls
+         */
         private void eraseBtn_Click(object sender, EventArgs e)
         {
             SetLabPenMode(labPenMode.Erase);
         }
 
+        /**
+         * Minotaur position button callback to set the minotaur's position
+         */
         private void setMinoPos_Click(object sender, EventArgs e)
         {
             SetLabPenMode(labPenMode.MinoPos);
         }
 
+        /**
+         * Roam button callback to set the map mode to have the minotaur roam
+         */
         private void roamBtn_Click(object sender, EventArgs e)
         {
             SetMapMode(mapPenMode.Roam);
         }
 
+        /**
+         * Target button callback to set the map mode to have the minotaur find
+         * a specified target
+         */
         private void targetBtn_Click(object sender, EventArgs e)
         {
             SetMapMode(mapPenMode.Target);
@@ -495,9 +588,13 @@ namespace Daedalus
 
         #region FileHandling
 
+        // Map files saved by the user are stored with the file extension ".blueprint"
         private static string FileExtension = ".blueprint";
         private static string FilterDialog = FileExtension + " files (*" + FileExtension + ") | *" + FileExtension;
 
+        /**
+         * Save button callback that creates a dialog box to save a new blueprint file (map)
+         */
         private void saveBtn_Click(object sender, EventArgs e)
         {
             saveMapFile.Title = "Save Labyrinth File";
@@ -508,6 +605,9 @@ namespace Daedalus
             saveMapFile.ShowDialog();
         }
 
+        /**
+         * Confirm file saving callback
+         */
         private void saveMapFile_FileOk(object sender, CancelEventArgs e)
         {
             if (!e.Cancel)
@@ -516,6 +616,10 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Load button callback that creates a dialog box to upload a blueprint file (map) from
+         * a local device
+         */
         private void loadBtn_Click(object sender, EventArgs e)
         {
             SetMinoState(MinoMode.Off);
@@ -526,6 +630,9 @@ namespace Daedalus
             openMapFile.ShowDialog(Owner);
         }
 
+        /**
+         * Confirm opening file callback
+         */
         private void openMapFile_FileOk(object sender, CancelEventArgs e)
         {
             if (!e.Cancel)
@@ -534,6 +641,13 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Processes the map and saves it to a blueprint file in text form
+         * File Delimeters:
+         *     - New line seperator --> "___"
+         *     - Point seperator --> "#"
+         *     - X and Y coordinate component seperator --> "/"
+         */
         private void ProcessSaveFile(string FilePath)
         {
             string output = "";
@@ -545,6 +659,10 @@ namespace Daedalus
             File.WriteAllText(FilePath, output);
         }
 
+        /**
+         * Decodes the blueprint file and adds the lines to the Walls list
+         * which will have all the lines be drawn to the screen as rectangles
+         */
         private void ProcessLoadFile(string FilePath)
         {
             MinoDisplay = MinoMode.Off;
@@ -579,21 +697,36 @@ namespace Daedalus
 
         #region DisplayControl
 
+        /**
+         * Clear button callback removes all the walls from the Walls list
+         * causing the labyrinth to become blank once the labyrinth is refreshed
+         */
         private void clearBtn_Click(object sender, EventArgs e)
         {
             Walls.Clear();
         }
 
+        /**
+         * Clear memory button callback removes all data the minotaur has collected
+         * about its surroundings casuing the map to become blank
+         */
         private void ClearMemory_Click(object sender, EventArgs e)
         {
             Mino.WipeMemory();
         }
 
+        /**
+         * Zoom slider calback changes the zoom amount which is used to calculate
+         * and redraw the labyrinth and map either smaller or larger
+         */
         private void zoomSlider_Scroll(object sender, EventArgs e)
         {
             ZoomAmount = MathF.Pow(((float)zoomSlider.Value + 1) / ((float)zoomSlider.Maximum / 2.0f), 2);
         }
 
+        /**
+         * Updates the screen origin while panning the screen
+         */
         private void UpdateOrigin()
         {
             ScreenOrigin.X = labyrinthScene.Width / 2;
@@ -615,6 +748,10 @@ namespace Daedalus
         private bool SetMino = false;
         private Lclass.Line TempLine = new Lclass.Line() { P1 = new PointF() { X = 0, Y = 1 }, P2 = new PointF() { X = 1, Y = 1 }, Width = 1 };
 
+        /**
+         * Tracks mouse cursor and performs action depending on the selected pen 
+         * mode or the mouse button pressed
+         */
         private void labyrinthScene_Mouse(object sender, MouseEventArgs e)
         {
             PointF Current = new PointF();
@@ -666,6 +803,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Calculates the midpoint between two points
+         */
         private PointF midpoint(PointF A, PointF B)
         {
             PointF ret = new PointF();
@@ -674,6 +814,9 @@ namespace Daedalus
             return ret;
         }
 
+        /**
+         * Finds shortest (perpendicular) distance from a point to a line
+         */
         private bool PointDistanceToLine(Lclass.Line Item, PointF Point)
         {
             PointF Mid = midpoint(Item.P1, Item.P2);
@@ -687,6 +830,10 @@ namespace Daedalus
             return false;
         }
 
+        /**
+         * Pans the map or sets the user target depending on the mouse button being 
+         * held down
+         */
         private void mapScene_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -699,6 +846,10 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Pans the labyrinth or performs a pen mode action depending on the mouse button being 
+         * held down
+         */
         private void labyrinthScene_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -736,6 +887,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Calculates the distance between two points
+         */
         private double Dist(PointF P1, PointF P2)
         {
             float num = P1.X - P2.X;
@@ -743,11 +897,17 @@ namespace Daedalus
             return Math.Sqrt(num * num + num2 * num2);
         }
 
+        /**
+         * Adds two points' corresponding X and Y values together
+         */
         private PointF Add(PointF P1, PointF P2)
         {
             return new PointF(P1.X + P2.X, P1.Y + P2.Y);
         }
 
+        /**
+         * Mouse controls for labyrinth scene while no mouse buttons are pressed
+         */
         private void labyrinthScene_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -774,6 +934,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Turns labyrinth controls off when the cursor leaves the labyrinth scene
+         */
         private void labyrinthScene_MouseLeave(object sender, EventArgs e)
         {
             if (CreatingLine)
@@ -785,11 +948,17 @@ namespace Daedalus
             Pan = false;
         }
 
+        /**
+         * Turns map controls off when the cursor leaves the labyrinth scene
+         */
         private void mapScene_MouseLeave(object sender, EventArgs e)
         {
             Pan = false;
         }
 
+        /**
+         * Adds new line to Walls list which is to be drawn to the labyrinth
+         */
         private void AddLine(PointF P1, PointF P2)
         {
             if (Dist(TempLine.P1, TempLine.P2) > 0.1f)
@@ -803,6 +972,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Keeps track of cursor while in the map scene
+         */
         private void mapScene_Mouse(object sender, MouseEventArgs e)
         {
             PointF Current = new PointF();
@@ -821,6 +993,9 @@ namespace Daedalus
             MouseLocation = Current;
         }
 
+        /**
+         * Mouse controls for map scene while no mouse buttons are pressed
+         */
         private void mapScene_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -831,6 +1006,9 @@ namespace Daedalus
 
         public bool UpdateFrames = true;
 
+        /**
+         * Creates thread to update frames
+         */
         private void LabyrinthUpdate_DoWork(object sender, DoWorkEventArgs e)
         {
             while (UpdateFrames)
@@ -840,6 +1018,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Main function to refresh the screen 
+         */
         private static void RefreshScene(Knossos Form)
         {
             long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -850,6 +1031,9 @@ namespace Daedalus
             HelpData.Update(Form.DeltaTime);
         }
 
+        /**
+         * Refreshes the labyrinth and map scenes in the "Tower" tab
+         */
         public void PaintWindows()
         {
             CopyDisplayData();
@@ -858,6 +1042,9 @@ namespace Daedalus
             ClearDisplayData();
         }
 
+        /**
+         * Displays debuggin log messages
+         */
         public void DebugLog(string Key, string Message, bool LabScene = true, bool AddToError = false)
         {
             Dictionary<string, string> Dic = (LabScene ? LogOuput : MapLogOuput);
@@ -876,11 +1063,17 @@ namespace Daedalus
                 AddError(Message);
         }
 
+        /**
+         * Adds spacing to errors in log to find them more easily
+         */
         public void AddError(string Message)
         {
             ErrorOut += Message + "\n\n";
         }
 
+        /**
+         * Erases element from debug log
+         */
         private void EraseDebugLog(string Key, bool LabScene = true)
         {
             Dictionary<string, string> Dic = (LabScene ? LogOuput : MapLogOuput);
@@ -890,6 +1083,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Displays messages on the specified window
+         */
         private void PrintMessages(Graphics window, Dictionary<string, string> Dic)
         {
             float i = 0;
@@ -955,6 +1151,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Clears data from the display
+         */
         private void ClearDisplayData()
         {
             if (ClearFrame)
@@ -965,6 +1164,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Checks if able to draw in a window
+         */
         private bool CanDraw(Window window, Window subject)
         {
             if (subject == Window.Both)
@@ -972,6 +1174,9 @@ namespace Daedalus
             return subject == window;
         }
 
+        /**
+         * Draws the labyrinth data
+         */
         private void DrawDisplayData(bool Lab, Graphics window)
         {
             try
@@ -1081,13 +1286,15 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Draws the walls, minotaur, and target onto the labyrinth scene along with debugging text data
+         */
         private void labyrinthScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Settings.LabMap_Color, 2);
             Pen RedPen = new Pen(Settings.Highlight_Color, 2);
             Graphics window = e.Graphics;
             UpdateOrigin();
-            //TODO
             foreach (Lclass.Line item in Walls)
             {
                 foreach (Lclass.Line Wall in item.GenerateRec(Origin, ZoomAmount))
@@ -1127,6 +1334,10 @@ namespace Daedalus
             RedPen.Dispose();
         }
 
+        /**
+         * Draws all the elements needed for the map scene including the minotaur, target, 
+         * and detection data
+         */
         private void mapScene_Paint(object sender, PaintEventArgs e)
         {
             Pen DrawPen = new Pen(Color.White, 2);
@@ -1144,6 +1355,9 @@ namespace Daedalus
             DrawPen.Dispose();
         }
 
+        /**
+         * Draws the minotaur and takes zoom into account
+         */
         private void DrawMino(Graphics window)
         {
             try
@@ -1179,6 +1393,9 @@ namespace Daedalus
         private MinoMode MinoState;
         private MinoMode MinoDisplay;
 
+        /**
+         * Updates the minotaur status to run or stop
+         */
         private void UpdateMinoControlBar()
         {
             stopBtn.Visible = MinoState == MinoMode.On;
@@ -1186,22 +1403,34 @@ namespace Daedalus
             mapToolStrip.Refresh();
         }
 
+        /**
+         * Sets the minotuar mode (roam or target)
+         */
         public void SetMinoState(MinoMode Mode)
         {
             MinoState = Mode;
             UpdateMinoControlBar();
         }
 
+        /**
+         * Sets minotuar status to stop
+         */
         private void stopBtn_Click(object sender, EventArgs e)
         {
             SetMinoState(MinoMode.Off);
         }
 
+        /**
+         * Sets minotaur status to run
+         */
         private void playBtn_Click(object sender, EventArgs e)
         {
             SetMinoState(MinoMode.On);
         }
 
+        /**
+         * Updates minotaur status in the UI and stops and starts the minotaur
+         */
         private void MinotaurWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             while (UpdateFrames)
@@ -1228,6 +1457,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Finds the angle/slope of a detected wall
+         */
         public bool WallDetectAngle(PointF Origin, float[] Angles, float Dist, out List<Lclass.CollisionPoint> Hits)
         {
             PointF[] Slopes = new PointF[Angles.Length];
@@ -1238,6 +1470,9 @@ namespace Daedalus
             return WallDetect(Origin, Slopes, Dist, out Hits);
         }
 
+        /**
+         * Finds walls detected through collision points with the projected rays
+         */
         public bool WallDetect(PointF Origin, PointF[] Slopes, float Dist, out List<Lclass.CollisionPoint> Hits)
         {
             PointF?[] Ray = new PointF?[Slopes.Length];
@@ -1305,19 +1540,30 @@ namespace Daedalus
         }
 
         private bool ClearFrame = false;
+
+        /**
+         * Clears the frame after minotaur data is updated
+         */
         public void MinoEndUpdate()
         {
             ClearFrame = true;
         }
 
         private bool UpdateFrame = false;
+        /**
+         * Set the frame to be updated after the minotaur data has been refreshed
+         */
         public void MinoRefresh()
         {
             UpdateFrame = true;
         }
 
+        // Window Labels
         public enum Window { Both, Lab, Map }
 
+        /**
+         * Target point for minotaur to travel to
+         */
         public struct TargetPoint
         {
             public PointF Point;
@@ -1328,6 +1574,10 @@ namespace Daedalus
             public bool Scale;
             public Window DisplayWindow;
         }
+
+        /**
+         * Adds a new target point for the mino to go to next
+         */
         public void AddPoint(TargetPoint Point)
         {
             PointF NewPoint = CalculateViewPosition(Point.Point);
@@ -1336,6 +1586,9 @@ namespace Daedalus
                 MapPoints.Add(NewItem);
         }
 
+        /**
+         * Target line for minotaur to travel to
+         */
         public struct TargetLine
         {
             public Lclass.Line Line;
@@ -1346,12 +1599,18 @@ namespace Daedalus
             public Window DisplayWindow;
         }
 
+        /**
+         * Adds a new target line for the mino to go to next
+         */
         public void AddLine(TargetLine Line)
         {
             if (!MapLines.Contains(Line))
                 MapLines.Add(Line);
         }
 
+        /**
+         * Target shape (collection of lines) for minotaur to travel to
+         */
         public struct TargetShape
         {
             public PointF[] Points;
@@ -1359,17 +1618,22 @@ namespace Daedalus
             public Window DisplayWindow;
         }
 
+        /**
+         * Adds a new target shape for the mino to go to next
+         */
         public void AddShape(TargetShape Shape)
         {
             if (!MapShapes.Contains(Shape))
                 MapShapes.Add(Shape);
         }
 
-
         #endregion
 
         #region Settings
-
+        
+        /**
+         * Update settings menu tree display after an element is selected
+         */
         private void treeSettings_AfterSelect(object sender, TreeViewEventArgs e)
         {
             switch (e.Node.Name)
@@ -1410,6 +1674,9 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Settings reset button callback
+         */
         private void Reset_Click(object sender, EventArgs e)
         {
             Settings.SetDefaults();
@@ -1417,12 +1684,18 @@ namespace Daedalus
             AssignSettings();
         }
 
+        /**
+         * Cancel changes to settings button callback
+         */
         private void CancelSet_Click(object sender, EventArgs e)
         {
             SettingControl.SelectTab(0);
             AssignSettings();
         }
 
+        /**
+         * Apply changes to settings button callback
+         */
         private void Apply_Click(object sender, EventArgs e)
         {
             Settings.ApplyColorChanges();
@@ -1430,11 +1703,18 @@ namespace Daedalus
             AssignVisualSettings();
         }
 
+        /**
+         * Cancel settings button callback
+         * (Takes user back to main settings)
+         */
         private void Cancel_Click(object sender, EventArgs e)
         {
             SettingControl.SelectTab(0);
         }
 
+        /**
+         * Saves and exports settings to be used on future startups of the application
+         */
         private void SaveSettings()
         {
             File.WriteAllText(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings", Settings.Export());
@@ -1444,6 +1724,9 @@ namespace Daedalus
                 File.WriteAllText(Directory.GetCurrentDirectory() + "/ERRORs/Error-" + DateTime.Now.TimeOfDay.ToString().Replace(".", ":").Replace(":", "") + ".txt", ErrorOut);
         }
 
+        /**
+         * Imports settings from last settings that were saved
+         */
         private void LoadSettings()
         {
             if (File.Exists(Directory.GetCurrentDirectory() + "/Settings.daedalusSettings"))
@@ -1452,6 +1735,9 @@ namespace Daedalus
                 Settings = new DaedalusFormSettings();
         }
 
+        /**
+         * Sets color prefrences from settings to the labyrinth and map
+         */
         private void AssignVisualSettings()
         {
             LabColor.BackColor = Settings.LabMap_Color;
@@ -1465,6 +1751,9 @@ namespace Daedalus
             RayLineColor.BackColor = Settings.RayColor;
         }
 
+        /**
+         * Sets display prefrences from settings to the labyrinth and map
+         */
         private void AssignDisplaySettings()
         {
             ShowCollidedPoints.Checked = Settings.Collided_Show;
@@ -1485,6 +1774,9 @@ namespace Daedalus
             ShowNonHitRays.Checked = Settings.NonRayHit_Show;
         }
 
+        /**
+         * Sets internal processing prefrences from settings to the labyrinth and map
+         */
         private void AssignInternalSettings()
         {
             MinoRadius.Text = Settings.Mino_Radius.ToString();
@@ -1508,12 +1800,18 @@ namespace Daedalus
             WallSimpSlider.Value = (int)Math.Clamp(Settings.WallSimplify, WallSimpSlider.Minimum, WallSimpSlider.Maximum);
         }
 
+        /**
+         * Sets wall width prefrences from settings to the labyrinth and map
+         */
         private void AssignEnvironmentSettings()
         {
             WallWidth.Text = Settings.WallWidth.ToString();
             WallWidthSlider.Value = (int)Math.Clamp(Settings.WallWidth, WallWidthSlider.Minimum, WallWidthSlider.Maximum);
         }
 
+        /**
+         * Refreshes all settings
+         */
         private void AssignSettings()
         {
             AssignDisplaySettings();
@@ -1522,6 +1820,9 @@ namespace Daedalus
             AssignEnvironmentSettings();
         }
 
+        /**
+         * Sets color settings of the application
+         */
         private void SetColorSetting(ref Color subject)
         {
             if (colorDialog.ShowDialog() == DialogResult.OK)
@@ -1531,6 +1832,9 @@ namespace Daedalus
             AssignVisualSettings();
         }
 
+        /**
+         * Sets slider value to usable setting value
+         */
         private void SetFloatSetting(string Value, System.Windows.Forms.TrackBar Slider, ref float ValueResult)
         {
             if (float.TryParse(Value, out float Result))
@@ -1541,12 +1845,18 @@ namespace Daedalus
             }
         }
 
+        /**
+         * Sets text box value to usable setting value
+         */
         private void SetFloatSetting(int Value, System.Windows.Forms.TextBox Text, ref float ValueResult)
         {
             Text.Text = Value.ToString();
             ValueResult = Value;
         }
 
+        /**
+         * Settings menu UI elements callbacks
+         */
         private void ChangeNonHitColor_Click(object sender, EventArgs e)
         {
             SetColorSetting(ref Settings.NonPointColor);

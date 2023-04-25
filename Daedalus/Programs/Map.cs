@@ -1,4 +1,14 @@
-﻿using Daedalus;
+﻿/**
+ * Map.cs
+ * 
+ * This file contains functions and data to create a map and a navigation net
+ * for the minotaur to detect and navigate through.
+ * 
+ * Last Modifier: Fillip Cannard
+ * Last Modified: 4/24/2023
+ */
+
+using Daedalus;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -24,6 +34,9 @@ using System.Xml.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 
+/**
+ * Main class used for creating a map and navnet
+ */
 public class Map
 {
     private float brickWidth { get { return Knossos.KnossosUI.Settings.Mino_Radius + (2 * Knossos.KnossosUI.Settings.ExpansionBias); } }
@@ -49,6 +62,9 @@ public class Map
     private float GridSize { get { return Knossos.KnossosUI.Settings.GridRadius; } }
     private float Diameter { get { return Knossos.KnossosUI.Settings.Mino_Radius + Knossos.KnossosUI.Settings.ExpansionBias; } }
 
+    /**
+     * Map Constructor
+     */
     public Map(double ScanSpeed = 1)
     {
         this.ScanSpeed = ScanSpeed;
@@ -59,6 +75,10 @@ public class Map
         }
     }
 
+    /**
+     * Exports map data into string format which can be saved to 
+     * a .blueprint (text) file
+     */
     public string ExportMapData()
     {
         string output = "";
@@ -85,6 +105,10 @@ public class Map
         return output;
     }
 
+    /**
+     * Takes map data from string form and converts it into a map using chunks contianing
+     * Bricks
+     */
     public void ImportMapData(string Data, float Diameter)
     {
         bricks.Clear();
@@ -136,6 +160,9 @@ public class Map
         ClearMem = true;
     }
 
+    /**
+     * Finds the closest point within a point in a chunk
+     */
     public PointF GetClosestPoint(PointF Location, int StartRange = 0, int EndRange = 500)
     {
         if (SortedNet.Count == 0)
@@ -191,6 +218,9 @@ public class Map
         return Vertex;
     }
 
+    /**
+     * Finds trangulation connections for a specified point 
+     */
     private List<PointF> GetConnections(PointF Point, out bool ContainsChunks, float Thres = 0.1f, int Radius = 1)
     {
         List<PointF> Avalable = new List<PointF>();
@@ -280,6 +310,9 @@ public class Map
         return Avalable;
     }
 
+    /**
+     * Determines whether two points would cause intersection
+     */
     private bool Intersection(PointF P1, PointF P2, float Width, bool Inflate)
     {
         PathsD Line = new PathsD();
@@ -338,6 +371,9 @@ public class Map
         return false;
     }
 
+    /**
+     * Nodes used to navigate through the navnet using AStar pathfinding
+     */
     public class AStarNode : IEquatable<AStarNode>
     {
         public PointF Point;
@@ -346,6 +382,9 @@ public class Map
         public double hCost;
         public AStarNode parent;
 
+        /**
+         * Checks if AStar nodes are equivalent
+         */
         public bool Equals([AllowNull] AStarNode other)
         {
             if (other != null)
@@ -354,6 +393,11 @@ public class Map
         }
     }
 
+    /**
+     * Performs AStar algorith for path finding.
+     * Uses different weights to determine which path is more optimal by looking at the distance to its 
+     * neighboring node and then goes to the node that looks the most promising. Returns the optimal path.
+     */
     public List<AStarNode> Astar(PointF Location, PointF Target, float Radius, int Iterations = 100)
     {
         AStarNode Ret = null;
@@ -433,6 +477,9 @@ public class Map
         return openSet;
     }
 
+    /**
+     * Determines whether lines (groups of points) will intersect
+     */
     public bool LineIntersection(PointF[] Points)
     {
         if (Points == null)
@@ -446,6 +493,9 @@ public class Map
         return false;
     }
 
+    /**
+     * Determines whether a point is within a wall
+     */
     public bool InsideWall(PointF Point, double Radius, bool Cover = false)
     {
         bool Inside = false;
@@ -474,6 +524,9 @@ public class Map
         return Inside;
     }
 
+    /**
+     * Determines the most optimal node to go to next in AStar
+     */
     public AStarNode AstarPath(List<AStarNode> Options, double Radius, bool IsInsideWall)
     {
         AStarNode ret = null;
@@ -534,6 +587,9 @@ public class Map
         return ret;
     }
 
+    /**
+     * Creates sudo targets to get to during roam mode
+     */
     public List<PointF> RoamTargets(PointF Location)
     {
         if (SortedNet.Count == 0)
@@ -580,6 +636,9 @@ public class Map
         return EdgeChunks;
     }
 
+    /**
+     * Gets Brciks from a specified chunk at a grid location
+     */
     private List<Lclass.Brick> GetBricksAt(List<PointF> GridCoords)
     {
         List<Lclass.Brick> Overlap = new List<Lclass.Brick>();
@@ -599,6 +658,9 @@ public class Map
         return Overlap;
     }
 
+    /**
+     * Adds a new Brick
+     */
     private List<PointF> AddBrick(Lclass.Brick item, float Diameter)
     {
         List<PointF> Coords = BrickCoords(item);
@@ -657,6 +719,9 @@ public class Map
         return Coords;
     }
 
+    /**
+     * Adds newly cut chunk to list of chunks
+     */
     private void AddToChunkList(Dictionary<PointF, List<Lclass.Brick>> Collection, Lclass.Brick item, Lclass.Brick Buff, PointF Point)
     {
         Collection[Point].Add(item);
@@ -684,6 +749,9 @@ public class Map
         Collection[Point].Remove(Buff);
     }
 
+    /**
+     * Check if Bricks encapsulate each other
+     */
     private bool Encaps(Lclass.Brick Outter, Lclass.Brick Inner)
     {
         float P1 = PointDistanceToLine(Outter, Inner.P1);
@@ -692,6 +760,9 @@ public class Map
         return P1 != float.MaxValue && P2 != float.MaxValue;
     }
 
+    /**
+     * Checks if Bricks are touching
+     */
     private bool Touching(Lclass.Brick Outter, Lclass.Brick Inner, out sledgeHammer.point InnerPoint)
     {
         float P1 = PointDistanceToLine(Outter, Inner.P1);
@@ -710,6 +781,9 @@ public class Map
         return P1In ^ P2In;
     }
 
+    /**
+     * Removes a Brick from the minotaurs memory if it is no longer detected
+     */
     private List<PointF> RemoveBrick(Lclass.Brick Brick, float Diameter)
     {
         List<PointF> Coords = BrickCoords(Brick);
@@ -725,9 +799,9 @@ public class Map
             {
                 // Adding brick to empty brick polygon
                 WallPoly.Add(Clipper.MakePath(new double[] { lines[0].P1.X, lines[0].P1.Y,
-                                                                     lines[0].P2.X, lines[0].P2.Y,
-                                                                     lines[1].P2.X, lines[1].P2.Y,
-                                                                     lines[1].P1.X, lines[1].P1.Y}));
+                                                             lines[0].P2.X, lines[0].P2.Y,
+                                                             lines[1].P2.X, lines[1].P2.Y,
+                                                             lines[1].P1.X, lines[1].P1.Y}));
 
                 if (SortedWalls.ContainsKey(Point))
                 {
@@ -786,6 +860,9 @@ public class Map
         return removed;
     }
 
+    /**
+     * Removes buffer walls from Bricks
+     */
     private List<PointF> RemoveBuffers(ref List<Lclass.Brick> Buffers)
     {
         List<PointF> removed = new List<PointF>();
@@ -821,6 +898,9 @@ public class Map
         return removed;
     }
 
+    /**
+     * Resorts Bricks typically after deletion or new addition
+     */
     private void RefreshSortedBricks()
     {
         SortedBricks.Clear();
@@ -834,6 +914,9 @@ public class Map
         CanRefresh = true;
     }
 
+    /**
+     * Snaps a point to the specified grid
+     */
     private PointF Snap(PointF Point)
     {
         return new PointF(
@@ -842,6 +925,9 @@ public class Map
             );
     }
 
+    /**
+     * Snaps chunk to the grid with a specified radius
+     */
     private List<PointF> SnapCoords(PointF Point, int Radius, bool Hollow = false)
     {
         List<PointF> Coords = new List<PointF>();
@@ -889,6 +975,9 @@ public class Map
         return Coords;
     }
 
+    /**
+     * Gets the rough coordinates of a specified Brick within the grid
+     */
     private List<PointF> BrickCoords(Lclass.Line Wall)
     {
         List<PointF> GridCorrdinates = LineCoords(Wall.P1, Wall.P2);
@@ -900,6 +989,9 @@ public class Map
         return GridCorrdinates;
     }
 
+    /**
+     * Gets the rough coordinates of a specified line within the grid
+     */
     private List<PointF> LineCoords(PointF P1, PointF P2)
     {
         List<PointF> GridCorrdinates = new List<PointF>();
@@ -958,6 +1050,10 @@ public class Map
         return GridCorrdinates;
     }
 
+    /**
+     * Clears the minotaurs memory of the map.
+     * Includes all walls, Bricks, chunks, and the net altogether
+     */
     public void ClearMemory()
     {
         if (CanClear)
@@ -974,6 +1070,9 @@ public class Map
         ClearMem = true;
     }
 
+    /**
+     * Refreshes the chunks to be drawn to the map scene
+     */
     public void RefreshChunks()
     {
         if (CanClear)
@@ -1003,6 +1102,9 @@ public class Map
         ClearMem = true;
     }
 
+    /**
+     * Creates a buffer around a wall to ensure that the minotaur does not go into the walls
+     */
     public bool CreateBuffer(List<Lclass.CollisionPoint> collisionPoints, PointF location)
     {
 
@@ -1219,7 +1321,10 @@ public class Map
         ForceRefresh = false;
         return Changed;
     }
-    // DISPLAY STUFF!!!
+
+    /**
+     * Takes all the components detected and displays the map
+     */
     public void DisplayMap(PointF Focus, int DisplayRadius, int UnRenderedRadius)
     {
         if (Clear)
@@ -1372,6 +1477,9 @@ public class Map
         ClearMem = false;
     }
 
+    /**
+     * Used for removing extraneous lines within Bricks
+     */
     private struct sledgeHammer
     {
         public Lclass.Brick intersectingBrick;
@@ -1386,6 +1494,9 @@ public class Map
         }
     }
 
+    /**
+     * Handles line deletion within Bricks
+     */
     private void processDeletion(float Diameter, List<Lclass.Line> preBuffers, ref List<PointF> Regions)
     {
         if (preBuffers.Count == 0)
@@ -1404,6 +1515,9 @@ public class Map
         }
     }
 
+    /**
+     * Handles prebuffers that are added to the bricks to ensure the minotaur doesn't pass through walls
+     */
     private void processPreBuffers(float Diameter, List<Lclass.Line> preBuffers, ref List<PointF> Regions)
     {
         if (preBuffers.Count == 0)
@@ -1453,6 +1567,11 @@ public class Map
         }
     }
 
+    /**
+     * Processes list of Bricks that need to be simplified with the sledgeHammer
+     * (Extranous lines needing to be deleted and bricks being coupled together after
+     * line deletion)
+     */
     private Lclass.Brick processBricks(List<sledgeHammer> preBricks)
     {
         switch (preBricks[0].ouioui)
@@ -1491,6 +1610,9 @@ public class Map
 
     private delegate void IntersectionAction(sledgeHammer.point Point, PointF Target);
 
+    /**
+     * Handles intersections for extraneous lines to be deleted
+     */
     private bool processIntersection(Lclass.Brick Object, Lclass.Line Subject, IntersectionAction action)
     {
         float point1 = PointDistanceToLine(Object, Subject.P1);
@@ -1542,11 +1664,18 @@ public class Map
         return FoundIntercection;
     }
 
+    /**
+     * Calculates the difference between slopes and determines if the differnece
+     * is within a certain threshold
+     */
     private bool SimilarSlope(PointF Slope1, PointF Slope2, float Thres)
     {
         return (InRange(MathF.Abs(Slope1.X), MathF.Abs(Slope2.X), Thres)) && (InRange(MathF.Abs(Slope1.Y), MathF.Abs(Slope2.Y), Thres));
     }
 
+    /**
+     * Calculates the chunk size based on a given radius
+     */
     private PathsD ChunkShape(PointF item, double Radius)
     {
         PathsD chunk = new PathsD();
@@ -1557,17 +1686,26 @@ public class Map
         return chunk;
     }
 
+    /**
+     * Calculates the chunk size and shape based on a given grid size
+     */
     private PathsD ChunkShape(PointF item)
     {
         return ChunkShape(item, GridSize);
     }
 
+    /**
+     * Finds a point within a chunk
+     */
     private PointF GetChunkPointFrom(PointF Chunk, float DirectionX = 0, float DirectionY = 0)
     {
         PointF Start = Snap(Chunk);
         return Snap(new PointF(Start.X + (DirectionX * 2 * GridSize), Start.Y + (DirectionY * 2 * GridSize)));
     }
 
+    /**
+     * Creates an adjacent edge chunk
+     */
     private void AddEdgeChunk(PointF Point)
     {
         if (SortedChunks.ContainsKey(Point))
@@ -1584,6 +1722,9 @@ public class Map
         }
     }
 
+    /**
+     * Creates a new chunk at the specified point
+     */
     private void NewChunk(PointF Point)
     {
         AddEdgeChunk(Point);
@@ -1598,6 +1739,11 @@ public class Map
         AddEdgeChunk(GetChunkPointFrom(Point, -1, -1));
     }
 
+    /**
+     * Main function that performs ear clipping. It essentially takes a list of
+     * points that make up the lines of the walls and cuts a polygon out of the
+     * chunk that contains those points.
+     */
     private bool Refresh(List<PointF> RegionsChanged)
     {
         bool Ret = false;
@@ -1660,7 +1806,7 @@ public class Map
                     // Add to list of solid polygons
                     polygons.Add(coordinates);
                 }
-                // Adds holes to nemosis (holes list)
+                // Adds holes to nemo list (holes list)
                 else
                 {
                     List<Vector3m> nemo = new List<Vector3m>();
@@ -1672,8 +1818,8 @@ public class Map
                     holes.Add(nemo);
                 }
             }
-            // EARCLIPPING!!!!
-            EarClipping earClipper;   //hiheywydnmcool;):)//
+            // Earclipping Process
+            EarClipping earClipper;
             List<Vector3m> result;
             PointF[] KeyPoints = new PointF[3];
             PointF KeyPoint;
@@ -1733,6 +1879,9 @@ public class Map
         return Ret;
     }
 
+    /**
+     * Determines if a point exists within a specified polygon
+     */
     bool InPolygon(PointF point, PathD polygon)
     {
         int n = polygon.Count;
@@ -1760,7 +1909,9 @@ public class Map
         return isIn;
     }
 
-
+    /**
+     * Calculates largest distance between two lines
+     */
     private Lclass.Brick MaxDist(List<Lclass.Brick> Group)
     {
         PointF Max = new Point(0, 0);
@@ -1795,6 +1946,9 @@ public class Map
         return Ret;
     }
 
+    /**
+     * Calculates smalleset distance between two lines
+     */
     private double MinDistance(Lclass.Line L1, Lclass.Line L2)
     {
         double P11 = DistSqr(L1.P1, L2.P1);
@@ -1805,6 +1959,11 @@ public class Map
         return Math.Sqrt(Math.Min(P11, Math.Min(P12, Math.Min(P21, P22))));
     }
 
+    /**
+     * Calculates the distance squared between two points
+     * (Square root is not always necessary, so avoiding the sqaure root saves
+     * on computational power.)
+     */
     private double DistSqr(PointF P1, PointF P2)
     {
         float num = P1.X - P2.X;
@@ -1812,6 +1971,9 @@ public class Map
         return (num * num + num2 * num2);
     }
 
+    /**
+     * Calculates midpoinint between two points 
+     */
     private PointF midpoint(PointF A, PointF B)
     {
         PointF ret = new PointF();
@@ -1819,12 +1981,19 @@ public class Map
         ret.Y = (A.Y + B.Y) / 2;
         return ret;
     }
+
+    /**
+     * Calculates midpoint between two vectors 
+     */
     private Vector3m midpoint(Vector3m A, Vector3m B)
     {
         Vector3m ret = new Vector3m((A.X + B.Y) / 2, (A.Y + B.Y) / 2, 0);
         return ret;
     }
 
+    /**
+     * Calculates the absolute distance from a point to a line (Brick)
+     */
     private float LineDistance(Lclass.Brick Item, PointF Point)
     {
         float num = MathF.Abs((Item.P2.X - Item.P1.X) * (Item.P1.Y - Point.Y) - (Item.P1.X - Point.X) * (Item.P2.Y - Item.P1.Y));
@@ -1833,7 +2002,10 @@ public class Map
         return distance;
     }
 
-
+    /**
+     * Calcualtes distance from a point to a line (Brick) and takes into
+     * account the width of the Brick 
+     */
     private float PointDistanceToLine(Lclass.Brick Item, PointF Point)
     {
         if ((Item.P1 == Point || Item.P2 == Point))
@@ -1850,20 +2022,27 @@ public class Map
         return float.MaxValue;
     }
 
+    /**
+     * Determines whenther two values are within a certain range from one another
+     */
     private bool InRange(float Val1, float Val2, float Thres)
     {
         return MathF.Abs(Val1 - Val2) <= Thres;
     }
 
+    /**
+     *  Returns the angle between 2 points in radians
+     *  p1 = {x: 1, y: 2};
+     *  p2 = {x: 3, y: 4};
+     */
     private double getAngleRad(PointF p1, PointF p2)
     {
-        // returns the angle between 2 points in radians
-        // p1 = {x: 1, y: 2};
-        // p2 = {x: 3, y: 4};
         return ((MathF.Atan2(p2.Y - p1.Y, p2.X - p1.X)) * (180 / MathF.PI)) + 180;
     }
 
-
+    /**
+     * Conatins a color in a RGB format
+     */
     public struct ColorRGB
     {
         public byte R;
@@ -1888,6 +2067,9 @@ public class Map
         }
     }
 
+    /**
+     * Converts HSL color representation to RGB
+     */
     public static ColorRGB HSL2RGB(double h, double sl, double l)
     {
         double v;

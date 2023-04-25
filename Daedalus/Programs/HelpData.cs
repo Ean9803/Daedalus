@@ -1,4 +1,16 @@
-﻿using System;
+﻿/**
+ * HelpData.cs
+ * 
+ * This file primarily holds all the data which is displayed in the help panel and pages.
+ * This includes all text, organization tree, and even ASCII animantions and static images
+ * for each corresponding help page. Additionally, this file contains functions to setup
+ * and update the help panel interface and UI.
+ * 
+ * Last Modifier: Fillip Cannard
+ * Last Modified: 4/25/2023
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -10,6 +22,7 @@ namespace Daedalus.Daedalus.Programs
 {
     internal class HelpData
     {
+        // Help text info
         private static Dictionary<string, string> HelpText = new Dictionary<string, string>()
         {
             {
@@ -212,6 +225,7 @@ namespace Daedalus.Daedalus.Programs
             },
         };
 
+        // Help tree and animation variables
         private static Dictionary<TreeNode, string> HelpTree = new Dictionary<TreeNode, string>();
         private static RichTextBox HelpTextBox = new RichTextBox();
         private static string DisplayText = "\n\n";
@@ -223,6 +237,7 @@ namespace Daedalus.Daedalus.Programs
         private static bool UpdateFrame = true;
         private static string BUFFER = "BUFFER=";
 
+        // Contains static ASCII art images to be displayed in the help pages
         private static Dictionary<string, string> Images = new Dictionary<string, string>()
         {
             {
@@ -343,6 +358,7 @@ namespace Daedalus.Daedalus.Programs
             }
         };
 
+        // Contains lists of ASCII art strings that are displayed in the help pages as animations
         private static Dictionary<string, List<string>> Animations = new Dictionary<string, List<string>>()
         {
             {
@@ -1110,7 +1126,10 @@ namespace Daedalus.Daedalus.Programs
             }
         };
 
-
+        /**
+         * Initalizes and adds all the components to the help menu window and 
+         * tree navigation
+         */
         public static void PopulateManual(TreeView Tree, RichTextBox Text)
         {
             TreeNodeCollection Node = Tree.Nodes;
@@ -1147,16 +1166,25 @@ namespace Daedalus.Daedalus.Programs
             Frame = TimeFrame;
         }
 
+        /**
+         * Pauses annimations while scrolling
+         */
         private static void HelpTextBox_MouseWheel(object sender, MouseEventArgs e)
         {
             UpdateFrame = false;
         }
 
+        /**
+         * Finds greatest common denominator between two integers
+         */
         public static int GCD(int a, int b)
         {
             return b == 0 ? a : GCD(b, a % b);
         }
 
+        /**
+         * Displays next nodes in the selected parent node of the tree for the side menu
+         */
         private static void Tree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (HelpTree.ContainsKey(e.Node))
@@ -1168,6 +1196,10 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Updates ASCII graphics in the applicable help pages by essentially iterating
+         * though a list a different ASCII art strings at a given rate
+         */
         public static void Update(float DTime)
         {
             if (!UpdateFrame)
@@ -1210,6 +1242,9 @@ namespace Daedalus.Daedalus.Programs
             }
         }
 
+        /**
+         * Gets the next tree node of the help page side pannel menu
+         */
         private static TreeNode GetNode(TreeNodeCollection Node, string Key)
         {
             string Item = Key.Split('/')[0];

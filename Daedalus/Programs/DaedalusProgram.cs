@@ -1,3 +1,12 @@
+/**
+ * HelpData.cs
+ * 
+ * This file is the main entry point for the application.
+ * 
+ * Last Modifier: Fillip Cannard
+ * Last Modified: 4/24/2023
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
