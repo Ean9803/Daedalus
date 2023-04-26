@@ -335,7 +335,7 @@ namespace Daedalus.Daedalus.Programs
                             },
                             Type = Knossos.TargetLine.DrawType.Solid,
                             ViewWidth = 2,
-                            DisplayWindow = Knossos.Window.Map
+                            DisplayWindow = Knossos.Window.Both
                         });
                         LastPoint = node.Point;
                         node = node.parent;
