@@ -151,7 +151,6 @@ namespace Daedalus.Daedalus.Programs
 
             if (AStarPath != null)
                 MovePath();
-
             Knossos.KnossosUI.EraseDebugLog("Error", true);
         }
 
@@ -434,7 +433,7 @@ namespace Daedalus.Daedalus.Programs
                 RefreshLocation = false;
                 RemakePath();
             }
-            if (FollowPath != null)
+            else if (FollowPath != null)
             {
                 if (setMasterTarget(FollowPath[CurrentPositionIndex], getRadius() / 2))
                 {

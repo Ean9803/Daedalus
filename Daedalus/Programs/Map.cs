@@ -39,7 +39,7 @@ using System.Diagnostics;
  */
 public class Map
 {
-    private float brickWidth { get { return Knossos.KnossosUI.Settings.Mino_Radius + (2 * Knossos.KnossosUI.Settings.ExpansionBias); } }
+    private float brickWidth { get { return (2 * Knossos.KnossosUI.Settings.ExpansionBias); } }
     private List<Lclass.Brick> bricks = new List<Lclass.Brick>();
     private Dictionary<PointF, List<Lclass.Brick>> SortedBricks = new Dictionary<PointF, List<Lclass.Brick>>();
     private Dictionary<PointF, PathsD> SortedChunks = new Dictionary<PointF, PathsD>();
