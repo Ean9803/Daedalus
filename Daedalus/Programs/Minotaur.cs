@@ -151,6 +151,8 @@ namespace Daedalus.Daedalus.Programs
 
             if (AStarPath != null)
                 MovePath();
+
+            Knossos.KnossosUI.EraseDebugLog("Error", true);
         }
 
         /**
@@ -199,7 +201,7 @@ namespace Daedalus.Daedalus.Programs
                 }
             }
 
-            if (minotaurMap.InsideWall(getPosition(), 3, false) && (FollowPath != null ? minotaurMap.InsideWall(FollowPath[CurrentPositionIndex], 3, false) : true))
+            if (minotaurMap.InsideWall(getPosition(), 3, false) && (FollowPath != null ? (CurrentPositionIndex < FollowPath.Length ? minotaurMap.InsideWall(FollowPath[CurrentPositionIndex], 3, false) : true) : true))
             {
                 Escaped = true;
             }
@@ -210,7 +212,7 @@ namespace Daedalus.Daedalus.Programs
 
             if (Escaped)
             {
-                PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 1);
+                PointF FallBack = minotaurMap.GetClosestPoint(getPosition(), 0);
                 if (!InRange(getPosition(), FallBack, getRadius()))
                 {
                     SetMaster(FallBack);

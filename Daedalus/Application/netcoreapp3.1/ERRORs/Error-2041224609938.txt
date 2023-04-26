@@ -1,0 +1,8 @@
+The given key '{X=0, Y=-100}' was not present in the dictionary.
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Map.InsideWall(PointF Point, Double Radius, Boolean Cover) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Map.cs:line 561
+   at Map.PathIntersect(PointF P1, PointF P2, Boolean Cover) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Map.cs:line 493
+   at Map.PathIntersect(PointF[] Ps) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Map.cs:line 511
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 154
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+

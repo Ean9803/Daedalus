@@ -1,0 +1,8 @@
+The given key '{X=100, Y=100}' was not present in the dictionary.
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Map.GetConnections(PointF Point, Boolean& ContainsChunks, Single Thres, Int32 Radius) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Map.cs:line 289
+   at Map.Astar(PointF Location, PointF Target, Single Radius, Int32 Iterations) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Map.cs:line 440
+   at Daedalus.Daedalus.Programs.Minotaur.CalculateAStar(Boolean ForceRefresh) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 171
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 154
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+

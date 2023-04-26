@@ -539,23 +539,30 @@ public class Map
         PointF ChunkPoint = Snap(Point);
         if (SortedWalls.ContainsKey(ChunkPoint))
         {
-            if (SortedWalls[ChunkPoint] != null)
+            try
             {
-                PathsD Object = ChunkShape(Point, Radius);
-                PathsD Inflated;
-                if (SortedWalls[ChunkPoint].Count > 0 && Cover)
+                if (SortedWalls[ChunkPoint] != null)
                 {
-                    Inflated = Clipper.InflatePaths(SortedWalls[ChunkPoint], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
-                    Inflated = Clipper.SimplifyPaths(Inflated, Knossos.KnossosUI.Settings.Mino_Radius);
-                }
-                else
-                    Inflated = SortedWalls[ChunkPoint];
-                PathsD Intersection = Clipper.BooleanOp(ClipType.Intersection, Inflated, Object, FillRule.NonZero);
+                    PathsD Object = ChunkShape(Point, Radius);
+                    PathsD Inflated;
+                    if (SortedWalls[ChunkPoint].Count > 0 && Cover)
+                    {
+                        Inflated = Clipper.InflatePaths(SortedWalls[ChunkPoint], Knossos.KnossosUI.Settings.Mino_Radius, JoinType.Square, EndType.Polygon);
+                        Inflated = Clipper.SimplifyPaths(Inflated, Knossos.KnossosUI.Settings.Mino_Radius);
+                    }
+                    else
+                        Inflated = SortedWalls[ChunkPoint];
+                    PathsD Intersection = Clipper.BooleanOp(ClipType.Intersection, Inflated, Object, FillRule.NonZero);
 
-                if (Intersection.Count != 0)
-                {
-                    Inside = true;
+                    if (Intersection.Count != 0)
+                    {
+                        Inside = true;
+                    }
                 }
+            }
+            catch (Exception Lost)
+            {
+                Inside = false;
             }
         }
         return Inside;

@@ -1,0 +1,400 @@
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+
+Index was outside the bounds of the array.
+   at Daedalus.Daedalus.Programs.Minotaur.PostProcessTarget(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 181
+   at Daedalus.Daedalus.Programs.Minotaur.Update(mapPenMode Mode) in C:\Users\irobo\source\repos\Daedalus\Daedalus\Programs\Minotaur.cs:line 156
+   at Daedalus.Knossos.MinotaurWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\irobo\source\repos\Daedalus\DaedalusWindow.cs:line 1443
+

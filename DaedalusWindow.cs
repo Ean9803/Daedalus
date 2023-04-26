@@ -1074,7 +1074,7 @@ namespace Daedalus
         /**
          * Erases element from debug log
          */
-        private void EraseDebugLog(string Key, bool LabScene = true)
+        public void EraseDebugLog(string Key, bool LabScene = true)
         {
             Dictionary<string, string> Dic = (LabScene ? LogOuput : MapLogOuput);
             if (!string.IsNullOrEmpty(Key) && Dic.ContainsKey(Key))

@@ -77,7 +77,10 @@ namespace EarClipperLib
                     p0 = points[i];
                     pointsHashSet.Add(p0, p0);
                     List<ConnectionEdge> list = new List<ConnectionEdge>();
-                    p0.DynamicProperties.AddProperty(PropertyConstants.IncidentEdges, list);
+                    if(!p0.DynamicProperties.ExistsKey(PropertyConstants.IncidentEdges))
+                        p0.DynamicProperties.AddProperty(PropertyConstants.IncidentEdges, list);
+                    else
+                        p0.DynamicProperties.ChangeValue(PropertyConstants.IncidentEdges, list);
                     pointCount++;
                 }
                 ConnectionEdge current = new ConnectionEdge(p0, polygon);
