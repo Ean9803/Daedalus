@@ -24,6 +24,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing.Printing;
 using Daedalus.Daedalus.Programs;
 using Microsoft.Win32;
+using System.Media;
 
 namespace Daedalus
 {
@@ -275,6 +276,55 @@ namespace Daedalus
         }
         #endregion
 
+        #region Audio
+
+        public class SoundEffect
+        {
+            Stream _soundFile;
+            Thread _soundThread;
+            bool _isStopped = true;
+            SoundPlayer player;
+            public Action OnFinish = null;
+
+            public bool IsFinished { get { return _isStopped; } }
+
+            public SoundEffect(Stream soundFile)
+            {
+                _soundFile = soundFile;
+                player = new SoundPlayer(_soundFile);
+            }
+
+            public void PlayLooping()
+            {
+                player.PlayLooping();
+            }
+
+            public void Stop()
+            {
+                player.Stop();
+            }
+
+            public void Play()
+            {
+                if (!_isStopped)
+                    return;
+
+                _soundThread = new Thread(PlayThread);
+                _soundThread.Start();
+            }
+
+            private void PlayThread()
+            {
+                _isStopped = false;
+                player.PlaySync();
+                _isStopped = true;
+                if (OnFinish != null)
+                    OnFinish();
+            }
+        }
+
+        #endregion
+
         Minotaur Mino;
         public static Knossos KnossosUI;
         public DaedalusFormSettings Settings;
@@ -282,6 +332,10 @@ namespace Daedalus
         public float DeltaTime { set { if (value != 0) { DT = value; } } get { return MathF.Max(0.01f, DT); } }
         public PointF UserTarget;
         public string ErrorOut = "";
+
+        private SoundEffect IdleSound;
+        private SoundEffect RunningSound;
+        private SoundEffect GoalSound;
 
         /**
          * Knossos Constructor
@@ -292,6 +346,11 @@ namespace Daedalus
             LoadSettings();
             this.Load += DaedalusForm_Load;
             KnossosUI = this;
+
+            IdleSound = new SoundEffect(Properties.Resources.lost_in_the_maze_63079_1);
+            RunningSound = new SoundEffect(Properties.Resources.chase_8_bit_73312);
+            GoalSound = new SoundEffect(Properties.Resources.success_fanfare_trumpets_6185);
+            GoalSound.OnFinish = OnVictoryStop;
         }
 
         public delegate void SceneDel(Knossos Form);
@@ -339,6 +398,8 @@ namespace Daedalus
             RefreshSceneWindows = RefreshScene;
             ScreenOrigin = new PointF(labyrinthScene.Width / 2, labyrinthScene.Height / 2);
             ZoomAmount = 1;
+
+            IdleSound.PlayLooping();
         }
 
         /**
@@ -656,6 +717,7 @@ namespace Daedalus
                 output += item.P1.X + "/" + item.P1.Y + "#" + item.P2.X + "/" + item.P2.Y + "#" + item.Width + "___";
             }
             output += "\n" + Mino.ExportMapData();
+            output += "\n" + Settings.Export();
             File.WriteAllText(FilePath, output);
         }
 
@@ -691,6 +753,9 @@ namespace Daedalus
                 Walls.Add(new Lclass.Line() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Width = width });
             }
             MinoDisplay = MinoMode.On;
+
+            if (SplitData.Length > 2)
+                Settings = new DaedalusFormSettings(SplitData[2]);
         }
 
         #endregion
@@ -1418,6 +1483,8 @@ namespace Daedalus
         private void stopBtn_Click(object sender, EventArgs e)
         {
             SetMinoState(MinoMode.Off);
+            RunningSound.Stop();
+            IdleSound.PlayLooping();
         }
 
         /**
@@ -1426,6 +1493,28 @@ namespace Daedalus
         private void playBtn_Click(object sender, EventArgs e)
         {
             SetMinoState(MinoMode.On);
+            IdleSound.Stop();
+            RunningSound.PlayLooping();
+        }
+
+        /**
+         * Plays musice when mino reaches goal
+         */
+        public void PlayVictoryMusic()
+        {
+            GoalSound.Play();
+        }
+
+        public void OnVictoryStop()
+        {
+            if (MinoState == MinoMode.On)
+            {
+                RunningSound.PlayLooping();
+            }
+            else
+            {
+                IdleSound.PlayLooping();
+            }
         }
 
         /**

@@ -16,6 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Daedalus\Application\netcoreapp3.1\AudioFiles\chase-8-bit-73312.wav" />
+    <None Include="Daedalus\Application\netcoreapp3.1\AudioFiles\lost-in-the-maze-63079_1.wav" />
+    <None Include="Daedalus\Application\netcoreapp3.1\AudioFiles\success-fanfare-trumpets-6185.wav" />
     <Content Include="maze.ico" />
   </ItemGroup>
 
@@ -29,7 +32,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

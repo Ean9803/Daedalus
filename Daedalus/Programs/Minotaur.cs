@@ -51,6 +51,7 @@ namespace Daedalus.Daedalus.Programs
         private PointF LastPosition;
         private bool Escaped = false;
         private bool GoalChange = false;
+        private bool ReachedTarget = false;
 
         /**
          * Minotaur Constructor
@@ -172,11 +173,32 @@ namespace Daedalus.Daedalus.Programs
         }
 
         /**
+         * Is called when Mino reaches the set target
+         */
+        private void Success()
+        {
+            Knossos.KnossosUI.PlayVictoryMusic();
+        }
+
+        /**
          * Prepares to get new target after movement and also sets a timeout for the minotaur movement
          * to prevent it from getting stuck if two paths are equally long
          */
         private void PostProcessTarget(Knossos.mapPenMode Mode)
         {
+            if (InRange(getPosition(), Master_Bait, getRadius()))
+            {
+                if (!ReachedTarget)
+                {
+                    ReachedTarget = true;
+                    Success();
+                }
+            }
+            else
+            {
+                ReachedTarget = false;
+            }
+
             if (Mode == Knossos.mapPenMode.Target)
             {
                 SetMaster(UserTarget);

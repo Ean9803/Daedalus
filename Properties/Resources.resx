@@ -117,4 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="chase-8-bit-73312" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Daedalus\Application\netcoreapp3.1\AudioFiles\chase-8-bit-73312.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lost-in-the-maze-63079_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Daedalus\Application\netcoreapp3.1\AudioFiles\lost-in-the-maze-63079_1.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="success-fanfare-trumpets-6185" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Daedalus\Application\netcoreapp3.1\AudioFiles\success-fanfare-trumpets-6185.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
